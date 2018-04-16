@@ -48,6 +48,11 @@ module.exports.updateNews = function(id,news,option, callback){
     News.findOneAndUpdate(query,update,option,callback);
 };
 
+//test API get last two
+// module.exports.getLastTwo = function(callback,limit){
+//     News.find(callback).sort({_id:-1}).limit(limit);
+// };
+
 // delete news
 module.exports.deleteNews = function(id, callback){
     var query = {_id:id};

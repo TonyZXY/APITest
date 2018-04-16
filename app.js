@@ -128,6 +128,25 @@ app.delete('/api/videos/:_id', function(req,res){
     })
 });
 
+//test API
+// app.get('/api/users',function (req,res) {
+//     var name = req.query.name;
+//     var user_id = req.query.id;
+//
+//     console.log(name +" "+user_id);
+//
+//     res.end();
+// });
+
+//test get last 2 records
+// app.get('/api/users', function (req,res) {
+//     News.getLastTwo(function(err,video){
+//         if(err){
+//             throw err;
+//         }
+//         res.json(video);
+//     },3)
+// });
 
 //start application
 app.listen(3000);
