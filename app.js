@@ -16,14 +16,14 @@ mongoose.connect('mongodb://localhost/news');
 var db = mongoose.connection;
 
 //nothing
-app.get('/', function(req,res){
+app.get('/', function (req, res) {
     res.send('helloworld');
 });
 
 //get news list (all news)
-app.get('/api/news',function(req,res){
-    News.getNewsList(function(err,newsList){
-        if(err){
+app.get('/api/news', function (req, res) {
+    News.getNewsList(function (err, newsList) {
+        if (err) {
             throw err;
         }
         res.json(newsList);
@@ -31,9 +31,9 @@ app.get('/api/news',function(req,res){
 });
 
 //get news by ID
-app.get('/api/news/:_id',function(req,res){
-    News.getNewsByID(req.params._id,function(err,news){
-        if(err){
+app.get('/api/news/:_id', function (req, res) {
+    News.getNewsByID(req.params._id, function (err, news) {
+        if (err) {
             throw err;
         }
         res.json(news);
@@ -41,10 +41,10 @@ app.get('/api/news/:_id',function(req,res){
 });
 
 //add news
-app.post('/api/news', function(req,res){
+app.post('/api/news', function (req, res) {
     var newsAdded = req.body;
-    News.addNews(newsAdded, function(err,news){
-        if(err){
+    News.addNews(newsAdded, function (err, news) {
+        if (err) {
             throw err;
         }
         res.json(news);
@@ -52,11 +52,11 @@ app.post('/api/news', function(req,res){
 });
 
 //update news
-app.put('/api/news/:_id', function(req,res){
+app.put('/api/news/:_id', function (req, res) {
     var id = req.params._id;
     var news = req.body;
-    News.updateNews(id,news,{}, function(err,news){
-        if(err){
+    News.updateNews(id, news, {}, function (err, news) {
+        if (err) {
             throw err;
         }
         res.json(news);
@@ -64,10 +64,10 @@ app.put('/api/news/:_id', function(req,res){
 });
 
 //delete news
-app.delete('/api/news/:_id', function(req,res){
+app.delete('/api/news/:_id', function (req, res) {
     var id = req.params._id;
-    News.deleteNews(id, function(err,news){
-        if(err){
+    News.deleteNews(id, function (err, news) {
+        if (err) {
             throw err;
         }
         res.json(news);
@@ -75,9 +75,9 @@ app.delete('/api/news/:_id', function(req,res){
 });
 
 //get video List
-app.get('/api/videos',function(req,res){
-    Video.getVideos(function(err,video){
-        if(err){
+app.get('/api/videos', function (req, res) {
+    Video.getVideos(function (err, video) {
+        if (err) {
             throw err;
         }
         res.json(video);
@@ -85,10 +85,10 @@ app.get('/api/videos',function(req,res){
 });
 
 // add video
-app.post('/api/videos', function(req,res){
+app.post('/api/videos', function (req, res) {
     var videoAdded = req.body;
-    Video.addVideo(videoAdded, function(err,video){
-        if(err){
+    Video.addVideo(videoAdded, function (err, video) {
+        if (err) {
             throw err;
         }
         res.json(video);
@@ -96,11 +96,11 @@ app.post('/api/videos', function(req,res){
 });
 
 //update video
-app.put('/api/videos/:_id', function(req,res){
+app.put('/api/videos/:_id', function (req, res) {
     var id = req.params._id;
     var videoAdded = req.body;
-    Video.updateVideo(id,videoAdded,{}, function(err,video){
-        if(err){
+    Video.updateVideo(id, videoAdded, {}, function (err, video) {
+        if (err) {
             throw err;
         }
         res.json(video);
@@ -108,9 +108,9 @@ app.put('/api/videos/:_id', function(req,res){
 });
 
 //get video by id
-app.get('/api/videos/:_id',function(req,res){
-    Video.getVideoByID(req.params._id,function(err,video){
-        if(err){
+app.get('/api/videos/:_id', function (req, res) {
+    Video.getVideoByID(req.params._id, function (err, video) {
+        if (err) {
             throw err;
         }
         res.json(video);
@@ -118,10 +118,10 @@ app.get('/api/videos/:_id',function(req,res){
 });
 
 //delete video
-app.delete('/api/videos/:_id', function(req,res){
+app.delete('/api/videos/:_id', function (req, res) {
     var id = req.params._id;
-    Video.deleteVideo(id, function(err,video){
-        if(err){
+    Video.deleteVideo(id, function (err, video) {
+        if (err) {
             throw err;
         }
         res.json(video);
@@ -147,6 +147,16 @@ app.delete('/api/videos/:_id', function(req,res){
 //         res.json(video);
 //     },3)
 // });
+
+//test get last 2 news records
+app.get('/api/users', function (req, res) {
+    News.getLastTwo(function (err, news) {
+        if (err) {
+            throw err;
+        }
+        res.json(news);
+    }, 3)
+});
 
 //start application
 app.listen(3000);

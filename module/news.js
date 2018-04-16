@@ -2,59 +2,69 @@ var mongoose = require('mongoose');
 
 //news module 
 var newsSchrma = mongoose.Schema({
-    title:{
-        type:String,
+    author: {
+        type: String,
         require: true
     },
-    time:{
-        type:String,
+    title: {
+        type: String,
         require: true
     },
-    image:{
-        type:String,
+    description: {
+        type: String,
         require: true
     },
-    detilel:{
-        type:String,
-        require:true
+    imageURL: {
+        type: String,
+        require: true
+    },
+    detail: {
+        type: String,
+        require: true
+    },
+    publishedTime: {
+        type: Date,
+        default: Date.now
     }
 });
 
-var News = module.exports = mongoose.model('News',newsSchrma);
+var News = module.exports = mongoose.model('News', newsSchrma);
 
 // get news list
-module.exports.getNewsList = function(callback,limit){
+module.exports.getNewsList = function (callback, limit) {
     News.find(callback).limit(limit);
 };
 
 //get news by id
-module.exports.getNewsByID = function(id,callback){
-    News.findById(id,callback);
+module.exports.getNewsByID = function (id, callback) {
+    News.findById(id, callback);
 };
 
 //add news
-module.exports.addNews = function(newsAdded, callback){
-    News.create(newsAdded,callback);
+module.exports.addNews = function (newsAdded, callback) {
+    News.create(newsAdded, callback);
 };
 
 // update news
-module.exports.updateNews = function(id,news,option, callback){
-    var query = {_id:id};
+module.exports.updateNews = function (id, news, option, callback) {
+    var query = {_id: id};
     var update = {
-        title:news.title,
-        detilel:news.detilel,
-        image:news.image
+        author: news.author,
+        title: news.title,
+        description: news.description,
+        imageURL: news.imageURL,
+        detail: news.detail
     };
-    News.findOneAndUpdate(query,update,option,callback);
+    News.findOneAndUpdate(query, update, option, callback);
 };
 
 //test API get last two
-// module.exports.getLastTwo = function(callback,limit){
-//     News.find(callback).sort({_id:-1}).limit(limit);
-// };
+module.exports.getLastTwo = function (callback, limit) {
+    News.find(callback).sort({_id: -1}).limit(limit);
+};
 
 // delete news
-module.exports.deleteNews = function(id, callback){
-    var query = {_id:id};
-    News.remove(query,callback);
+module.exports.deleteNews = function (id, callback) {
+    var query = {_id: id};
+    News.remove(query, callback);
 };
