@@ -11,7 +11,7 @@ var News = require('./module/news.js');
 var Video = require('./module/video.js');
 
 
-//connecte to database
+//connect to database
 mongoose.connect('mongodb://localhost/news');
 var db = mongoose.connection;
 
@@ -28,7 +28,7 @@ app.get('/api/news',function(req,res){
         }
         res.json(newsList);
     })
-})
+});
 
 //get news by ID
 app.get('/api/news/:_id',function(req,res){
@@ -38,7 +38,7 @@ app.get('/api/news/:_id',function(req,res){
         }
         res.json(news);
     })
-})
+});
 
 //add news
 app.post('/api/news', function(req,res){
@@ -49,7 +49,7 @@ app.post('/api/news', function(req,res){
         }
         res.json(news);
     })
-})
+});
 
 //update news
 app.put('/api/news/:_id', function(req,res){
@@ -61,7 +61,7 @@ app.put('/api/news/:_id', function(req,res){
         }
         res.json(news);
     })
-})
+});
 
 //delete news
 app.delete('/api/news/:_id', function(req,res){
@@ -72,7 +72,7 @@ app.delete('/api/news/:_id', function(req,res){
         }
         res.json(news);
     })
-})
+});
 
 //get video List
 app.get('/api/videos',function(req,res){
@@ -82,7 +82,7 @@ app.get('/api/videos',function(req,res){
         }
         res.json(video);
     })
-})
+});
 
 // add video
 app.post('/api/videos', function(req,res){
@@ -93,7 +93,7 @@ app.post('/api/videos', function(req,res){
         }
         res.json(video);
     })
-})
+});
 
 //update video
 app.put('/api/videos/:_id', function(req,res){
@@ -105,7 +105,7 @@ app.put('/api/videos/:_id', function(req,res){
         }
         res.json(video);
     })
-})
+});
 
 //get video by id
 app.get('/api/videos/:_id',function(req,res){
@@ -115,7 +115,7 @@ app.get('/api/videos/:_id',function(req,res){
         }
         res.json(video);
     })
-})
+});
 
 //delete video
 app.delete('/api/videos/:_id', function(req,res){
@@ -126,7 +126,7 @@ app.delete('/api/videos/:_id', function(req,res){
         }
         res.json(video);
     })
-})
+});
 
 
 //start application
