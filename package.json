@@ -1,0 +1,16 @@
+{
+  "name": "apitest",
+  "version": "1.0.0",
+  "description": "sample api test using node js",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "*",
+    "body-parser": "*",
+    "mongoose": "*"
+  },
+  "author": "Tony Zheng",
+  "license": "ISC"
+}
