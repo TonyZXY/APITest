@@ -22,6 +22,10 @@ var newsSchrma = mongoose.Schema({
         type: String,
         require: true
     },
+    newsTag: {
+        type: String,
+        require: true
+    },
     publishedTime: {
         type: Date,
         default: Date.now

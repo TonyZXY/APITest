@@ -22,6 +22,10 @@ var videoSchrma = mongoose.Schema({
         type: String,
         require: true
     },
+    videoTag: {
+        type: String,
+        require: true
+    },
     publishedTime: {
         type: Date,
         default: Date.now
