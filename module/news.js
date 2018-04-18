@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 //news module 
-var newsSchrma = mongoose.Schema({
+var newsSchema = mongoose.Schema({
     author: {
         type: String,
         require: true
@@ -22,9 +22,13 @@ var newsSchrma = mongoose.Schema({
         type: String,
         require: true
     },
-    newsTag: {
+    localeTag: {
         type: String,
         require: true
+    },
+    contentTag:{
+        type:String,
+        require:true
     },
     publishedTime: {
         type: Date,
@@ -32,7 +36,7 @@ var newsSchrma = mongoose.Schema({
     }
 });
 
-var News = module.exports = mongoose.model('News', newsSchrma);
+var News = module.exports = mongoose.model('News', newsSchema);
 
 // get news list
 module.exports.getNewsList = function (callback, limit) {
@@ -57,7 +61,9 @@ module.exports.updateNews = function (id, news, option, callback) {
         title: news.title,
         description: news.description,
         imageURL: news.imageURL,
-        detail: news.detail
+        detail: news.detail,
+        localeTag:news.localeTag,
+        contentTag:news.contentTag
     };
     News.findOneAndUpdate(query, update, option, callback);
 };
@@ -67,8 +73,16 @@ module.exports.getLastTwo = function (callback, limit) {
     News.find(callback).sort({_id: -1}).limit(limit);
 };
 
+
 // delete news
 module.exports.deleteNews = function (id, callback) {
     var query = {_id: id};
     News.remove(query, callback);
+};
+
+/**
+ *  This is the Area that for testing code
+ */
+module.exports.findNewsByTag = function (localeTag, contentTag, callback, limit) {
+    News.find({localeTag:localeTag,contentTag:contentTag},callback).limit(limit);
 };
