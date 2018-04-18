@@ -7,9 +7,10 @@ app.use(bodyParser.json());
 
 
 //import news and video module
-var News = require('./module/news.js');
-var Video = require('./module/video.js');
-var NewsFlash = require('./module/NewsFlash');
+var News = require('./module/News.js');
+var Video = require('./module/Video.js');
+var NewsFlash = require('./module/NewsFlash.js');
+var Genuine = require('./module/Genuine.js');
 
 
 //connect to database
