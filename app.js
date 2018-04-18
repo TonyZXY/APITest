@@ -313,14 +313,14 @@ console.log('Running on port 3000');
 // });
 
 //test get last 2 news records
-app.get('/api/users', function (req, res) {
-    var tag = "原创";
-    News.findNewsByTag(/原创/i,function (err, news) {
-        if (err) {
-            throw err;
-        }
-        res.json(news);
-    },1)
-});
+// app.get('/api/users', function (req, res) {
+//     var tag = "原创";
+//     News.findNewsByTag(tag,function (err, news) {
+//         if (err) {
+//             throw err;
+//         }
+//         res.json(news);
+//     },1)
+// });
 
 /* TESTING PART END */
