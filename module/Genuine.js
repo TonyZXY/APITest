@@ -70,6 +70,11 @@ module.exports.deleteGenuine = function (id, callback) {
     Genuine.remove(query,callback);
 };
 
+// get Genuine by Tag
+module.exports.getGenuineByTag = function (geuninetag,callback,limit) {
+    Genuine.find({genuineTag:geuninetag},callback,limit);
+};
+
 
 /**
  *  Please place your Test code here

@@ -218,6 +218,73 @@ app.delete('/api/flash/:_id', function (req,res) {
 
 /* NEWSFLASH PART END */
 
+
+/**
+ * This part is for Update Genuine News in Database
+ *
+ * - get
+ * - getByID
+ * - add
+ * - update
+ * - delete
+ */
+//get Genuine List
+app.get('/api/genuine',function (req,res) {
+    Genuine.getGenuineList(function(err,genuine){
+        if(err){
+            throw err;
+        }
+        res.json(genuine);
+    })
+});
+
+//get Genuine By ID
+app.get('/api/genuine/:_id',function (req,res) {
+    Genuine.getGenuineByID(req.params._id,function (err,genuine) {
+        if(err){
+            throw err;
+        }
+        res.json(genuine);
+    })
+});
+
+// add genuine news
+app.post('/api/genuine',function(req,res){
+    var genuineAdd = req.body;
+    Genuine.addGenuine(genuineAdd,function (err,genuine) {
+        if(err){
+            throw err;
+        }
+        res.json(genuine);
+    })
+});
+
+//Update genuine
+app.post('/api/genuine/:_id',function (req,res){
+    var id = req.params._id;
+    var genuineAdd = req.body;
+    Genuine.updateGenuine(id,genuineAdd,{},function (err, genuine) {
+        if(err){
+            throw err;
+        }
+        res.json(genuine);
+    })
+});
+
+//delete genuine
+app.delete('/api/genuine/:_id',function (req,res) {
+    var id = req.params._id;
+    Genuine.deleteGenuine(id,function (err,genuine) {
+        if(err){
+            throw err;
+        }
+        res.json(genuine);
+    })
+});
+
+/* GENUINE PART ENDS */
+
+
 //start application
 app.listen(3000);
 console.log('Running on port 3000');
