@@ -9,6 +9,7 @@ app.use(bodyParser.json());
 //import news and video module
 var News = require('./module/news.js');
 var Video = require('./module/video.js');
+var NewsFlash = require('./module/NewsFlash');
 
 
 //connect to database
@@ -156,6 +157,61 @@ app.get('/api/users', function (req, res) {
         }
         res.json(news);
     }, 3)
+});
+
+
+//get NewsFlash List
+app.get('/api/flash', function (req,res) {
+    NewsFlash.getFlashList(function (err,newsFlash) {
+        if(err){
+            throw err;
+        }
+        res.json(newsFlash);
+    })
+});
+
+//get newsFlash by ID
+app.get('/api/flash/:_id',function (req,res) {
+    NewsFlash.getFlashByID(req.params._id,function (err,newsFlash) {
+        if(err){
+            throw err;
+        }
+        res.json(newsFlash);
+    })
+});
+
+//add News Flash
+app.post('/api/flash',function (req,res) {
+    var flashAdded = req.body;
+    NewsFlash.addFlashNews(flashAdded,function (err,flashAdded) {
+        if(err){
+            throw err;
+        }
+        res.json(flashAdded);
+    })
+});
+
+//delete News Flash
+app.delete('/api/flash/:_id', function (req,res) {
+    var id = req.params._id;
+    NewsFlash.deleteFlash(id,function (err,newsFlash) {
+        if(err){
+            throw err;
+        }
+        res.json(newsFlash);
+    })
+});
+
+//update News Flash
+app.put('/api/flash/:_id',function (req,res) {
+    var id = req.params._id;
+    var flashAdded = req.body;
+    NewsFlash.updateFlashNews(id,flashAdded,{},function (err,flash) {
+        if(err){
+            throw err;
+        }
+        res.json(flash);
+    })
 });
 
 //start application
