@@ -21,6 +21,15 @@ app.get('/', function (req, res) {
     res.send('helloworld');
 });
 
+/**
+ * This part is for Update News in Database
+ *
+ * - get
+ * - getByID
+ * - add
+ * - update
+ * - delete
+ */
 //get news list (all news)
 app.get('/api/news', function (req, res) {
     News.getNewsList(function (err, newsList) {
@@ -75,9 +84,31 @@ app.delete('/api/news/:_id', function (req, res) {
     })
 });
 
+/*  NEWS PART END  */
+
+
+/**
+ * This part is for Update Video in Database
+ *
+ * - get
+ * - getByID
+ * - add
+ * - update
+ * - delete
+ */
 //get video List
 app.get('/api/videos', function (req, res) {
     Video.getVideos(function (err, video) {
+        if (err) {
+            throw err;
+        }
+        res.json(video);
+    })
+});
+
+//get video by id
+app.get('/api/videos/:_id', function (req, res) {
+    Video.getVideoByID(req.params._id, function (err, video) {
         if (err) {
             throw err;
         }
@@ -108,16 +139,6 @@ app.put('/api/videos/:_id', function (req, res) {
     })
 });
 
-//get video by id
-app.get('/api/videos/:_id', function (req, res) {
-    Video.getVideoByID(req.params._id, function (err, video) {
-        if (err) {
-            throw err;
-        }
-        res.json(video);
-    })
-});
-
 //delete video
 app.delete('/api/videos/:_id', function (req, res) {
     var id = req.params._id;
@@ -129,37 +150,17 @@ app.delete('/api/videos/:_id', function (req, res) {
     })
 });
 
-//test API
-// app.get('/api/users',function (req,res) {
-//     var name = req.query.name;
-//     var user_id = req.query.id;
-//
-//     console.log(name +" "+user_id);
-//
-//     res.end();
-// });
+/* VIDEO PART END*/
 
-//test get last 2 records
-// app.get('/api/users', function (req,res) {
-//     News.getLastTwo(function(err,video){
-//         if(err){
-//             throw err;
-//         }
-//         res.json(video);
-//     },3)
-// });
-
-//test get last 2 news records
-app.get('/api/users', function (req, res) {
-    News.getLastTwo(function (err, news) {
-        if (err) {
-            throw err;
-        }
-        res.json(news);
-    }, 3)
-});
-
-
+/**
+ * This part is for Update NewsFlash in Database
+ *
+ * - get
+ * - getByID
+ * - add
+ * - update
+ * - delete
+ */
 //get NewsFlash List
 app.get('/api/flash', function (req,res) {
     NewsFlash.getFlashList(function (err,newsFlash) {
@@ -191,17 +192,6 @@ app.post('/api/flash',function (req,res) {
     })
 });
 
-//delete News Flash
-app.delete('/api/flash/:_id', function (req,res) {
-    var id = req.params._id;
-    NewsFlash.deleteFlash(id,function (err,newsFlash) {
-        if(err){
-            throw err;
-        }
-        res.json(newsFlash);
-    })
-});
-
 //update News Flash
 app.put('/api/flash/:_id',function (req,res) {
     var id = req.params._id;
@@ -214,7 +204,54 @@ app.put('/api/flash/:_id',function (req,res) {
     })
 });
 
+//delete News Flash
+app.delete('/api/flash/:_id', function (req,res) {
+    var id = req.params._id;
+    NewsFlash.deleteFlash(id,function (err,newsFlash) {
+        if(err){
+            throw err;
+        }
+        res.json(newsFlash);
+    })
+});
+
+/* NEWSFLASH PART END */
+
 //start application
 app.listen(3000);
 console.log('Running on port 3000');
 
+/**
+ * Please Write Testing Code here
+ */
+//test API
+// app.get('/api/users',function (req,res) {
+//     var name = req.query.name;
+//     var user_id = req.query.id;
+//
+//     console.log(name +" "+user_id);
+//
+//     res.end();
+// });
+
+//test get last 2 records
+// app.get('/api/users', function (req,res) {
+//     News.getLastTwo(function(err,video){
+//         if(err){
+//             throw err;
+//         }
+//         res.json(video);
+//     },3)
+// });
+
+//test get last 2 news records
+app.get('/api/users', function (req, res) {
+    News.getLastTwo(function (err, news) {
+        if (err) {
+            throw err;
+        }
+        res.json(news);
+    }, 3)
+});
+
+/* TESTING PART END */
