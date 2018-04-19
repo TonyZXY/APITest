@@ -1,0 +1,159 @@
+API Usage Doc
+
+1 GET       /api/news
+        get all news list
+        Return Json
+
+2 GET       /api/news/:_id
+        get news By ID
+        example localhost:3000/api/news/5ad7ebb672f81183d57fdc19
+
+3 POST      /api/news
+        Add new news into database
+        News content in body Json format
+        author: {
+                type: String,
+                require: true
+            },
+            title: {
+                type: String,
+                require: true
+            },
+            description: {
+                type: String,
+                require: true
+            },
+            imageURL: {
+                type: String,
+                require: true
+            },
+            detail: {
+                type: String,
+                require: true
+            },
+            localeTag: {
+                type: String,
+                require: true
+            },
+            contentTag:{
+                type:String,
+                require:true
+            }
+
+4 POST      /api/news/:_id
+        Update news content
+        News content in body in JSON format
+        author: {
+                type: String,
+                require: true
+            },
+            title: {
+                type: String,
+                require: true
+            },
+            description: {
+                type: String,
+                require: true
+            },
+            imageURL: {
+                type: String,
+                require: true
+            },
+            detail: {
+                type: String,
+                require: true
+            },
+            localeTag: {
+                type: String,
+                require: true
+            },
+            contentTag:{
+                type:String,
+                require:true
+            }
+
+5 DELETE    /api/news/:_id
+        Delete selected id of news
+        example:      localhost:3000/api/news/5ad7ebb672f81183d57fdc19
+
+6 GET       /api/getnews?localeTag={localeTag}&contentTag={contentTag}&limit={limitation}
+        Get category of news
+        example:        localhost:3000/api/getnews?localeTag=国际&contentTag=原创&limit=3
+        limit: limitation of numbers of news wants to get
+
+7 First 5 APIs same with PATH   /api/flash      (NewsFlash)
+                                different in
+                                module
+                                shortMassage:{
+                                        type:String,
+                                        require: true
+                                    }
+
+                                /api/genuine    (GenuineArticle)
+
+                                author:{
+                                        type: String,
+                                        require:true
+                                    },
+                                    title:{
+                                        type:String,
+                                        require:true
+                                    },
+                                    description:{
+                                        type:String,
+                                        require:true
+                                    },
+                                    imageURL:{
+                                        type:String,
+                                        require:true
+                                    },
+                                    detail:{
+                                        type:String,
+                                        require:true
+                                    },
+                                    genuineTag:{
+                                        type:String,
+                                        require:true
+                                    }
+
+                                /api/video      (Videos)
+
+                                author: {
+                                        type: String,
+                                        require: true
+                                    },
+                                    title: {
+                                        type: String,
+                                        require: true
+                                    },
+                                    description: {
+                                        type: String,
+                                        require: true
+                                    },
+                                    url: {
+                                        type: String,
+                                        require: true
+                                    },
+                                    imageURL: {
+                                        type: String,
+                                        require: true
+                                    },
+                                    localeTag: {
+                                        type: String,
+                                        require: true
+                                    },
+                                    typeTag:{
+                                        type:String,
+                                        require:true
+                                    }
+
+8 GET       /api/getvideo?localeTag={localeTag}&typeTag={typeTag}&limit={limit}
+            Get category of Video
+            example localhost:3000/api/getvideo?localTag=国内&type=原创&limit=3
+            limit : limitation of numbers of video want to get
+
+
+9 GET       /api/getgenuine?genuineTag={genuineTag}&limit={limit}
+            get category of Genuine
+            example localhost:3000/api/getgenuine?genuineTag=百科&limit=3
+

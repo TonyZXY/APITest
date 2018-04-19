@@ -80,9 +80,12 @@ module.exports.deleteNews = function (id, callback) {
     News.remove(query, callback);
 };
 
+// get News by category and limitation of number
+module.exports.findNewsByTag = function (locaTag, contTag, callback, limit) {
+    News.find({localeTag:locaTag,contentTag:contTag},callback).sort({_id:-1}).limit(limit);
+};
+
 /**
  *  This is the Area that for testing code
  */
-module.exports.findNewsByTag = function (localeTag, contentTag, callback, limit) {
-    News.find({localeTag:localeTag,contentTag:contentTag},callback).limit(limit);
-};
+

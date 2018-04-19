@@ -30,6 +30,7 @@ app.get('/', function (req, res) {
  * - add
  * - update
  * - delete
+ * - get By category
  */
 //get news list (all news)
 app.get('/api/news', function (req, res) {
@@ -85,6 +86,19 @@ app.delete('/api/news/:_id', function (req, res) {
     })
 });
 
+//get news by category
+app.get("/api/getnews",function (req,res) {
+    var loTag = req.query.localeTag;
+    var typeTag = req.query.contentTag;
+    var limit = req.query.limit;
+    News.findNewsByTag(loTag,typeTag,function (err,news) {
+        if(err){
+            throw err;
+        }
+        res.json(news);
+    },parseInt(limit))
+});
+
 /*  NEWS PART END  */
 
 
@@ -96,6 +110,7 @@ app.delete('/api/news/:_id', function (req, res) {
  * - add
  * - update
  * - delete
+ * - Get Video By category
  */
 //get video List
 app.get('/api/videos', function (req, res) {
@@ -149,6 +164,19 @@ app.delete('/api/videos/:_id', function (req, res) {
         }
         res.json(video);
     })
+});
+
+//get video By category
+app.get("/api/getvideo",function (req,res) {
+    var loTag = req.query.localeTag;
+    var tyTag = req.query.typeTag;
+    var limit = req.query.limit;
+    Video.findVideoByTag(loTag,tyTag,function (err,video) {
+        if(err){
+            throw err;
+        }
+        res.json(video);
+    },parseInt(limit))
 });
 
 /* VIDEO PART END*/
@@ -227,6 +255,7 @@ app.delete('/api/flash/:_id', function (req,res) {
  * - add
  * - update
  * - delete
+ * - get genuine news by category
  */
 //get Genuine List
 app.get('/api/genuine',function (req,res) {
@@ -282,6 +311,18 @@ app.delete('/api/genuine/:_id',function (req,res) {
     })
 });
 
+//get genuine news by Category
+app.get("/api/getgenuine",function (req,res) {
+    var geTag = req.query.genuineTag;
+    var limit = req.query.limit;
+    Genuine.findGenuineByTag(geTag,function (err,genuine) {
+        if(err){
+            throw err;
+        }
+        res.json(genuine);
+    },parseInt(limit))
+});
+
 /* GENUINE PART ENDS */
 
 
@@ -322,5 +363,28 @@ console.log('Running on port 3000');
 //         res.json(news);
 //     },1)
 // });
+
+// app.get("/api/getnews",function (req,res) {
+//     var loTag = req.query.localeTag;
+//     var typeTag = req.query.contentTag;
+//     var limit = req.query.limit;
+//     News.findNewsByTag(loTag,typeTag,function (err,news) {
+//         if(err){
+//             throw err;
+//         }
+//         res.json(news);
+//     },parseInt(limit))
+// });
+
+app.get("/api/users",function (req,res) {
+    var geTag = req.query.genuineTag;
+    var limit = req.query.limit;
+    Genuine.findGenuineByTag(geTag,function (err,genuine) {
+        if(err){
+            throw err;
+        }
+        res.json(genuine);
+    },parseInt(limit))
+});
 
 /* TESTING PART END */

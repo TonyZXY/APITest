@@ -71,8 +71,8 @@ module.exports.deleteGenuine = function (id, callback) {
 };
 
 // get Genuine by Tag
-module.exports.getGenuineByTag = function (geuninetag,callback,limit) {
-    Genuine.find({genuineTag:geuninetag},callback,limit);
+module.exports.findGenuineByTag = function (geuninetag,callback,limit) {
+    Genuine.find({genuineTag:geuninetag},callback).sort({_id:-1}).limit(limit);
 };
 
 
