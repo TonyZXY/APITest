@@ -22,6 +22,21 @@ app.get('/', function (req, res) {
     res.send('helloworld');
 });
 
+//start application
+app.listen(3000);
+console.log('Running on port 3000');
+
+
+
+
+
+
+
+
+
+
+
+/*----------------------------------------------------------------------------*/
 /**
  * This part is for Update News in Database
  *
@@ -100,8 +115,19 @@ app.get("/api/getnews",function (req,res) {
 });
 
 /*  NEWS PART END  */
+/*----------------------------------------------------------------------------*/
 
 
+
+
+
+
+
+
+
+
+
+/*----------------------------------------------------------------------------*/
 /**
  * This part is for Update Video in Database
  *
@@ -180,7 +206,25 @@ app.get("/api/getvideo",function (req,res) {
 });
 
 /* VIDEO PART END*/
+/*----------------------------------------------------------------------------*/
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*----------------------------------------------------------------------------*/
 /**
  * This part is for Update NewsFlash in Database
  *
@@ -245,8 +289,24 @@ app.delete('/api/flash/:_id', function (req,res) {
 });
 
 /* NEWSFLASH PART END */
+/*----------------------------------------------------------------------------*/
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*----------------------------------------------------------------------------*/
 /**
  * This part is for Update Genuine News in Database
  *
@@ -324,12 +384,37 @@ app.get("/api/getgenuine",function (req,res) {
 });
 
 /* GENUINE PART ENDS */
+/*----------------------------------------------------------------------------*/
 
 
-//start application
-app.listen(3000);
-console.log('Running on port 3000');
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*----------------------------------------------------------------------------*/
 /**
  * Please Write Testing Code here
  */
