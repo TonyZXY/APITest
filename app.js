@@ -15,11 +15,11 @@ var Genuine = require('./module/Genuine.js');
 
 //connect to database
 var options = {
-    user:'bglappdev100',
-    pass:"appdevgkV6="
+    user: 'bglappdev100',
+    pass: "appdevgkV6="
 };
 
-mongoose.connect('mongodb://10.10.6.111:27017/BGLNewsAppbkend',options);
+mongoose.connect('mongodb://10.10.6.111:27017/BGLNewsAppbkend', options);
 // mongoose.connect('mongodb://localhost/news');
 var db = mongoose.connection;
 
@@ -31,15 +31,6 @@ app.get('/', function (req, res) {
 //start application
 app.listen(3000);
 console.log('Running on port 3000');
-
-
-
-
-
-
-
-
-
 
 
 /*----------------------------------------------------------------------------*/
@@ -108,51 +99,42 @@ app.delete('/api/news/:_id', function (req, res) {
 });
 
 //get news by category
-app.get("/api/getNews",function (req,res) {
+app.get("/api/getNews", function (req, res) {
     var loTag = req.query.localeTag;
     var typeTag = req.query.contentTag;
     var limit = req.query.limit;
-    News.findNewsByTag(loTag,typeTag,function (err,news) {
-        if(err){
+    News.findNewsByTag(loTag, typeTag, function (err, news) {
+        if (err) {
             throw err;
         }
         res.json(news);
-    },parseInt(limit))
+    }, parseInt(limit))
 });
 
-app.get("/api/getNewsLocaleOnly",function (req,res) {
+app.get("/api/getNewsLocaleOnly", function (req, res) {
     var loTag = req.query.localeTag;
     var limit = req.query.limit;
-    News.findNewsByLocal(loTag,function (err,news) {
-        if(err){
+    News.findNewsByLocal(loTag, function (err, news) {
+        if (err) {
             throw err;
         }
         res.json(news);
-    },parseInt(limit))
+    }, parseInt(limit))
 });
 
-app.get("/api/getNewsContentOnly",function (req,res) {
+app.get("/api/getNewsContentOnly", function (req, res) {
     var typeTag = req.query.contentTag;
     var limit = req.query.limit;
-    News.findNewsByContent(typeTag,function (err,news) {
-        if(err){
+    News.findNewsByContent(typeTag, function (err, news) {
+        if (err) {
             throw err;
         }
         res.json(news);
-    },parseInt(limit))
+    }, parseInt(limit))
 });
 
 /*  NEWS PART END  */
 /*----------------------------------------------------------------------------*/
-
-
-
-
-
-
-
-
-
 
 
 /*----------------------------------------------------------------------------*/
@@ -221,56 +203,41 @@ app.delete('/api/videos/:_id', function (req, res) {
 });
 
 //get video By category
-app.get("/api/getVideo",function (req,res) {
+app.get("/api/getVideo", function (req, res) {
     var loTag = req.query.localeTag;
     var tyTag = req.query.typeTag;
     var limit = req.query.limit;
-    Video.findVideoByTag(loTag,tyTag,function (err,video) {
-        if(err){
+    Video.findVideoByTag(loTag, tyTag, function (err, video) {
+        if (err) {
             throw err;
         }
         res.json(video);
-    },parseInt(limit))
+    }, parseInt(limit))
 });
 
-app.get("/api/getVideoLocalOnly",function (req,res) {
+app.get("/api/getVideoLocalOnly", function (req, res) {
     var loTag = req.query.localeTag;
     var limit = req.query.limit;
-    Video.findVideoByLocale(loTag,function (err,video) {
-        if(err){
+    Video.findVideoByLocale(loTag, function (err, video) {
+        if (err) {
             throw err;
         }
         res.json(video);
-    },parseInt(limit))
+    }, parseInt(limit))
 });
 
-app.get("/api/getVideoTypeOnly",function (req,res) {
+app.get("/api/getVideoTypeOnly", function (req, res) {
     var tyTag = req.query.typeTag;
     var limit = req.query.limit;
-    Video.findVideoByType(tyTag,function (err,video) {
-        if(err){
+    Video.findVideoByType(tyTag, function (err, video) {
+        if (err) {
             throw err;
         }
         res.json(video);
-    },parseInt(limit))
+    }, parseInt(limit))
 });
 /* VIDEO PART END*/
 /*----------------------------------------------------------------------------*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /*----------------------------------------------------------------------------*/
@@ -284,9 +251,9 @@ app.get("/api/getVideoTypeOnly",function (req,res) {
  * - delete
  */
 //get NewsFlash List
-app.get('/api/flash', function (req,res) {
-    NewsFlash.getFlashList(function (err,newsFlash) {
-        if(err){
+app.get('/api/flash', function (req, res) {
+    NewsFlash.getFlashList(function (err, newsFlash) {
+        if (err) {
             throw err;
         }
         res.json(newsFlash);
@@ -294,9 +261,9 @@ app.get('/api/flash', function (req,res) {
 });
 
 //get newsFlash by ID
-app.get('/api/flash/:_id',function (req,res) {
-    NewsFlash.getFlashByID(req.params._id,function (err,newsFlash) {
-        if(err){
+app.get('/api/flash/:_id', function (req, res) {
+    NewsFlash.getFlashByID(req.params._id, function (err, newsFlash) {
+        if (err) {
             throw err;
         }
         res.json(newsFlash);
@@ -304,10 +271,10 @@ app.get('/api/flash/:_id',function (req,res) {
 });
 
 //add News Flash
-app.post('/api/flash',function (req,res) {
+app.post('/api/flash', function (req, res) {
     var flashAdded = req.body;
-    NewsFlash.addFlashNews(flashAdded,function (err,flashAdded) {
-        if(err){
+    NewsFlash.addFlashNews(flashAdded, function (err, flashAdded) {
+        if (err) {
             throw err;
         }
         res.json(flashAdded);
@@ -315,11 +282,11 @@ app.post('/api/flash',function (req,res) {
 });
 
 //update News Flash
-app.put('/api/flash/:_id',function (req,res) {
+app.put('/api/flash/:_id', function (req, res) {
     var id = req.params._id;
     var flashAdded = req.body;
-    NewsFlash.updateFlashNews(id,flashAdded,{},function (err,flash) {
-        if(err){
+    NewsFlash.updateFlashNews(id, flashAdded, {}, function (err, flash) {
+        if (err) {
             throw err;
         }
         res.json(flash);
@@ -327,10 +294,10 @@ app.put('/api/flash/:_id',function (req,res) {
 });
 
 //delete News Flash
-app.delete('/api/flash/:_id', function (req,res) {
+app.delete('/api/flash/:_id', function (req, res) {
     var id = req.params._id;
-    NewsFlash.deleteFlash(id,function (err,newsFlash) {
-        if(err){
+    NewsFlash.deleteFlash(id, function (err, newsFlash) {
+        if (err) {
             throw err;
         }
         res.json(newsFlash);
@@ -339,20 +306,6 @@ app.delete('/api/flash/:_id', function (req,res) {
 
 /* NEWSFLASH PART END */
 /*----------------------------------------------------------------------------*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /*----------------------------------------------------------------------------*/
@@ -367,9 +320,9 @@ app.delete('/api/flash/:_id', function (req,res) {
  * - get genuine news by category
  */
 //get Genuine List
-app.get('/api/genuine',function (req,res) {
-    Genuine.getGenuineList(function(err,genuine){
-        if(err){
+app.get('/api/genuine', function (req, res) {
+    Genuine.getGenuineList(function (err, genuine) {
+        if (err) {
             throw err;
         }
         res.json(genuine);
@@ -377,9 +330,9 @@ app.get('/api/genuine',function (req,res) {
 });
 
 //get Genuine By ID
-app.get('/api/genuine/:_id',function (req,res) {
-    Genuine.getGenuineByID(req.params._id,function (err,genuine) {
-        if(err){
+app.get('/api/genuine/:_id', function (req, res) {
+    Genuine.getGenuineByID(req.params._id, function (err, genuine) {
+        if (err) {
             throw err;
         }
         res.json(genuine);
@@ -387,10 +340,10 @@ app.get('/api/genuine/:_id',function (req,res) {
 });
 
 // add genuine news
-app.post('/api/genuine',function(req,res){
+app.post('/api/genuine', function (req, res) {
     var genuineAdd = req.body;
-    Genuine.addGenuine(genuineAdd,function (err,genuine) {
-        if(err){
+    Genuine.addGenuine(genuineAdd, function (err, genuine) {
+        if (err) {
             throw err;
         }
         res.json(genuine);
@@ -398,11 +351,11 @@ app.post('/api/genuine',function(req,res){
 });
 
 //Update genuine
-app.post('/api/genuine/:_id',function (req,res){
+app.post('/api/genuine/:_id', function (req, res) {
     var id = req.params._id;
     var genuineAdd = req.body;
-    Genuine.updateGenuine(id,genuineAdd,{},function (err, genuine) {
-        if(err){
+    Genuine.updateGenuine(id, genuineAdd, {}, function (err, genuine) {
+        if (err) {
             throw err;
         }
         res.json(genuine);
@@ -410,10 +363,10 @@ app.post('/api/genuine/:_id',function (req,res){
 });
 
 //delete genuine
-app.delete('/api/genuine/:_id',function (req,res) {
+app.delete('/api/genuine/:_id', function (req, res) {
     var id = req.params._id;
-    Genuine.deleteGenuine(id,function (err,genuine) {
-        if(err){
+    Genuine.deleteGenuine(id, function (err, genuine) {
+        if (err) {
             throw err;
         }
         res.json(genuine);
@@ -421,46 +374,19 @@ app.delete('/api/genuine/:_id',function (req,res) {
 });
 
 //get genuine news by Category
-app.get("/api/getgenuine",function (req,res) {
+app.get("/api/getgenuine", function (req, res) {
     var geTag = req.query.genuineTag;
     var limit = req.query.limit;
-    Genuine.findGenuineByTag(geTag,function (err,genuine) {
-        if(err){
+    Genuine.findGenuineByTag(geTag, function (err, genuine) {
+        if (err) {
             throw err;
         }
         res.json(genuine);
-    },parseInt(limit))
+    }, parseInt(limit))
 });
 
 /* GENUINE PART ENDS */
 /*----------------------------------------------------------------------------*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /*----------------------------------------------------------------------------*/
@@ -510,15 +436,15 @@ app.get("/api/getgenuine",function (req,res) {
 //     },parseInt(limit))
 // });
 
-app.get("/api/users",function (req,res) {
+app.get("/api/users", function (req, res) {
     var geTag = req.query.genuineTag;
     var limit = req.query.limit;
-    Genuine.findGenuineByTag(geTag,function (err,genuine) {
-        if(err){
+    Genuine.findGenuineByTag(geTag, function (err, genuine) {
+        if (err) {
             throw err;
         }
         res.json(genuine);
-    },parseInt(limit))
+    }, parseInt(limit))
 });
 
 /* TESTING PART END */

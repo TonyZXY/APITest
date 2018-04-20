@@ -26,9 +26,9 @@ var newsSchema = mongoose.Schema({
         type: String,
         require: true
     },
-    contentTag:{
-        type:String,
-        require:true
+    contentTag: {
+        type: String,
+        require: true
     },
     publishedTime: {
         type: Date,
@@ -62,8 +62,8 @@ module.exports.updateNews = function (id, news, option, callback) {
         description: news.description,
         imageURL: news.imageURL,
         detail: news.detail,
-        localeTag:news.localeTag,
-        contentTag:news.contentTag
+        localeTag: news.localeTag,
+        contentTag: news.contentTag
     };
     News.findOneAndUpdate(query, update, option, callback);
 };
@@ -82,14 +82,14 @@ module.exports.deleteNews = function (id, callback) {
 
 // get News by category and limitation of number
 module.exports.findNewsByTag = function (locaTag, contTag, callback, limit) {
-    News.find({localeTag:locaTag,contentTag:contTag},callback).sort({_id:-1}).limit(limit);
+    News.find({localeTag: locaTag, contentTag: contTag}, callback).sort({_id: -1}).limit(limit);
 };
 module.exports.findNewsByLocal = function (locaTag, callback, limit) {
-    News.find({localeTag:locaTag},callback).sort({_id:-1}).limit(limit);
+    News.find({localeTag: locaTag}, callback).sort({_id: -1}).limit(limit);
 };
 
-module.exports.findNewsByContent = function ( contTag, callback, limit) {
-    News.find({contentTag:contTag},callback).sort({_id:-1}).limit(limit);
+module.exports.findNewsByContent = function (contTag, callback, limit) {
+    News.find({contentTag: contTag}, callback).sort({_id: -1}).limit(limit);
 };
 /**
  *  This is the Area that for testing code

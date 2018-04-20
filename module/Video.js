@@ -26,9 +26,9 @@ var videoSchrma = mongoose.Schema({
         type: String,
         require: true
     },
-    typeTag:{
-        type:String,
-        require:true
+    typeTag: {
+        type: String,
+        require: true
     },
     publishedTime: {
         type: Date,
@@ -62,8 +62,8 @@ module.exports.updateVideo = function (id, video, option, callback) {
         description: video.description,
         url: video.url,
         imageURL: video.imageURL,
-        localeTag:video.localeTag,
-        typeTag:video.typeTag
+        localeTag: video.localeTag,
+        typeTag: video.typeTag
     };
     Video.findOneAndUpdate(query, update, option, callback);
 };
@@ -76,13 +76,13 @@ module.exports.deleteVideo = function (id, callback) {
 
 // Get video by Tag
 module.exports.findVideoByTag = function (localetag, typetag, callback, limit) {
-    Video.find({localeTag:localetag,typeTag:typetag},callback).sort({_id:-1}).limit(limit);
+    Video.find({localeTag: localetag, typeTag: typetag}, callback).sort({_id: -1}).limit(limit);
 };
 
 module.exports.findVideoByLocale = function (localetag, callback, limit) {
-    Video.find({localeTag:localetag},callback).sort({_id:-1}).limit(limit);
+    Video.find({localeTag: localetag}, callback).sort({_id: -1}).limit(limit);
 };
 
-module.exports.findVideoByType = function ( typetag, callback, limit) {
-    Video.find({typeTag:typetag},callback).sort({_id:-1}).limit(limit);
+module.exports.findVideoByType = function (typetag, callback, limit) {
+    Video.find({typeTag: typetag}, callback).sort({_id: -1}).limit(limit);
 };
