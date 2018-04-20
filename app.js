@@ -215,7 +215,7 @@ app.get("/api/getVideo", function (req, res) {
     }, parseInt(limit))
 });
 
-app.get("/api/getVideoLocalOnly", function (req, res) {
+app.get("/api/getVideoLocaleOnly", function (req, res) {
     var loTag = req.query.localeTag;
     var limit = req.query.limit;
     Video.findVideoByLocale(loTag, function (err, video) {
