@@ -149,7 +149,7 @@ API Usage Doc
 
 8 GET       /api/getvideo?localeTag={localeTag}&typeTag={typeTag}&limit={limit}
             Get category of Video
-            example localhost:3000/api/getvideo?localTag=国内&type=原创&limit=3
+            example localhost:3000/api/getvideo?localTag=国内&typeTag=原创&limit=3
             limit : limitation of numbers of video want to get
 
 

@@ -84,7 +84,13 @@ module.exports.deleteNews = function (id, callback) {
 module.exports.findNewsByTag = function (locaTag, contTag, callback, limit) {
     News.find({localeTag:locaTag,contentTag:contTag},callback).sort({_id:-1}).limit(limit);
 };
+module.exports.findNewsByLocal = function (locaTag, callback, limit) {
+    News.find({localeTag:locaTag},callback).sort({_id:-1}).limit(limit);
+};
 
+module.exports.findNewsByContent = function ( contTag, callback, limit) {
+    News.find({contentTag:contTag},callback).sort({_id:-1}).limit(limit);
+};
 /**
  *  This is the Area that for testing code
  */

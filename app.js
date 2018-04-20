@@ -14,7 +14,13 @@ var Genuine = require('./module/Genuine.js');
 
 
 //connect to database
-mongoose.connect('mongodb://localhost/news');
+var options = {
+    user:'bglappdev100',
+    pass:"appdevgkV6="
+};
+
+mongoose.connect('mongodb://10.10.6.111:27017/BGLNewsAppbkend',options);
+// mongoose.connect('mongodb://localhost/news');
 var db = mongoose.connection;
 
 //nothing
@@ -102,11 +108,33 @@ app.delete('/api/news/:_id', function (req, res) {
 });
 
 //get news by category
-app.get("/api/getnews",function (req,res) {
+app.get("/api/getNews",function (req,res) {
     var loTag = req.query.localeTag;
     var typeTag = req.query.contentTag;
     var limit = req.query.limit;
     News.findNewsByTag(loTag,typeTag,function (err,news) {
+        if(err){
+            throw err;
+        }
+        res.json(news);
+    },parseInt(limit))
+});
+
+app.get("/api/getNewsLocaleOnly",function (req,res) {
+    var loTag = req.query.localeTag;
+    var limit = req.query.limit;
+    News.findNewsByLocal(loTag,function (err,news) {
+        if(err){
+            throw err;
+        }
+        res.json(news);
+    },parseInt(limit))
+});
+
+app.get("/api/getNewsContentOnly",function (req,res) {
+    var typeTag = req.query.contentTag;
+    var limit = req.query.limit;
+    News.findNewsByContent(typeTag,function (err,news) {
         if(err){
             throw err;
         }
@@ -193,7 +221,7 @@ app.delete('/api/videos/:_id', function (req, res) {
 });
 
 //get video By category
-app.get("/api/getvideo",function (req,res) {
+app.get("/api/getVideo",function (req,res) {
     var loTag = req.query.localeTag;
     var tyTag = req.query.typeTag;
     var limit = req.query.limit;
@@ -205,6 +233,27 @@ app.get("/api/getvideo",function (req,res) {
     },parseInt(limit))
 });
 
+app.get("/api/getVideoLocalOnly",function (req,res) {
+    var loTag = req.query.localeTag;
+    var limit = req.query.limit;
+    Video.findVideoByLocale(loTag,function (err,video) {
+        if(err){
+            throw err;
+        }
+        res.json(video);
+    },parseInt(limit))
+});
+
+app.get("/api/getVideoTypeOnly",function (req,res) {
+    var tyTag = req.query.typeTag;
+    var limit = req.query.limit;
+    Video.findVideoByType(tyTag,function (err,video) {
+        if(err){
+            throw err;
+        }
+        res.json(video);
+    },parseInt(limit))
+});
 /* VIDEO PART END*/
 /*----------------------------------------------------------------------------*/
 
