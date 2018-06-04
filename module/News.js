@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-//news module 
+//news module
 var newsSchema = mongoose.Schema({
     author: {
         type: String,
@@ -10,7 +10,7 @@ var newsSchema = mongoose.Schema({
         type: String,
         require: true
     },
-    description: {
+    newsDescription: {
         type: String,
         require: true
     },
@@ -18,7 +18,7 @@ var newsSchema = mongoose.Schema({
         type: String,
         require: true
     },
-    detail: {
+    url: {
         type: String,
         require: true
     },
@@ -59,9 +59,9 @@ module.exports.updateNews = function (id, news, option, callback) {
     var update = {
         author: news.author,
         title: news.title,
-        description: news.description,
+        newsDescription: news.newsDescription,
         imageURL: news.imageURL,
-        detail: news.detail,
+        url: news.url,
         localeTag: news.localeTag,
         contentTag: news.contentTag
     };
@@ -84,14 +84,13 @@ module.exports.deleteNews = function (id, callback) {
 module.exports.findNewsByTag = function (locaTag, contTag, callback, limit) {
     News.find({localeTag: locaTag, contentTag: contTag}, callback).sort({_id: -1}).limit(limit);
 };
-module.exports.findNewsByLocal = function (locaTag, callback, limit) {
-    News.find({localeTag: locaTag}, callback).sort({_id: -1}).limit(limit);
+module.exports.findNewsByLocal = function (locaTag, callback, skip, limit) {
+    News.find({localeTag: locaTag}, callback).sort({_id: -1}).skip(skip).limit(limit);
 };
 
-module.exports.findNewsByContent = function (contTag, callback, limit) {
-    News.find({contentTag: contTag}, callback).sort({_id: -1}).limit(limit);
+module.exports.findNewsByContent = function (contTag, callback, skip,limit) {
+    News.find({contentTag: contTag}, callback).sort({_id: -1}).skip(skip).limit(limit);
 };
 /**
  *  This is the Area that for testing code
  */
-
