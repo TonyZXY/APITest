@@ -60,7 +60,7 @@ module.exports.updateGenuine = function (id,genuine,option,callback) {
     var update = {
         author:genuine.author,
         title:genuine.title,
-        genuineDescription:genuine.genunieDescription,
+        genuineDescription:genuine.genuineDescription,
         imageURL:genuine.imageURL,
         url:genuine.url,
         genuineTag:genuine.genuineTag,
