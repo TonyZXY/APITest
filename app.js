@@ -165,6 +165,15 @@ app.get('/api/videos', function (req, res) {
     }, parseInt(skip),parseInt(limit))
 });
 
+app.get('/api/video',(req,res)=>{
+    Video.getVideoList((err,video)=>{
+        if(err) {
+            throw err;
+        }
+        res.json(video);
+    })
+});
+
 //get video by id
 app.get('/api/videos/:_id', function (req, res) {
     Video.getVideoByID(req.params._id, function (err, video) {
