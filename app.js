@@ -278,7 +278,7 @@ app.get('/api/flash', function (req, res) {
     })
 });
 
-app.get('api/flashList', function (req, res) {
+app.get('/api/flashList', function (req, res) {
     NewsFlash.getFlash((err, newsFlash) => {
         if (err) {
             throw err;
