@@ -476,4 +476,23 @@ app.get("/api/users", function (req, res) {
     }, parseInt(limit))
 });
 
+app.get("/api/members", (req,res)=>{
+    var patten = "百科";
+    var languageTag = "CN";
+    var list="";
+    Genuine.searchGenuineDesc(languageTag,patten,(err,genuine)=>{
+        if (err) {
+            throw err;
+        }
+        list.json(genuine)
+    });
+    Genuine.searchGenuineTitle(languageTag,patten,(err,genuine)=>{
+        if (err){
+            throw err;
+        }
+        list.add(json(genuine))
+    });
+    res.json(list);
+});
+
 /* TESTING PART END */
