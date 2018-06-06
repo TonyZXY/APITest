@@ -84,7 +84,7 @@ module.exports.searchGenuineTitle = (languageTag,patten,callback,skip,limit)=>{
     Genuine.find({title:{$regex:'.*'+patten+'.*'},languageTag:languageTag},callback).sort({_id:-1}).skip(skip).limit(limit);
 };
 module.exports.searchGenuineDesc = (languageTag,patten,callback,skip,limit) => {
-    Genuine.find({genuineDescription:{ $regex: '.*' + patten + '.*'},languageTag:languageTag},callback).sort({_id:-1}.skip(skip)).limit(limit);
+    Genuine.find({genuineDescription:{ $regex: '.*' + patten + '.*'},languageTag:languageTag},callback).sort({_id:-1}).skip(skip).limit(limit);
 };
 
 
