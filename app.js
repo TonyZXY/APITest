@@ -269,7 +269,8 @@ app.get("/api/getVideoTypeOnly", function (req, res) {
  */
 //get NewsFlash List
 app.get('/api/flash', function (req, res) {
-    NewsFlash.getFlashList(function (err, newsFlash) {
+    var leTag = req.query.languageTag;
+    NewsFlash.getFlashList(leTag, function (err, newsFlash) {
         if (err) {
             throw err;
         }
