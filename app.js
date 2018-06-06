@@ -477,8 +477,8 @@ app.get("/api/users", function (req, res) {
 });
 
 app.get("/api/members", (req,res)=>{
-    var patten = "百科";
-    var languageTag = "CN";
+    var patten = req.query.patten;
+    var languageTag = req.query.languageTag;
     Genuine.searchGenuineTitle(languageTag,patten,(err,genuine)=>{
         if (err){
             throw err;
