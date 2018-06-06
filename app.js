@@ -137,6 +137,20 @@ app.get("/api/getNewsContentOnly", function (req, res) {
     }, parseInt(skip), parseInt(limit))
 });
 
+
+// search news objects
+app.get("/api/searchnews",(req,res)=>{
+    var patten = req.query.patten;
+    var languageTag = req.query.languageTag;
+    var limit = req.query.limit;
+    var skip = req.query.skip;
+    News.searchNews(languageTag,patten,(err,news)=>{
+        if(err){
+            throw err;
+        }
+        res.json(news);
+    },parseInt(skip),parseInt(limit))
+});
 /*  NEWS PART END  */
 /*----------------------------------------------------------------------------*/
 
@@ -253,6 +267,19 @@ app.get("/api/getVideoTypeOnly", function (req, res) {
     }, parseInt(limit))
 });
 
+app.get("/api/searchVideo",(req,res)=>{
+    var patten = req.query.patten;
+    var languateTag = req.query.languageTag;
+    var limit = req.query.limit;
+    var skip = req.query.skip;
+    Video.searchVideo(languateTag,patten,(err,video)=>{
+        if(err){
+            throw err;
+        }
+        res.json(video);
+    },parseInt(skip),parseInt(limit))
+});
+
 /* VIDEO PART END*/
 /*----------------------------------------------------------------------------*/
 
@@ -330,6 +357,19 @@ app.delete('/api/flash/:_id', function (req, res) {
         res.json(newsFlash);
     })
 });
+
+app.get("/api/searchFlash",(req,res)=>{
+    var patten = req.query.patten;
+    var languateTag = req.query.languageTag;
+    var limit = req.query.limit;
+    var skip = req.query.skip;
+    NewsFlash.searchFlashNews(languateTag,patten,(err,flash)=>{
+        if(err){
+            throw err;
+        }
+        res.json(flash);
+    },parseInt(skip),parseInt(limit))
+})
 
 /* NEWSFLASH PART END */
 /*----------------------------------------------------------------------------*/
@@ -414,6 +454,20 @@ app.get("/api/getgenuine", function (req, res) {
     }, parseInt(skip), parseInt(limit))
 });
 
+// search genuine objects
+app.get("/api/searchgenuine", (req,res)=>{
+    var patten = req.query.patten;
+    var languageTag = req.query.languageTag;
+    var limit = req.query.limit;
+    var skip = req.query.skip;
+    Genuine.searchGenuine(languageTag,patten,(err,genuine)=>{
+        if(err){
+            throw err;
+        }
+        res.json(genuine);
+    },parseInt(skip),parseInt(limit))
+});
+
 /* GENUINE PART ENDS */
 /*----------------------------------------------------------------------------*/
 
@@ -479,7 +533,7 @@ app.get("/api/users", function (req, res) {
 app.get("/api/members", (req,res)=>{
     var patten = req.query.patten;
     var languageTag = req.query.languageTag;
-    Genuine.searchGenuineTitle(languageTag,patten,(err,genuine)=>{
+    Genuine.searchGenuine(languageTag,patten,(err,genuine)=>{
         if (err){
             throw err;
         }

@@ -96,6 +96,10 @@ module.exports.findNewsByLocal = function (locaTag,leTag, callback, skip, limit)
 module.exports.findNewsByContent = function (contTag,leTag, callback, skip,limit) {
     News.find({contentTag: contTag,languageTag:leTag}, callback).sort({_id: -1}).skip(skip).limit(limit);
 };
+
+module.exports.searchNews = (languageTag,patten,callback,skip,limit)=>{
+    News.find({$or:[{title:{$regex:'.*'+patten+'.*'}},{newsDescription:{$regex:'.*'+patten+'.*'}}],languageTag:languageTag},callback).sort({_id:-1}).skip(skip).limit(limit);
+};
 /**
  *  This is the Area that for testing code
  */

@@ -50,6 +50,10 @@ module.exports.updateFlashNews = function (id,flash,option,callback) {
     NewsFlash.findOneAndUpdate(query,update,option,callback);
 };
 
+module.exports.searchFlashNews = (languageTag,patten,callback,skip,limit)=>{
+    NewsFlash.find({shortMassage:{$regex:'.*'+patten+'.*'},languageTag:languageTag},callback).sort({_id:-1}).skip(skip).limit(limit);
+};
+
 //delete news
 module.exports.deleteFlash = function (id,callback) {
     var query = {_id:id};

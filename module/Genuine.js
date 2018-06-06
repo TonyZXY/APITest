@@ -80,11 +80,9 @@ module.exports.findGenuineByTag = function (geunineTag,languageTag,callback,skip
     Genuine.find({genuineTag:geunineTag,languageTag:languageTag},callback).sort({_id:-1}).skip(skip).limit(limit);
 };
 
-module.exports.searchGenuineTitle = (languageTag,patten,callback,skip,limit)=>{
+// this method used to search genuine news
+module.exports.searchGenuine = (languageTag,patten,callback,skip,limit)=>{
     Genuine.find({$or:[{title:{$regex:'.*'+patten+'.*'}},{genuineDescription:{ $regex: '.*' + patten + '.*'}}],languageTag:languageTag},callback).sort({_id:-1}).skip(skip).limit(limit);
-};
-module.exports.searchGenuineDesc = (languageTag,patten,callback,skip,limit) => {
-    Genuine.find({genuineDescription:{ $regex: '.*' + patten + '.*'},languageTag:languageTag},callback).sort({_id:-1}).skip(skip).limit(limit);
 };
 
 
