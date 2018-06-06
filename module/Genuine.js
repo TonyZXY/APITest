@@ -29,6 +29,10 @@ var genuineSchema = mongoose.Schema({
     publishedTime:{
         type:Date,
         default:Date.now
+    },
+    languageTag:{
+        type:String,
+        require:true
     }
 });
 
@@ -60,6 +64,7 @@ module.exports.updateGenuine = function (id,genuine,option,callback) {
         imageURL:genuine.imageURL,
         url:genuine.url,
         genuineTag:genuine.genuineTag,
+        languageTag:genuine.languageTag
     };
     Genuine.findOneAndUpdate(query,update,option,callback);
 };
@@ -71,9 +76,11 @@ module.exports.deleteGenuine = function (id, callback) {
 };
 
 // get Genuine by Tag
-module.exports.findGenuineByTag = function (geuninetag,callback,skip,limit) {
-    Genuine.find({genuineTag:geuninetag},callback).sort({_id:-1}).skip(skip).limit(limit);
+module.exports.findGenuineByTag = function (geunineTag,languageTag,callback,skip,limit) {
+    Genuine.find({genuineTag:geunineTag,languageTag:languageTag},callback).sort({_id:-1}).skip(skip).limit(limit);
 };
+
+
 
 
 /**

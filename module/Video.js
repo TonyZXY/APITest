@@ -33,13 +33,21 @@ var videoSchrma = mongoose.Schema({
     publishedTime: {
         type: Date,
         default: Date.now
+    },
+    languageTag:{
+        type:String,
+        require:true
     }
 });
 
 var Video = module.exports = mongoose.model('Videos', videoSchrma);
 
 // get video list
-module.exports.getVideos = function (callback, limit) {
+module.exports.getVideos = function (leTag,callback, skip, limit) {
+    Video.find({languageTag:leTag},callback).sort({_id:-1}).skip(skip).limit(limit);
+};
+
+module.exports.getVideoList = (callback,limit)=> {
     Video.find(callback).limit(limit);
 };
 
@@ -63,7 +71,8 @@ module.exports.updateVideo = function (id, video, option, callback) {
         url: video.url,
         imageURL: video.imageURL,
         localeTag:video.localeTag,
-        typeTag:video.typeTag
+        typeTag:video.typeTag,
+        languageTag:video.languageTag
     };
     Video.findOneAndUpdate(query, update, option, callback);
 };

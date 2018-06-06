@@ -33,6 +33,10 @@ var newsSchema = mongoose.Schema({
     publishedTime: {
         type: Date,
         default: Date.now
+    },
+    languageTag:{
+        type:String,
+        require:true
     }
 });
 
@@ -63,7 +67,8 @@ module.exports.updateNews = function (id, news, option, callback) {
         imageURL: news.imageURL,
         url: news.url,
         localeTag: news.localeTag,
-        contentTag: news.contentTag
+        contentTag: news.contentTag,
+        languageTag: news.languageTag
     };
     News.findOneAndUpdate(query, update, option, callback);
 };
@@ -84,12 +89,12 @@ module.exports.deleteNews = function (id, callback) {
 module.exports.findNewsByTag = function (locaTag, contTag, callback, limit) {
     News.find({localeTag: locaTag, contentTag: contTag}, callback).sort({_id: -1}).limit(limit);
 };
-module.exports.findNewsByLocal = function (locaTag, callback, skip, limit) {
-    News.find({localeTag: locaTag}, callback).sort({_id: -1}).skip(skip).limit(limit);
+module.exports.findNewsByLocal = function (locaTag,leTag, callback, skip, limit) {
+    News.find({localeTag: locaTag,languageTag:leTag}, callback).sort({_id: -1}).skip(skip).limit(limit);
 };
 
-module.exports.findNewsByContent = function (contTag, callback, skip,limit) {
-    News.find({contentTag: contTag}, callback).sort({_id: -1}).skip(skip).limit(limit);
+module.exports.findNewsByContent = function (contTag,leTag, callback, skip,limit) {
+    News.find({contentTag: contTag,languageTag:leTag}, callback).sort({_id: -1}).skip(skip).limit(limit);
 };
 /**
  *  This is the Area that for testing code

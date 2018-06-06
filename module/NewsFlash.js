@@ -10,6 +10,10 @@ var newsFlashSchrma = mongoose.Schema({
     publishedTime:{
         type: Date,
         default: Date.now
+    },
+    languageTag:{
+        type:String,
+        require:true
     }
 });
 
@@ -18,10 +22,13 @@ var NewsFlash = module.exports = mongoose.model('NewsFlash',newsFlashSchrma);
 
 
 //get list
-module.exports.getFlashList = function (callback,limit) {
-    NewsFlash.find(callback).limit(limit);
+module.exports.getFlashList = function (leTag ,callback,limit) {
+    NewsFlash.find({languageTag:leTag},callback).limit(limit);
 };
 
+module.exports.getFlash = function (callback,limit) {
+    NewsFlash.find(callback).limit(limit);
+};
 
 //get by id
 module.exports.getFlashByID = function (id,callback) {
@@ -37,7 +44,8 @@ module.exports.addFlashNews = function (flashAdded,callback) {
 module.exports.updateFlashNews = function (id,flash,option,callback) {
     var query = {_id:id};
     var update = {
-        shortMassage:flash.shortMassage
+        shortMassage:flash.shortMassage,
+        languageTag:flash.languageTag
     };
     NewsFlash.findOneAndUpdate(query,update,option,callback);
 };
