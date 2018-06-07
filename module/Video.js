@@ -97,5 +97,5 @@ module.exports.findVideoByType = function (typetag, callback, limit) {
 };
 
 module.exports.searchVideo = (languageTag,patten,callback,skip,limit)=>{
-    Video.find({$or:[{title:{$regex:'.*'+patten+'.*'}},{videoDescription:{$regex:'.*'+patten+'.*'}}],languageTag:languageTag},callback).sort({_id:-1}).skip(skip).limit(limit);
+    Video.find({$or:[{title:{$regex:'.*'+patten+'.*',$options:'i'}},{videoDescription:{$regex:'.*'+patten+'.*'}}],languageTag:languageTag},callback).sort({_id:-1}).skip(skip).limit(limit);
 };

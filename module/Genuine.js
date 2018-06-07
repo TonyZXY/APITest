@@ -82,7 +82,7 @@ module.exports.findGenuineByTag = function (geunineTag,languageTag,callback,skip
 
 // this method used to search genuine news
 module.exports.searchGenuine = (languageTag,patten,callback,skip,limit)=>{
-    Genuine.find({$or:[{title:{$regex:'.*'+patten+'.*'}},{genuineDescription:{ $regex: '.*' + patten + '.*'}}],languageTag:languageTag},callback).sort({_id:-1}).skip(skip).limit(limit);
+    Genuine.find({$or:[{title:{$regex:'.*'+patten+'.*',$options:'i'}},{genuineDescription:{ $regex: '.*' + patten + '.*'}}],languageTag:languageTag},callback).sort({_id:-1}).skip(skip).limit(limit);
 };
 
 
