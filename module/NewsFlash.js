@@ -32,7 +32,7 @@ module.exports.getFlash = function (callback,limit) {
 
 //get by id
 module.exports.getFlashByID = function (id,callback) {
-    NewsFlash.findByID(id,callback);
+    NewsFlash.findById(id,callback);
 };
 
 //add Flash news
