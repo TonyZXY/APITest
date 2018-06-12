@@ -26,28 +26,28 @@ var videoSchrma = mongoose.Schema({
         type: String,
         require: true
     },
-    typeTag:{
-        type:String,
-        require:true
+    typeTag: {
+        type: String,
+        require: true
     },
     publishedTime: {
         type: Date,
         default: Date.now
     },
-    languageTag:{
-        type:String,
-        require:true
+    languageTag: {
+        type: String,
+        require: true
     }
 });
 
 var Video = module.exports = mongoose.model('Videos', videoSchrma);
 
 // get video list
-module.exports.getVideos = function (leTag,callback, skip, limit) {
-    Video.find({languageTag:leTag},callback).sort({_id:-1}).skip(skip).limit(limit);
+module.exports.getVideos = function (leTag, callback, skip, limit) {
+    Video.find({languageTag: leTag}, callback).sort({_id: -1}).skip(skip).limit(limit);
 };
 
-module.exports.getVideoList = (callback,limit)=> {
+module.exports.getVideoList = (callback, limit) => {
     Video.find(callback).limit(limit);
 };
 
@@ -70,9 +70,9 @@ module.exports.updateVideo = function (id, video, option, callback) {
         videoeDescription: video.videoDescription,
         url: video.url,
         imageURL: video.imageURL,
-        localeTag:video.localeTag,
-        typeTag:video.typeTag,
-        languageTag:video.languageTag
+        localeTag: video.localeTag,
+        typeTag: video.typeTag,
+        languageTag: video.languageTag
     };
     Video.findOneAndUpdate(query, update, option, callback);
 };
@@ -85,7 +85,7 @@ module.exports.deleteVideo = function (id, callback) {
 
 // Get video by Tag
 module.exports.findVideoByTag = function (localetag, typetag, callback, limit) {
-    Video.find({localeTag:localetag,typeTag:typetag},callback).sort({_id:-1}).limit(limit);
+    Video.find({localeTag: localetag, typeTag: typetag}, callback).sort({_id: -1}).limit(limit);
 };
 
 module.exports.findVideoByLocale = function (localetag, callback, limit) {
@@ -96,6 +96,13 @@ module.exports.findVideoByType = function (typetag, callback, limit) {
     Video.find({typeTag: typetag}, callback).sort({_id: -1}).limit(limit);
 };
 
-module.exports.searchVideo = (languageTag,patten,callback,skip,limit)=>{
-    Video.find({$or:[{title:{$regex:'.*'+patten+'.*',$options:'i'}},{videoDescription:{$regex:'.*'+patten+'.*'}}],languageTag:languageTag},callback).sort({_id:-1}).skip(skip).limit(limit);
+module.exports.searchVideo = (languageTag, patten, callback, skip, limit) => {
+    Video.find({
+        $or: [{
+            title: {
+                $regex: '.*' + patten + '.*',
+                $options: 'i'
+            }
+        }, {videoDescription: {$regex: '.*' + patten + '.*'}}], languageTag: languageTag
+    }, callback).sort({_id: -1}).skip(skip).limit(limit);
 };

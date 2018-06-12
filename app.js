@@ -2,7 +2,9 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var cors = require('cors');
 
+app.use(cors());
 app.use(bodyParser.json());
 
 
@@ -139,17 +141,17 @@ app.get("/api/getNewsContentOnly", function (req, res) {
 
 
 // search news objects
-app.get("/api/searchnews",(req,res)=>{
+app.get("/api/searchnews", (req, res) => {
     var patten = req.query.patten;
     var languageTag = req.query.languageTag;
     var limit = req.query.limit;
     var skip = req.query.skip;
-    News.searchNews(languageTag,patten,(err,news)=>{
-        if(err){
+    News.searchNews(languageTag, patten, (err, news) => {
+        if (err) {
             throw err;
         }
         res.json(news);
-    },parseInt(skip),parseInt(limit))
+    }, parseInt(skip), parseInt(limit))
 });
 /*  NEWS PART END  */
 /*----------------------------------------------------------------------------*/
@@ -171,17 +173,17 @@ app.get('/api/videos', function (req, res) {
     var leTag = req.query.languageTag;
     var skip = req.query.skip;
     var limit = req.query.limit;
-    Video.getVideos(leTag,function (err, video) {
+    Video.getVideos(leTag, function (err, video) {
         if (err) {
             throw err;
         }
         res.json(video);
-    }, parseInt(skip),parseInt(limit))
+    }, parseInt(skip), parseInt(limit))
 });
 
-app.get('/api/video',(req,res)=>{
-    Video.getVideoList((err,video)=>{
-        if(err) {
+app.get('/api/video', (req, res) => {
+    Video.getVideoList((err, video) => {
+        if (err) {
             throw err;
         }
         res.json(video);
@@ -267,17 +269,17 @@ app.get("/api/getVideoTypeOnly", function (req, res) {
     }, parseInt(limit))
 });
 
-app.get("/api/searchVideo",(req,res)=>{
+app.get("/api/searchVideo", (req, res) => {
     var patten = req.query.patten;
     var languateTag = req.query.languageTag;
     var limit = req.query.limit;
     var skip = req.query.skip;
-    Video.searchVideo(languateTag,patten,(err,video)=>{
-        if(err){
+    Video.searchVideo(languateTag, patten, (err, video) => {
+        if (err) {
             throw err;
         }
         res.json(video);
-    },parseInt(skip),parseInt(limit))
+    }, parseInt(skip), parseInt(limit))
 });
 
 /* VIDEO PART END*/
@@ -315,7 +317,7 @@ app.get('/api/flashList', function (req, res) {
 });
 
 //get newsFlash by ID
-app.get('/api/flash/:_id', function (req, res) {
+app.get('/api/flashList/:_id', function (req, res) {
     NewsFlash.getFlashByID(req.params._id, function (err, newsFlash) {
         if (err) {
             throw err;
@@ -358,17 +360,17 @@ app.delete('/api/flash/:_id', function (req, res) {
     })
 });
 
-app.get("/api/searchFlash",(req,res)=>{
+app.get("/api/searchFlash", (req, res) => {
     var patten = req.query.patten;
     var languateTag = req.query.languageTag;
     var limit = req.query.limit;
     var skip = req.query.skip;
-    NewsFlash.searchFlashNews(languateTag,patten,(err,flash)=>{
-        if(err){
+    NewsFlash.searchFlashNews(languateTag, patten, (err, flash) => {
+        if (err) {
             throw err;
         }
         res.json(flash);
-    },parseInt(skip),parseInt(limit))
+    }, parseInt(skip), parseInt(limit))
 })
 
 /* NEWSFLASH PART END */
@@ -455,17 +457,17 @@ app.get("/api/getgenuine", function (req, res) {
 });
 
 // search genuine objects
-app.get("/api/searchgenuine", (req,res)=>{
+app.get("/api/searchgenuine", (req, res) => {
     var patten = req.query.patten;
     var languageTag = req.query.languageTag;
     var limit = req.query.limit;
     var skip = req.query.skip;
-    Genuine.searchGenuine(languageTag,patten,(err,genuine)=>{
-        if(err){
+    Genuine.searchGenuine(languageTag, patten, (err, genuine) => {
+        if (err) {
             throw err;
         }
         res.json(genuine);
-    },parseInt(skip),parseInt(limit))
+    }, parseInt(skip), parseInt(limit))
 });
 
 /* GENUINE PART ENDS */
@@ -530,11 +532,11 @@ app.get("/api/users", function (req, res) {
     }, parseInt(limit))
 });
 
-app.get("/api/members", (req,res)=>{
+app.get("/api/members", (req, res) => {
     var patten = req.query.patten;
     var languageTag = req.query.languageTag;
-    Genuine.searchGenuine(languageTag,patten,(err,genuine)=>{
-        if (err){
+    Genuine.searchGenuine(languageTag, patten, (err, genuine) => {
+        if (err) {
             throw err;
         }
         res.json(genuine);

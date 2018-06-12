@@ -34,9 +34,9 @@ var newsSchema = mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    languageTag:{
-        type:String,
-        require:true
+    languageTag: {
+        type: String,
+        require: true
     }
 });
 
@@ -89,16 +89,23 @@ module.exports.deleteNews = function (id, callback) {
 module.exports.findNewsByTag = function (locaTag, contTag, callback, limit) {
     News.find({localeTag: locaTag, contentTag: contTag}, callback).sort({_id: -1}).limit(limit);
 };
-module.exports.findNewsByLocal = function (locaTag,leTag, callback, skip, limit) {
-    News.find({localeTag: locaTag,languageTag:leTag}, callback).sort({_id: -1}).skip(skip).limit(limit);
+module.exports.findNewsByLocal = function (locaTag, leTag, callback, skip, limit) {
+    News.find({localeTag: locaTag, languageTag: leTag}, callback).sort({_id: -1}).skip(skip).limit(limit);
 };
 
-module.exports.findNewsByContent = function (contTag,leTag, callback, skip,limit) {
-    News.find({contentTag: contTag,languageTag:leTag}, callback).sort({_id: -1}).skip(skip).limit(limit);
+module.exports.findNewsByContent = function (contTag, leTag, callback, skip, limit) {
+    News.find({contentTag: contTag, languageTag: leTag}, callback).sort({_id: -1}).skip(skip).limit(limit);
 };
 
-module.exports.searchNews = (languageTag,patten,callback,skip,limit)=>{
-    News.find({$or:[{title:{$regex:'.*'+patten+'.*',$options:'i'}},{newsDescription:{$regex:'.*'+patten+'.*'}}],languageTag:languageTag},callback).sort({_id:-1}).skip(skip).limit(limit);
+module.exports.searchNews = (languageTag, patten, callback, skip, limit) => {
+    News.find({
+        $or: [{
+            title: {
+                $regex: '.*' + patten + '.*',
+                $options: 'i'
+            }
+        }, {newsDescription: {$regex: '.*' + patten + '.*'}}], languageTag: languageTag
+    }, callback).sort({_id: -1}).skip(skip).limit(limit);
 };
 /**
  *  This is the Area that for testing code
