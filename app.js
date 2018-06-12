@@ -307,15 +307,6 @@ app.get('/api/flash', function (req, res) {
     })
 });
 
-app.get('/api/flashList', function (req, res) {
-    NewsFlash.getFlash((err, newsFlash) => {
-        if (err) {
-            throw err;
-        }
-        res.json(newsFlash);
-    })
-});
-
 //get newsFlash by ID
 app.get('/api/flashList/:_id', function (req, res) {
     NewsFlash.getFlashByID(req.params._id, function (err, newsFlash) {
@@ -325,6 +316,17 @@ app.get('/api/flashList/:_id', function (req, res) {
         res.json(newsFlash);
     })
 });
+
+app.get('/api/flashList', function (req, res) {
+    NewsFlash.getFlash((err, newsFlash) => {
+        if (err) {
+            throw err;
+        }
+        res.json(newsFlash);
+    })
+});
+
+
 
 //add News Flash
 app.post('/api/flash', function (req, res) {
