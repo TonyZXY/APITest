@@ -44,7 +44,7 @@ var News = module.exports = mongoose.model('News', newsSchema);
 
 // get news list
 module.exports.getNewsList = function (callback, limit) {
-    News.find(callback).limit(limit);
+    News.find(callback).sort({_id:-1}).limit(limit);
 };
 
 //get news by id
@@ -106,6 +106,15 @@ module.exports.searchNews = (languageTag, patten, callback, skip, limit) => {
             }
         }, {newsDescription: {$regex: '.*' + patten + '.*'}}], languageTag: languageTag
     }, callback).sort({_id: -1}).skip(skip).limit(limit);
+};
+
+module.exports.searchNewsTime = (from, to, callback) =>{
+    News.find({
+        "publishedTime": {
+            "$gte": new Date(from),
+            "$lt": new Date(to)
+        }
+    }, callback).sort({_id:-1})
 };
 /**
  *  This is the Area that for testing code

@@ -153,6 +153,17 @@ app.get("/api/searchnews", (req, res) => {
         res.json(news);
     }, parseInt(skip), parseInt(limit))
 });
+
+app.get("/api/searchNewsTime", (req,res) => {
+    var from = req.query.from;
+    var to = req.query.to;
+    News.searchNewsTime(from,to,(err,news)=>{
+        if (err) {
+            throw err;
+        }
+        res.json(news);
+    })
+});
 /*  NEWS PART END  */
 /*----------------------------------------------------------------------------*/
 
@@ -282,6 +293,16 @@ app.get("/api/searchVideo", (req, res) => {
     }, parseInt(skip), parseInt(limit))
 });
 
+app.get('/api/searchVideoTime', (req,res) => {
+    var from = req.query.from;
+    var to = req.query.to;
+    Video.searchVideoTime(from,to,(err,videos)=>{
+        if(err){
+            throw err;
+        }
+        res.json(videos)
+    })
+});
 /* VIDEO PART END*/
 /*----------------------------------------------------------------------------*/
 
@@ -373,7 +394,18 @@ app.get("/api/searchFlash", (req, res) => {
         }
         res.json(flash);
     }, parseInt(skip), parseInt(limit))
-})
+});
+
+app.get('/api/searchFlashTime', (req,res)=>{
+    var from = req.query.from;
+    var to = req.query.to;
+    NewsFlash.searchFlashTime( from,to,(err,flash)=>{
+        if(err){
+            throw err;
+        }
+        res.json(flash);
+    })
+});
 
 /* NEWSFLASH PART END */
 /*----------------------------------------------------------------------------*/
@@ -470,6 +502,17 @@ app.get("/api/searchgenuine", (req, res) => {
         }
         res.json(genuine);
     }, parseInt(skip), parseInt(limit))
+});
+
+app.get('/api/searchGenuineTime',(req,res)=>{
+    var from = req.query.from;
+    var to = req.query.to;
+    Genuine.searchGenuineTime(from,to,(err,genuine)=>{
+        if(err){
+            throw err;
+        }
+        res.json(genuine);
+    })
 });
 
 /* GENUINE PART ENDS */

@@ -92,6 +92,15 @@ module.exports.searchGenuine = (languageTag, patten, callback, skip, limit) => {
     }, callback).sort({_id: -1}).skip(skip).limit(limit);
 };
 
+module.exports.searchGenuineTime = (from, to, callback) => {
+    Genuine.find({
+        'publishedTime': {
+            '$gte': new Date(from),
+            '$lt': new Date(to)
+        }
+    },callback).sort({_id:-1})
+};
+
 
 /**
  *  Please place your Test code here

@@ -106,3 +106,12 @@ module.exports.searchVideo = (languageTag, patten, callback, skip, limit) => {
         }, {videoDescription: {$regex: '.*' + patten + '.*'}}], languageTag: languageTag
     }, callback).sort({_id: -1}).skip(skip).limit(limit);
 };
+
+module.exports.searchVideoTime = (from, to, callback) => {
+    Video.find({
+        'publishedTime':{
+            '$gte': new Date(from),
+            '$lt': new Date(to)
+        }
+    }, callback).sort({_id:-1})
+};
