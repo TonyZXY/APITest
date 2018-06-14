@@ -44,7 +44,7 @@ var News = module.exports = mongoose.model('News', newsSchema);
 
 // get news list
 module.exports.getNewsList = function (callback, limit) {
-    News.find(callback).sort({_id:-1}).limit(limit);
+    News.find(callback).sort({_id:-1}).limit(limit).sort({_id:-1});
 };
 
 //get news by id

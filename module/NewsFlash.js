@@ -23,7 +23,7 @@ var NewsFlash = module.exports = mongoose.model('NewsFlash',newsFlashSchrma);
 
 //get list
 module.exports.getFlashList = function (leTag ,callback,limit) {
-    NewsFlash.find({languageTag:leTag},callback).limit(limit);
+    NewsFlash.find({languageTag:leTag},callback).limit(limit).sort({_id:-1});
 };
 
 module.exports.getFlash = function (callback,limit) {

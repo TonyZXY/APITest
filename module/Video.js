@@ -48,7 +48,7 @@ module.exports.getVideos = function (leTag, callback, skip, limit) {
 };
 
 module.exports.getVideoList = (callback, limit) => {
-    Video.find(callback).limit(limit);
+    Video.find(callback).limit(limit).sort({_id:-1});
 };
 
 // get video by ID

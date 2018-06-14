@@ -41,7 +41,7 @@ var Genuine = module.exports = mongoose.model('Genuine', genuineSchema);
 
 //get Genuine list
 module.exports.getGenuineList = function (callback, limit) {
-    Genuine.find(callback).limit(limit);
+    Genuine.find(callback).limit(limit).sort({_id:-1});
 };
 
 //get Genuine by ID
