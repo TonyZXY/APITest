@@ -614,13 +614,7 @@ app.post("/login", (req, res) => {
         if (err) {
             throw err;
         }
-        if (hashPassword.verify(
-            password,user.password
-        )){
-            res.json({login:true})
-        }else {
-            res.json({login:false})
-        }
+        res.json(hashPassword.verify(password,user.password));
     })
 });
 
