@@ -108,6 +108,7 @@ module.exports.searchVideo = (languageTag, patten, callback, skip, limit) => {
 };
 
 module.exports.searchVideoTime = (from, to, callback) => {
+    var date
     Video.find({
         'publishedTime':{
             '$gte': new Date(from),

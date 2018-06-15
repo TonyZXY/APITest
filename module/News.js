@@ -109,10 +109,13 @@ module.exports.searchNews = (languageTag, patten, callback, skip, limit) => {
 };
 
 module.exports.searchNewsTime = (from, to, callback) =>{
+    var dateFrom = new Date(from);
+    var dateTo = new Date(to);
+    dateTo.setDate(dateTo.getDate() + 1);
     News.find({
         "publishedTime": {
-            "$gte": new Date(from),
-            "$lt": new Date(to)
+            "$gte": dateFrom,
+            "$lt": dateTo
         }
     }, callback).sort({_id:-1})
 };

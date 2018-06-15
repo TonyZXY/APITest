@@ -61,10 +61,13 @@ module.exports.deleteFlash = function (id,callback) {
 };
 
 module.exports.searchFlashTime = (from, to, callback) =>{
+    var dateFrom = new Date(from);
+    var dateTo = new Date(to);
+    dateTo.setDate(dateTo.getDate() + 1);
     NewsFlash.find({
         'publishedTime': {
-            '$gte': new Date(from),
-            '$lt': new Date(to)
+            '$gte': dateFrom,
+            '$lt': dateTo
         }
     },callback).sort({_id:-1})
 };
