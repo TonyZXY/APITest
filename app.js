@@ -23,7 +23,7 @@ var options = {
     pass: "appdevgkV6="
 };
 
-mongoose.connect('mongodb://localhost/BGLNewsAppbkend', options);
+mongoose.connect('mongodb://10.10.6.111:27017/BGLNewsAppbkend', options);
 // mongoose.connect('mongodb://localhost/news');
 var db = mongoose.connection;
 
@@ -614,7 +614,12 @@ app.post("/login", (req, res) => {
         if (err) {
             throw err;
         }
-        res.json(hashPassword.verify(password,user.password));
+        var userDatabase = user[0];
+        if(hashPassword.verify(password,userDatabase.password)){
+            res.json({login:true})
+        }else {
+            res.json({login:false})
+        }
     })
 });
 
