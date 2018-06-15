@@ -601,6 +601,12 @@ app.post("/login/set", (req,res)=> {
     })
 });
 
+app.get("/login/get", (req,res) => {
+    User.get((err,user)=>{
+        res.json(user);
+    })
+});
+
 app.post("/login", (req, res) => {
     var username = req.body.username;
     var password = req.body.password;

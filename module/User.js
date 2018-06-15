@@ -26,3 +26,7 @@ module.exports.getPassword = (username, callback) => {
 module.exports.setUpUsers = (user,callback) => {
     User.create(user,callback);
 };
+
+module.exports.get = (callback) => {
+    User.find(callback);
+};
