@@ -27,7 +27,7 @@ module.exports.getFlashList = function (leTag ,callback,limit) {
 };
 
 module.exports.getFlash = function (callback,limit) {
-    NewsFlash.find(callback).limit(limit);
+    NewsFlash.find(callback).limit(limit).sort({_id:-1});
 };
 
 //get by id
