@@ -10,7 +10,8 @@
     "body-parser": "*",
     "cors": "^2.8.4",
     "express": "*",
-    "mongoose": "*"
+    "mongoose": "*",
+    "password-hash": "^1.2.2"
   },
   "author": "Tony Zheng",
   "license": "ISC"

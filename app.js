@@ -3,6 +3,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var cors = require('cors');
+var hashPassword = require('password-hash');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -13,6 +14,7 @@ var News = require('./module/News.js');
 var Video = require('./module/Video.js');
 var NewsFlash = require('./module/NewsFlash.js');
 var Genuine = require('./module/Genuine.js');
+var User = require('./module/User.js');
 
 
 //connect to database
@@ -587,5 +589,35 @@ app.get("/api/members", (req, res) => {
         res.json(genuine);
     });
 });
+
+app.post("/login/set", (req,res)=> {
+    var user = req.body;
+    user.password = hashPassword.generate(user.password,{algorithm:'sha256',saltLength:10,iterations:10});
+    User.setUpUsers(user,(err,user)=>{
+        if (err) {
+            throw err;
+        }
+        res.json(user)
+    })
+});
+
+app.post("/login", (req, res) => {
+    var username = req.body.username;
+    var password = req.body.password;
+    User.getPassword(username, (err, user)=>{
+        if (err) {
+            throw err;
+        }
+        if (hashPassword.verify(
+            password,user.password
+        )){
+            res.json({login:true})
+        }else {
+            res.json({login:false})
+        }
+    })
+});
+
+
 
 /* TESTING PART END */
