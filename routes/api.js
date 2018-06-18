@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 
 
 
@@ -20,6 +21,21 @@ const NewsFlash = require('../module/NewsFlash.js');
 const Genuine = require('../module/Genuine.js');
 
 
+function verifyToken(req,res,next) {
+    if (!req.headers.authorization) {
+        return res.status(401).json({login:false})
+    }
+    let token = req.headers.authorization.split(' ')[1];
+    if (token === 'null') {
+        return res.status(401).json({login:false})
+    }
+    let payload = jwt.verify(token, 'keyForJWT');
+    if (!payload) {
+        return res.status(401).json({login:false})
+    }
+    req.userID = payload.subject;
+    next()
+}
 
 /*----------------------------------------------------------------------------*/
 /**
@@ -305,7 +321,7 @@ router.get('/searchVideoTime', (req,res) => {
  */
 //get NewsFlash List
 router.get('/flash', function (req, res) {
-    var leTag = req.query.languageTag;
+    const leTag = req.query.languageTag;
     NewsFlash.getFlashList(leTag, function (err, newsFlash) {
         if (err) {
             console.log(err);
@@ -337,7 +353,7 @@ router.get('/flashList', function (req, res) {
 
 //add News Flash
 router.post('/flash', function (req, res) {
-    var flashAdded = req.body;
+    const flashAdded = req.body;
     NewsFlash.addFlashNews(flashAdded, function (err, flashAdded) {
         if (err) {
             console.log(err);
@@ -348,8 +364,8 @@ router.post('/flash', function (req, res) {
 
 //update News Flash
 router.put('/flash/:_id', function (req, res) {
-    var id = req.params._id;
-    var flashAdded = req.body;
+    const id = req.params._id;
+    const flashAdded = req.body;
     NewsFlash.updateFlashNews(id, flashAdded, {}, function (err, flash) {
         if (err) {
             console.log(err);
@@ -360,7 +376,7 @@ router.put('/flash/:_id', function (req, res) {
 
 //delete News Flash
 router.delete('/flash/:_id', function (req, res) {
-    var id = req.params._id;
+    const id = req.params._id;
     NewsFlash.deleteFlash(id, function (err, newsFlash) {
         if (err) {
             console.log(err);
@@ -370,10 +386,10 @@ router.delete('/flash/:_id', function (req, res) {
 });
 
 router.get("/searchFlash", (req, res) => {
-    var patten = req.query.patten;
-    var languateTag = req.query.languageTag;
-    var limit = req.query.limit;
-    var skip = req.query.skip;
+    const patten = req.query.patten;
+    const languateTag = req.query.languageTag;
+    const limit = req.query.limit;
+    const skip = req.query.skip;
     NewsFlash.searchFlashNews(languateTag, patten, (err, flash) => {
         if (err) {
             console.log(err);
@@ -383,8 +399,8 @@ router.get("/searchFlash", (req, res) => {
 });
 
 router.get('/searchFlashTime', (req,res)=>{
-    var from = req.query.from;
-    var to = req.query.to;
+    const from = req.query.from;
+    const to = req.query.to;
     NewsFlash.searchFlashTime( from,to,(err,flash)=>{
         if(err){
             console.log(err);
@@ -430,7 +446,7 @@ router.get('/genuine/:_id', function (req, res) {
 
 // add genuine news
 router.post('/genuine', function (req, res) {
-    var genuineAdd = req.body;
+    const genuineAdd = req.body;
     Genuine.addGenuine(genuineAdd, function (err, genuine) {
         if (err) {
             console.log(err);
@@ -441,8 +457,8 @@ router.post('/genuine', function (req, res) {
 
 //Update genuine
 router.put('/genuine/:_id', function (req, res) {
-    var id = req.params._id;
-    var genuineAdd = req.body;
+    const id = req.params._id;
+    const genuineAdd = req.body;
     Genuine.updateGenuine(id, genuineAdd, {}, function (err, genuine) {
         if (err) {
             console.log(err);
@@ -453,7 +469,7 @@ router.put('/genuine/:_id', function (req, res) {
 
 //delete genuine
 router.delete('/genuine/:_id', function (req, res) {
-    var id = req.params._id;
+    const id = req.params._id;
     Genuine.deleteGenuine(id, function (err, genuine) {
         if (err) {
             console.log(err);
@@ -464,10 +480,10 @@ router.delete('/genuine/:_id', function (req, res) {
 
 //get genuine news by Category
 router.get("/getgenuine", function (req, res) {
-    var geTag = req.query.genuineTag;
-    var leTag = req.query.languageTag;
-    var limit = req.query.limit;
-    var skip = req.query.skip;
+    const geTag = req.query.genuineTag;
+    const leTag = req.query.languageTag;
+    const limit = req.query.limit;
+    const skip = req.query.skip;
     Genuine.findGenuineByTag(geTag, leTag, function (err, genuine) {
         if (err) {
             console.log(err);
@@ -478,10 +494,10 @@ router.get("/getgenuine", function (req, res) {
 
 // search genuine objects
 router.get("/searchgenuine", (req, res) => {
-    var patten = req.query.patten;
-    var languageTag = req.query.languageTag;
-    var limit = req.query.limit;
-    var skip = req.query.skip;
+    const patten = req.query.patten;
+    const languageTag = req.query.languageTag;
+    const limit = req.query.limit;
+    const skip = req.query.skip;
     Genuine.searchGenuine(languageTag, patten, (err, genuine) => {
         if (err) {
             console.log(err);
@@ -491,8 +507,8 @@ router.get("/searchgenuine", (req, res) => {
 });
 
 router.get('/searchGenuineTime',(req,res)=>{
-    var from = req.query.from;
-    var to = req.query.to;
+    const from = req.query.from;
+    const to = req.query.to;
     Genuine.searchGenuineTime(from,to,(err,genuine)=>{
         if(err){
             console.log(err);

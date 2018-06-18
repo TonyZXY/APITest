@@ -10,6 +10,7 @@ app.use(bodyParser.json());
 
 const api = require('./routes/api');
 const login = require('./routes/login');
+const test = require('./routes/test');
 
 //import news and video module
 const News = require('./module/News.js');
@@ -31,6 +32,7 @@ const db = mongoose.connection;
 
 app.use('/api', api);
 app.use('/login',login);
+app.use('/test',test);
 
 //nothing
 app.get('/', function (req, res) {
@@ -91,27 +93,7 @@ console.log('Running on port 3000');
 //     },parseInt(limit))
 // });
 
-app.get("/api/users", function (req, res) {
-    var geTag = req.query.genuineTag;
-    var limit = req.query.limit;
-    Genuine.findGenuineByTag(geTag, function (err, genuine) {
-        if (err) {
-            throw err;
-        }
-        res.json(genuine);
-    }, parseInt(limit))
-});
 
-app.get("/api/members", (req, res) => {
-    var patten = req.query.patten;
-    var languageTag = req.query.languageTag;
-    Genuine.searchGenuine(languageTag, patten, (err, genuine) => {
-        if (err) {
-            throw err;
-        }
-        res.json(genuine);
-    });
-});
 
 
 

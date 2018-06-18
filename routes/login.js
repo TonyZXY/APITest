@@ -3,6 +3,9 @@ const express = require('express');
 const router = express.Router();
 const hashPassword = require('password-hash');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+
+
 const options = {
     user: 'bglappdev100',
     pass: "appdevgkV6="
@@ -38,12 +41,14 @@ router.post("/", (req, res) => {
             console.log(err);
         } else {
             if (!user) {
-                res.status(401).json({login:false})
+                res.send({login:false}).status(401)
             } else {
                 if ( !hashPassword.verify(password,user.password)) {
-                    res.status(401).json({login:false})
+                    res.send({login:false}).status(401)
                 } else {
-                    res.status(200).json({login:true})
+                    let payload = { subject: user._id};
+                    let tokenToSend = jwt.sign(payload, 'keyForJWT');
+                    res.send({login:true,token:tokenToSend,userID:user._id}).status(200)
                 }
             }
         }
