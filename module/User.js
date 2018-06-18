@@ -19,7 +19,7 @@ var User = module.exports = mongoose.model('User',userSchrma);
 
 //get password
 module.exports.getPassword = (username, callback) => {
-    User.find({username: username}, callback);
+    User.findOne({username: username}, callback);
 };
 
 //set user
