@@ -11,7 +11,7 @@ const options = {
     pass: "appdevgkV6="
 };
 
-mongoose.connect('mongodb://10.10.6.111:27017/BGLNewsAppbkend', options);
+mongoose.connect('mongodb://localhost/BGLNewsAppbkend', options);
 
 module.exports = router;
 
