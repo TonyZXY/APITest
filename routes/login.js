@@ -11,7 +11,7 @@ const options = {
     pass: "appdevgkV6="
 };
 
-mongoose.connect('mongodb://localhost/BGLNewsAppbkend', options);
+mongoose.connect('mongodb://10.10.6.111:27017/BGLNewsAppbkend', options);
 
 module.exports = router;
 
@@ -47,8 +47,8 @@ router.post("/", (req, res) => {
                     res.send({login:false}).status(401)
                 } else {
                     let payload = { subject: user._id};
-                    let tokenToSend = jwt.sign(payload, 'keyForJWT');
-                    res.send({login:true,token:tokenToSend,userID:user._id}).status(200)
+                    let tokenToSend = jwt.sign(payload, user._id.toString());
+                    res.send({login:true,token:tokenToSend,username:user._id}).status(200)
                 }
             }
         }

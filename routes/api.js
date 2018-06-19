@@ -10,7 +10,7 @@ const options = {
     pass: "appdevgkV6="
 };
 
-mongoose.connect('mongodb://localhost/BGLNewsAppbkend', options);
+mongoose.connect('mongodb://10.10.6.111:27017/BGLNewsAppbkend', options);
 
 
 module.exports = router;
@@ -24,17 +24,25 @@ const Genuine = require('../module/Genuine.js');
 function verifyToken(req,res,next) {
     if (!req.headers.authorization) {
         return res.status(401).json({login:false})
+    }else {
+        let userProfile = req.headers.authorization.split(' ')[1];
+        let token = req.headers.authorization.split(' ')[2];
+        if (userProfile === null || userProfile === undefined || token === null || token === undefined){
+            return res.status(401).json({login:false})
+        }else {
+            let payload = jwt.verify(token, userProfile);
+            if (!payload) {
+                return res.status(401).json({login:false})
+            }else {
+                req.userID = payload.subject;
+                if (payload.subject !== userProfile) {
+                    return res.status(401).json({login:false})
+                } else {
+                    next()
+                }
+            }
+        }
     }
-    let token = req.headers.authorization.split(' ')[1];
-    if (token === 'null') {
-        return res.status(401).json({login:false})
-    }
-    let payload = jwt.verify(token, 'keyForJWT');
-    if (!payload) {
-        return res.status(401).json({login:false})
-    }
-    req.userID = payload.subject;
-    next()
 }
 
 /*----------------------------------------------------------------------------*/
@@ -69,7 +77,7 @@ router.get('/news/:_id', function (req, res) {
 });
 
 //add news
-router.post('/news', function (req, res) {
+router.post('/news',verifyToken , function (req, res) {
     const newsAdded = req.body;
     News.addNews(newsAdded, function (err, news) {
         if (err) {
@@ -80,7 +88,7 @@ router.post('/news', function (req, res) {
 });
 
 //update news
-router.put('/news/:_id', function (req, res) {
+router.put('/news/:_id',verifyToken , function (req, res) {
     const id = req.params._id;
     const news = req.body;
     News.updateNews(id, news, {}, function (err, news) {
@@ -92,7 +100,7 @@ router.put('/news/:_id', function (req, res) {
 });
 
 //delete news
-router.delete('/news/:_id', function (req, res) {
+router.delete('/news/:_id',verifyToken , function (req, res) {
     const id = req.params._id;
     News.deleteNews(id, function (err, news) {
         if (err) {
@@ -214,7 +222,7 @@ router.get('/videos/:_id', function (req, res) {
 });
 
 // add video
-router.post('/videos', function (req, res) {
+router.post('/videos',verifyToken , function (req, res) {
     const videoAdded = req.body;
     Video.addVideo(videoAdded, function (err, video) {
         if (err) {
@@ -225,7 +233,7 @@ router.post('/videos', function (req, res) {
 });
 
 //update video
-router.put('/videos/:_id', function (req, res) {
+router.put('/videos/:_id',verifyToken , function (req, res) {
     const id = req.params._id;
     const videoAdded = req.body;
     Video.updateVideo(id, videoAdded, {}, function (err, video) {
@@ -237,7 +245,7 @@ router.put('/videos/:_id', function (req, res) {
 });
 
 //delete video
-router.delete('/videos/:_id', function (req, res) {
+router.delete('/videos/:_id',verifyToken , function (req, res) {
     const id = req.params._id;
     Video.deleteVideo(id, function (err, video) {
         if (err) {
@@ -352,7 +360,7 @@ router.get('/flashList', function (req, res) {
 
 
 //add News Flash
-router.post('/flash', function (req, res) {
+router.post('/flash',verifyToken , function (req, res) {
     const flashAdded = req.body;
     NewsFlash.addFlashNews(flashAdded, function (err, flashAdded) {
         if (err) {
@@ -363,7 +371,7 @@ router.post('/flash', function (req, res) {
 });
 
 //update News Flash
-router.put('/flash/:_id', function (req, res) {
+router.put('/flash/:_id',verifyToken , function (req, res) {
     const id = req.params._id;
     const flashAdded = req.body;
     NewsFlash.updateFlashNews(id, flashAdded, {}, function (err, flash) {
@@ -375,7 +383,7 @@ router.put('/flash/:_id', function (req, res) {
 });
 
 //delete News Flash
-router.delete('/flash/:_id', function (req, res) {
+router.delete('/flash/:_id',verifyToken , function (req, res) {
     const id = req.params._id;
     NewsFlash.deleteFlash(id, function (err, newsFlash) {
         if (err) {
@@ -445,7 +453,7 @@ router.get('/genuine/:_id', function (req, res) {
 });
 
 // add genuine news
-router.post('/genuine', function (req, res) {
+router.post('/genuine',verifyToken , function (req, res) {
     const genuineAdd = req.body;
     Genuine.addGenuine(genuineAdd, function (err, genuine) {
         if (err) {
@@ -456,7 +464,7 @@ router.post('/genuine', function (req, res) {
 });
 
 //Update genuine
-router.put('/genuine/:_id', function (req, res) {
+router.put('/genuine/:_id',verifyToken , function (req, res) {
     const id = req.params._id;
     const genuineAdd = req.body;
     Genuine.updateGenuine(id, genuineAdd, {}, function (err, genuine) {
@@ -468,7 +476,7 @@ router.put('/genuine/:_id', function (req, res) {
 });
 
 //delete genuine
-router.delete('/genuine/:_id', function (req, res) {
+router.delete('/genuine/:_id',verifyToken , function (req, res) {
     const id = req.params._id;
     Genuine.deleteGenuine(id, function (err, genuine) {
         if (err) {
