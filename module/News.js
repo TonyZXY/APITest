@@ -86,8 +86,8 @@ module.exports.deleteNews = function (id, callback) {
 };
 
 // get News by category and limitation of number
-module.exports.findNewsByTag = function (locaTag, contTag, callback, limit) {
-    News.find({localeTag: locaTag, contentTag: contTag}, callback).sort({_id: -1}).limit(limit);
+module.exports.findNewsByTag = function (locaTag, contTag ,languageTag , callback, limit) {
+    News.find({localeTag: locaTag, contentTag: contTag, languageTag: languageTag}, callback).sort({_id: -1}).limit(limit);
 };
 module.exports.findNewsByLocal = function (locaTag, leTag, callback, skip, limit) {
     News.find({localeTag: locaTag, languageTag: leTag}, callback).sort({_id: -1}).skip(skip).limit(limit);

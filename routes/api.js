@@ -114,8 +114,12 @@ router.delete('/news/:_id',verifyToken , function (req, res) {
 router.get("/getNews", function (req, res) {
     const loTag = req.query.localeTag;
     const typeTag = req.query.contentTag;
+    const lanTag = req.query.languageTag;
     const limit = req.query.limit;
-    News.findNewsByTag(loTag, typeTag, function (err, news) {
+    if (loTag === null || loTag === undefined || typeTag ===null || typeTag ===undefined || lanTag===null|| lanTag===undefined){
+        res.status(402)
+    }
+    News.findNewsByTag(loTag, typeTag, lanTag, function (err, news) {
         if (err) {
             console.log(err);
         }
@@ -259,8 +263,9 @@ router.delete('/videos/:_id',verifyToken , function (req, res) {
 router.get("/getVideo", function (req, res) {
     const loTag = req.query.localeTag;
     const tyTag = req.query.typeTag;
+    const lanTag = req.query.languageTag;
     const limit = req.query.limit;
-    Video.findVideoByTag(loTag, tyTag, function (err, video) {
+    Video.findVideoByTag(loTag, tyTag, lanTag, function (err, video) {
         if (err) {
             console.log(err);
         }

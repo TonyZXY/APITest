@@ -84,8 +84,8 @@ module.exports.deleteVideo = function (id, callback) {
 };
 
 // Get video by Tag
-module.exports.findVideoByTag = function (localetag, typetag, callback, limit) {
-    Video.find({localeTag: localetag, typeTag: typetag}, callback).sort({_id: -1}).limit(limit);
+module.exports.findVideoByTag = function (localetag, typetag, languageTag, callback, limit) {
+    Video.find({localeTag: localetag, typeTag: typetag, languageTag: languageTag}, callback).sort({_id: -1}).limit(limit);
 };
 
 module.exports.findVideoByLocale = function (localetag, callback, limit) {
