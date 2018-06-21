@@ -21,22 +21,30 @@ const NewsFlash = require('../module/NewsFlash.js');
 const Genuine = require('../module/Genuine.js');
 
 
-function verifyToken(req,res,next) {
+function verifyToken(req, res, next) {
     if (!req.headers.authorization) {
-        return res.status(401).json({login:false})
-    }else {
+        return res.status(401).json({
+            login: false
+        })
+    } else {
         let userProfile = req.headers.authorization.split(' ')[1];
         let token = req.headers.authorization.split(' ')[2];
-        if (userProfile === null || userProfile === undefined || token === null || token === undefined){
-            return res.status(401).json({login:false})
-        }else {
+        if (userProfile === null || userProfile === undefined || token === null || token === undefined) {
+            return res.status(401).json({
+                login: false
+            })
+        } else {
             let payload = jwt.verify(token, userProfile);
             if (!payload) {
-                return res.status(401).json({login:false})
-            }else {
+                return res.status(401).json({
+                    login: false
+                })
+            } else {
                 req.userID = payload.subject;
                 if (payload.subject !== userProfile) {
-                    return res.status(401).json({login:false})
+                    return res.status(401).json({
+                        login: false
+                    })
                 } else {
                     next()
                 }
@@ -77,7 +85,7 @@ router.get('/news/:_id', function (req, res) {
 });
 
 //add news
-router.post('/news',verifyToken , function (req, res) {
+router.post('/news', verifyToken, function (req, res) {
     const newsAdded = req.body;
     News.addNews(newsAdded, function (err, news) {
         if (err) {
@@ -88,7 +96,7 @@ router.post('/news',verifyToken , function (req, res) {
 });
 
 //update news
-router.put('/news/:_id',verifyToken , function (req, res) {
+router.put('/news/:_id', verifyToken, function (req, res) {
     const id = req.params._id;
     const news = req.body;
     News.updateNews(id, news, {}, function (err, news) {
@@ -100,7 +108,7 @@ router.put('/news/:_id',verifyToken , function (req, res) {
 });
 
 //delete news
-router.delete('/news/:_id',verifyToken , function (req, res) {
+router.delete('/news/:_id', verifyToken, function (req, res) {
     const id = req.params._id;
     News.deleteNews(id, function (err, news) {
         if (err) {
@@ -116,15 +124,16 @@ router.get("/getNews", function (req, res) {
     const typeTag = req.query.contentTag;
     const lanTag = req.query.languageTag;
     const limit = req.query.limit;
-    if (loTag === null || loTag === undefined || typeTag ===null || typeTag ===undefined || lanTag===null|| lanTag===undefined){
-        res.status(402)
+    if (loTag === null || loTag === undefined || typeTag === null || typeTag === undefined || lanTag === null || lanTag === undefined) {
+        res.status(400)
+    } else {
+        News.findNewsByTag(loTag, typeTag, lanTag, function (err, news) {
+            if (err) {
+                console.log(err);
+            }
+            res.json(news);
+        }, parseInt(limit))
     }
-    News.findNewsByTag(loTag, typeTag, lanTag, function (err, news) {
-        if (err) {
-            console.log(err);
-        }
-        res.json(news);
-    }, parseInt(limit))
 });
 
 router.get("/getNewsLocaleOnly", function (req, res) {
@@ -168,10 +177,10 @@ router.get("/searchnews", (req, res) => {
     }, parseInt(skip), parseInt(limit))
 });
 
-router.get("/searchNewsTime", (req,res) => {
+router.get("/searchNewsTime", (req, res) => {
     const from = req.query.from;
     const to = req.query.to;
-    News.searchNewsTime(from,to,(err,news)=>{
+    News.searchNewsTime(from, to, (err, news) => {
         if (err) {
             console.log(err);
         }
@@ -226,7 +235,7 @@ router.get('/videos/:_id', function (req, res) {
 });
 
 // add video
-router.post('/videos',verifyToken , function (req, res) {
+router.post('/videos', verifyToken, function (req, res) {
     const videoAdded = req.body;
     Video.addVideo(videoAdded, function (err, video) {
         if (err) {
@@ -237,7 +246,7 @@ router.post('/videos',verifyToken , function (req, res) {
 });
 
 //update video
-router.put('/videos/:_id',verifyToken , function (req, res) {
+router.put('/videos/:_id', verifyToken, function (req, res) {
     const id = req.params._id;
     const videoAdded = req.body;
     Video.updateVideo(id, videoAdded, {}, function (err, video) {
@@ -249,7 +258,7 @@ router.put('/videos/:_id',verifyToken , function (req, res) {
 });
 
 //delete video
-router.delete('/videos/:_id',verifyToken , function (req, res) {
+router.delete('/videos/:_id', verifyToken, function (req, res) {
     const id = req.params._id;
     Video.deleteVideo(id, function (err, video) {
         if (err) {
@@ -265,12 +274,16 @@ router.get("/getVideo", function (req, res) {
     const tyTag = req.query.typeTag;
     const lanTag = req.query.languageTag;
     const limit = req.query.limit;
-    Video.findVideoByTag(loTag, tyTag, lanTag, function (err, video) {
-        if (err) {
-            console.log(err);
-        }
-        res.json(video);
-    }, parseInt(limit))
+    if (loTag === null || loTag === undefined || tyTag === null || tyTag === undefined || lanTag === null || lanTag === undefined) {
+        res.status(400)
+    } else {
+        Video.findVideoByTag(loTag, tyTag, lanTag, function (err, video) {
+            if (err) {
+                console.log(err);
+            }
+            res.json(video);
+        }, parseInt(limit))
+    }
 });
 
 router.get("/getVideoLocaleOnly", function (req, res) {
@@ -308,11 +321,11 @@ router.get("/searchVideo", (req, res) => {
     }, parseInt(skip), parseInt(limit))
 });
 
-router.get('/searchVideoTime', (req,res) => {
+router.get('/searchVideoTime', (req, res) => {
     const from = req.query.from;
     const to = req.query.to;
-    Video.searchVideoTime(from,to,(err,videos)=>{
-        if(err){
+    Video.searchVideoTime(from, to, (err, videos) => {
+        if (err) {
             console.log(err);
         }
         res.json(videos)
@@ -365,7 +378,7 @@ router.get('/flashList', function (req, res) {
 
 
 //add News Flash
-router.post('/flash',verifyToken , function (req, res) {
+router.post('/flash', verifyToken, function (req, res) {
     const flashAdded = req.body;
     NewsFlash.addFlashNews(flashAdded, function (err, flashAdded) {
         if (err) {
@@ -376,7 +389,7 @@ router.post('/flash',verifyToken , function (req, res) {
 });
 
 //update News Flash
-router.put('/flash/:_id',verifyToken , function (req, res) {
+router.put('/flash/:_id', verifyToken, function (req, res) {
     const id = req.params._id;
     const flashAdded = req.body;
     NewsFlash.updateFlashNews(id, flashAdded, {}, function (err, flash) {
@@ -388,7 +401,7 @@ router.put('/flash/:_id',verifyToken , function (req, res) {
 });
 
 //delete News Flash
-router.delete('/flash/:_id',verifyToken , function (req, res) {
+router.delete('/flash/:_id', verifyToken, function (req, res) {
     const id = req.params._id;
     NewsFlash.deleteFlash(id, function (err, newsFlash) {
         if (err) {
@@ -411,11 +424,11 @@ router.get("/searchFlash", (req, res) => {
     }, parseInt(skip), parseInt(limit))
 });
 
-router.get('/searchFlashTime', (req,res)=>{
+router.get('/searchFlashTime', (req, res) => {
     const from = req.query.from;
     const to = req.query.to;
-    NewsFlash.searchFlashTime( from,to,(err,flash)=>{
-        if(err){
+    NewsFlash.searchFlashTime(from, to, (err, flash) => {
+        if (err) {
             console.log(err);
         }
         res.json(flash);
@@ -458,7 +471,7 @@ router.get('/genuine/:_id', function (req, res) {
 });
 
 // add genuine news
-router.post('/genuine',verifyToken , function (req, res) {
+router.post('/genuine', verifyToken, function (req, res) {
     const genuineAdd = req.body;
     Genuine.addGenuine(genuineAdd, function (err, genuine) {
         if (err) {
@@ -469,7 +482,7 @@ router.post('/genuine',verifyToken , function (req, res) {
 });
 
 //Update genuine
-router.put('/genuine/:_id',verifyToken , function (req, res) {
+router.put('/genuine/:_id', verifyToken, function (req, res) {
     const id = req.params._id;
     const genuineAdd = req.body;
     Genuine.updateGenuine(id, genuineAdd, {}, function (err, genuine) {
@@ -481,7 +494,7 @@ router.put('/genuine/:_id',verifyToken , function (req, res) {
 });
 
 //delete genuine
-router.delete('/genuine/:_id',verifyToken , function (req, res) {
+router.delete('/genuine/:_id', verifyToken, function (req, res) {
     const id = req.params._id;
     Genuine.deleteGenuine(id, function (err, genuine) {
         if (err) {
@@ -497,12 +510,16 @@ router.get("/getgenuine", function (req, res) {
     const leTag = req.query.languageTag;
     const limit = req.query.limit;
     const skip = req.query.skip;
-    Genuine.findGenuineByTag(geTag, leTag, function (err, genuine) {
-        if (err) {
-            console.log(err);
-        }
-        res.json(genuine);
-    }, parseInt(skip), parseInt(limit))
+    if (leTag === null || leTag === undefined || geTag === null || geTag === undefined) {
+        res.status(400)
+    } else {
+        Genuine.findGenuineByTag(geTag, leTag, function (err, genuine) {
+            if (err) {
+                console.log(err);
+            }
+            res.json(genuine);
+        }, parseInt(skip), parseInt(limit))
+    }
 });
 
 // search genuine objects
@@ -519,11 +536,11 @@ router.get("/searchgenuine", (req, res) => {
     }, parseInt(skip), parseInt(limit))
 });
 
-router.get('/searchGenuineTime',(req,res)=>{
+router.get('/searchGenuineTime', (req, res) => {
     const from = req.query.from;
     const to = req.query.to;
-    Genuine.searchGenuineTime(from,to,(err,genuine)=>{
-        if(err){
+    Genuine.searchGenuineTime(from, to, (err, genuine) => {
+        if (err) {
             console.log(err);
         }
         res.json(genuine);
