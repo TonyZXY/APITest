@@ -16,10 +16,16 @@ const IOSDevice = require('../module/IOSDevice');
 
 router.post('/addIOSDevice', function (req, res) {
     const device = req.body;
-    News.addNews(newsAdded, function (err, news) {
-        if (err) {
-            console.log(err);
+    Device.getDevice(device.deviceId, function(err,device){
+        if(!device){
+            Device.addNews(device, function (err, news) {
+                if (err) {
+                    console.log(err);
+                }
+                res.json(news);
+            })
+        } else{
+            
         }
-        res.json(news);
     })
 });

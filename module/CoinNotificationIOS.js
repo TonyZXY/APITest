@@ -1,12 +1,12 @@
 var mongoose = require('mongoose');
 
 var CustomerSchema = mongoose.Schema({
-    fullName:{
+    userId:{
         type: String,
         require: true
     },
-    email:{
-        type: String,
+    deviceId:{
+        type: [String],
         require: true
     }
 })
