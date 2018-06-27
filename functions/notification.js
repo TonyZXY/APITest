@@ -40,14 +40,14 @@ module.exports.sendFlashNotification = (message) => {
     })
 };
 
-module.exports.sendCoinNotification = (userID, message) => {
-    IOSDevice.getDevice(userID, (err, devices) => {
-        if (err) {
-            console.log(err);
-        } else {
-            devices.forEach(device => {
-                sendIos(device.deviceID, message);
-            })
-        }
-    })
-};
+// module.exports.sendCoinNotification = (userID, message) => {
+//     IOSDevice.getDevice(userID, (err, devices) => {
+//         if (err) {
+//             console.log(err);
+//         } else {
+//             devices.forEach(device => {
+//                 sendIos(device.deviceID, message);
+//             })
+//         }
+//     })
+// };

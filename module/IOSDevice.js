@@ -1,10 +1,6 @@
 var mongoose = require('mongoose');
 
 var devicesiosSchema = mongoose.Schema({
-    userID : {
-        type: String,
-        require: true
-    },
     deviceID: {
         type: String,
         require: true
@@ -20,6 +16,15 @@ var IOSDevice = module.exports = mongoose.model('IOSDevice',devicesiosSchema);
 
 
 module.exports.addDevice = (device,callback)=>{
+    IOSDevice.findOne({deviceID:device},(err,deviceFromDB)=>{
+        if (err) {
+            console.log(err)
+        }else{
+            if(deviceFromDB){
+                IOSDevice.update()
+            }
+        }
+    })
     IOSDevice.create(device,callback);
 };
 
