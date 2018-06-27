@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
+const Notification = require('../functions/notification');
 
 
 
@@ -10,7 +11,7 @@ const options = {
     pass: "appdevgkV6="
 };
 
-mongoose.connect('mongodb://localhost/BGLNewsAppbkend', options);
+mongoose.connect('mongodb://localhost/APITest');
 
 
 module.exports = router;
@@ -29,7 +30,8 @@ function verifyToken(req, res, next) {
     } else {
         let userProfile = req.headers.authorization.split(' ')[1];
         let token = req.headers.authorization.split(' ')[2];
-        if (userProfile === null || userProfile === undefined || token === null || token === undefined) {
+        if (userProfile === null || userProfile === undefined ||
+            token === null || token === undefined) {
             return res.status(401).json({
                 login: false
             })
@@ -136,31 +138,54 @@ router.get("/getNews", function (req, res) {
     }
 });
 
-router.get("/getNewsLocaleOnly", function (req, res) {
-    const loTag = req.query.localeTag;
-    const leTag = req.query.languageTag;
-    const limit = req.query.limit;
-    const skip = req.query.skip;
-    News.findNewsByLocal(loTag, leTag, function (err, news) {
-        if (err) {
-            console.log(err);
-        }
-        res.json(news);
-    }, parseInt(skip), parseInt(limit))
-});
+// router.get("/getNewsLocaleOnly", function (req, res) {
+//     const loTag = req.query.localeTag;
+//     const leTag = req.query.languageTag;
+//     const limit = req.query.limit;
+//     const skip = req.query.skip;
+//     News.findNewsByLocal(loTag, leTag, function (err, news) {
+//         if (err) {
+//             console.log(err);
+//         }
+//         res.json(news);
+//     }, parseInt(skip), parseInt(limit))
+// });
 
 router.get("/getNewsContentOnly", function (req, res) {
     const typeTag = req.query.contentTag;
     const leTag = req.query.languageTag;
     const limit = req.query.limit;
     const skip = req.query.skip;
-    News.findNewsByContent(typeTag, leTag, function (err, news) {
-        if (err) {
-            console.log(err);
-        }
-        res.json(news);
-    }, parseInt(skip), parseInt(limit))
+    if (typeTag === null || typeTag === undefined || leTag === null || leTag === undefined) {
+        res.status(400).send({
+            message: 'bad request'
+        });
+    } else {
+        News.findNewsByContent(typeTag, leTag, function (err, news) {
+            if (err) {
+                console.log(err);
+            }
+            res.json(news);
+        }, parseInt(skip), parseInt(limit))
+    }
 });
+
+router.get("/getTags", (req, res) => {
+    const tags = [{
+        tag: 'tech',
+        name: 'technology'
+    }, {
+        tag: 'crypto',
+        name: 'crypto'
+    }, {
+        tag: 'business',
+        name: 'business'
+    }, {
+        tag: 'general',
+        name: 'general'
+    }]
+    res.json(tags);
+})
 
 
 // search news objects
@@ -169,23 +194,34 @@ router.get("/searchnews", (req, res) => {
     const languageTag = req.query.languageTag;
     const limit = req.query.limit;
     const skip = req.query.skip;
-    News.searchNews(languageTag, patten, (err, news) => {
-        if (err) {
-            console.log(err);
-        }
-        res.json(news);
-    }, parseInt(skip), parseInt(limit))
+    if (patten === null || patten === undefined || languageTag === null || languageTag === undefined) {
+        res.status(400).send({
+            message: 'bad request'
+        });
+    } else {
+        News.searchNews(languageTag, patten, (err, news) => {
+            if (err) {
+                console.log(err);
+            }
+            res.json(news);
+        }, parseInt(skip), parseInt(limit))
+    }
 });
 
 router.get("/searchNewsTime", (req, res) => {
     const from = req.query.from;
     const to = req.query.to;
-    News.searchNewsTime(from, to, (err, news) => {
-        if (err) {
-            console.log(err);
-        }
-        res.json(news);
-    })
+    if(from === null||from===undefined||to===null||to===undefined){
+        res.status(400).send({message:'bad request'});
+    } else {
+        News.searchNewsTime(from, to, (err, news) => {
+            if (err) {
+                console.log(err);
+            }
+            res.json(news);
+        })
+    }
+    
 });
 /*  NEWS PART END  */
 /*----------------------------------------------------------------------------*/
@@ -385,6 +421,7 @@ router.post('/flash', verifyToken, function (req, res) {
             console.log(err);
         }
         res.json(flashAdded);
+        Notification.sendFlashNotification(flashAdded.shortMassage);
     })
 });
 

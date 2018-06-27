@@ -11,6 +11,7 @@ app.use(bodyParser.json());
 const api = require('./routes/api');
 const login = require('./routes/login');
 const test = require('./routes/test');
+const userLogin = require('./routes/userLogin');
 
 //import news and video module
 const News = require('./module/News.js');
@@ -26,13 +27,15 @@ const options = {
     pass: "appdevgkV6="
 };
 
-mongoose.connect('mongodb://localhost/BGLNewsAppbkend', options);
+mongoose.connect('mongodb://localhost/APITest'/**, options**/);
 // mongoose.connect('mongodb://localhost/news');
 const db = mongoose.connection;
 
 app.use('/api', api);
+app.use('/userLogin', userLogin);
 app.use('/login',login);
 app.use('/test',test);
+
 
 //nothing
 app.get('/', function (req, res) {
@@ -40,8 +43,9 @@ app.get('/', function (req, res) {
 });
 
 //start application
-app.listen(3000);
-console.log('Running on port 3000');
+var port = 3030;
+app.listen(port);
+console.log(`Running on port ${port}`);
 
 
 

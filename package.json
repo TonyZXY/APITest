@@ -7,12 +7,14 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "apn": "^2.2.0",
     "body-parser": "*",
     "cors": "^2.8.4",
     "express": "*",
     "jsonwebtoken": "^8.3.0",
     "mongoose": "*",
-    "password-hash": "^1.2.2"
+    "password-hash": "^1.2.2",
+    "pg": "^7.4.3"
   },
   "author": "Tony Zheng",
   "license": "ISC"
