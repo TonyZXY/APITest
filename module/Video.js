@@ -92,8 +92,8 @@ module.exports.findVideoByLocale = function (localetag, callback, limit) {
     Video.find({localeTag: localetag}, callback).sort({_id: -1}).limit(limit);
 };
 
-module.exports.findVideoByType = function (typetag, callback, limit) {
-    Video.find({typeTag: typetag}, callback).sort({_id: -1}).limit(limit);
+module.exports.findVideoByType = function (typetag, laTag, callback, limit) {
+    Video.find({typeTag: typetag,languageTag: laTag}, callback).sort({_id: -1}).limit(limit);
 };
 
 module.exports.searchVideo = (languageTag, patten, callback, skip, limit) => {

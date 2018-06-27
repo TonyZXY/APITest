@@ -335,8 +335,9 @@ router.get("/getVideoLocaleOnly", function (req, res) {
 
 router.get("/getVideoTypeOnly", function (req, res) {
     const tyTag = req.query.typeTag;
+    const laTag = req.query.languageTag;
     const limit = req.query.limit;
-    Video.findVideoByType(tyTag, function (err, video) {
+    Video.findVideoByType(tyTag, laTag, function (err, video) {
         if (err) {
             console.log(err);
         }
