@@ -12,33 +12,25 @@ var devicesiosSchema = mongoose.Schema({
 });
 
 
-var IOSDevice = module.exports = mongoose.model('IOSDevice',devicesiosSchema);
+var IOSDevice = module.exports = mongoose.model('IOSDevice', devicesiosSchema);
 
 
-module.exports.addDevice = (device,callback)=>{
-    IOSDevice.findOne({deviceID:device},(err,deviceFromDB)=>{
-        if (err) {
-            console.log(err)
-        }else{
-            if(deviceFromDB){
-                IOSDevice.update()
-            }
-        }
-    })
-    IOSDevice.create(device,callback);
+module.exports.addDevice = (device, callback) => {
+    IOSDevice.create(device, callback);
 };
 
-module.exports.getDeviceList = (callback)=>{
+
+module.exports.getDeviceList = (callback) => {
     IOSDevice.find(callback);
 };
 
-module.exports.updateNotificationStatus = (deviceID,callback)=>{
-    IOSDevice.findOne({deviceID:deviceID},(err,device)=>{
+module.exports.updateNotificationStatus = (deviceID, callback) => {
+    IOSDevice.findOne({deviceID: deviceID}, (err, device) => {
         device.notification = !device.notification;
-        IOSDevice.findOneAndUpdate({deviceID:deviceID},device,{},callback);
+        IOSDevice.findOneAndUpdate({deviceID: deviceID}, device, {}, callback);
     })
 };
 
-module.exports.getDevice = (userID,callback)=>{
-    IOSDevice.find({userID:userID},callback);
+module.exports.getDevice = (deviceID, callback) => {
+    IOSDevice.find({deviceID: deviceID}, callback);
 };
