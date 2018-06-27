@@ -1,10 +1,6 @@
 var mongoose = require('mongoose');
 
 var devicesiosSchema = mongoose.Schema({
-    userID : {
-        type: String,
-        require: true
-    },
     deviceID: {
         type: String,
         require: true
@@ -33,7 +29,6 @@ module.exports.updateNotificationStatus = (deviceID,callback)=>{
         IOSDevice.findOneAndUpdate({deviceID:deviceID},device,{},callback);
     })
 };
-
 module.exports.getDevice = (userID,callback)=>{
     IOSDevice.find({userID:userID},callback);
 };
