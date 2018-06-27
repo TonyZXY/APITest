@@ -10,29 +10,73 @@ const interestSchema = mongoose.Schema({
             coinFrom: String,
             coinTo: String,
             market: String,
-            price: Number
+            price: Number,
+            status: Boolean,
+            id: String
         }]
+    },
+    status: {
+        type: Boolean,
+        require: true
     }
 });
 
-var Interest = module.exports = mongoose.model('Interest',interestSchema);
+var Interest = module.exports = mongoose.model('Interest', interestSchema);
 
 module.exports.getInterestList = (callback) => {
     Interest.find(callback);
 };
 
-module.exports.AddInterest = (userID,interest,callback)=>{
-    Interest.findOne({userID:userID},(err,interestFromDB)=>{
+module.exports.AddInterest = (userID, interest, callback) => {
+    Interest.findOne({userID: userID}, (err, interestFromDB) => {
         if (err) {
             console.log(err)
-        } if (!interestFromDB) {
+        }
+        if (!interestFromDB) {
             let interestToDB = {
                 userID: userID,
-                interest: [interest]
+                interest: [interest],
+                status: true
             };
-            Interest.create(interestToDB,callback);
+            Interest.create(interestToDB, callback);
         } else {
-            Interest.findOneAndUpdate({userID:userID},{$push:{interest:interest}},{new:true},callback);
+            Interest.findOneAndUpdate({userID: userID}, {
+                $push:
+                    {
+                        interest: interest
+                    }
+            }, {new: true}, callback);
         }
     })
+};
+
+module.exports.updateInterest = (userID, interest, callback) => {
+    Interest.updateOne({userID: userID, "interest._id": interest._id},
+        {
+            $set: {
+                "interest.$": interest
+            }
+        }, callback
+    )
+};
+
+module.exports.closeNotificationStatus = (userID, callback) => {
+    Interest.findOne({userID: userID}, (err, msg) => {
+        if (err) {
+            console.log(err);
+        } else {
+            let statusToDB = !msg.status;
+            Interest.findOneAndUpdate({userID: userID}, {$set: {status: statusToDB}}, {new: true}, callback);
+        }
+    });
+};
+
+module.exports.deleteInterest = (userID, interestID, callback) => {
+    Interest.findOneAndUpdate({userID: userID}, {
+        $pull: {
+            interest: {
+                _id: interestID
+            }
+        }
+    }, {new: true}, callback);
 };
