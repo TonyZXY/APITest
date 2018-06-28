@@ -16,6 +16,18 @@ const IOSDevice = require('../module/IOSDevice');
 
 router.post('/addIOSDevice', function (req, res) {
     const device = req.body;
+<<<<<<< HEAD
+    Device.getDevice(device.deviceId, function(err,device){
+        if(!device){
+            Device.addNews(device, function (err, news) {
+                if (err) {
+                    console.log(err);
+                }
+                res.json(news);
+            })
+        } else{
+            
+=======
     IOSDevice.getDevice(device.deviceID, (err, device) => {
         if (err) {
             console.log(err);
@@ -31,6 +43,7 @@ router.post('/addIOSDevice', function (req, res) {
                     }
                 })
             }
+>>>>>>> 2b366db2592eb58629f8dc0ad08b229fb37014b9
         }
     })
 });

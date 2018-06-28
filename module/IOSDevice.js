@@ -30,7 +30,12 @@ module.exports.updateNotificationStatus = (deviceID, callback) => {
         IOSDevice.findOneAndUpdate({deviceID: deviceID}, device, {}, callback);
     })
 };
+<<<<<<< HEAD
+module.exports.getDevice = (deviceID,callback)=>{
+    IOSDevice.find({deviceID:deviceID},callback);
+=======
 
 module.exports.getDevice = (deviceID, callback) => {
     IOSDevice.findOne({deviceID: deviceID}, callback);
+>>>>>>> 2b366db2592eb58629f8dc0ad08b229fb37014b9
 };
