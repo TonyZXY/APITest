@@ -231,13 +231,24 @@ router.post('/addInterest', verifyToken, (req, res) => {
             console.log(err);
         } else {
             let userID = user._id;
+            let length = interests.length;
+            let times = 0;
             interests.forEach(interest => {
                 if (interest._id === null || interest._id === undefined) {
                     Interest.AddInterest(userID, interest, (err, intFromDB) => {
                         if (err) {
                             console.log(err);
                         } else {
-                            res.json(intFromDB);
+                            times +=1;
+                            if(length===times){
+                                Interest.getInterest(userID,(err,message)=>{
+                                    if(err) {
+                                        console.log(err);
+                                    }else {
+                                        res.json(message);
+                                    }
+                                })
+                            }
                         }
                     })
                 } else {
@@ -245,11 +256,20 @@ router.post('/addInterest', verifyToken, (req, res) => {
                         if (err) {
                             console.log(err);
                         } else {
-                            res.json(intFromDB);
+                            times+=1;
+                            if(length===times){
+                                Interest.getInterest(userID,(err,message)=>{
+                                    if(err) {
+                                        console.log(err);
+                                    }else {
+                                        res.json(message);
+                                    }
+                                })
+                            }
                         }
                     })
                 }
-            })
+            });
         }
     });
 });
@@ -274,19 +294,29 @@ router.post('/changeNotificationStatus', verifyToken, (req, res) => {
 
 router.post('/deleteInterest', verifyToken, (req, res) => {
     let userEmail = req.body.email;
-    let interestID = req.body.interest;
+    let interestIDs = req.body.interests;
     Customer.getUser(userEmail, (err, user) => {
         if (err) {
             console.log(err);
         } else {
             let userID = user._id;
-            Interest.deleteInterest(userID, interestID, (err, msg) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    res.json(msg);
-                }
-            })
+            let length = interestIDs.length;
+            let times = 0;
+            interestIDs.forEach(interest=>{
+                Interest.deleteInterest(userID, interest._id, (err, msg) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        times+=1;
+                        if(times===length){
+                            Interest.getInterest(userID,(err,msg)=>{
+                                res.json(msg);
+                            })
+                        }
+                    }
+                });
+
+            });
         }
     })
 });

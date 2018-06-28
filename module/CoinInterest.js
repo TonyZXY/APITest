@@ -81,3 +81,7 @@ module.exports.deleteInterest = (userID, interestID, callback) => {
         }
     }, {new: true}, callback);
 };
+
+module.exports.getInterest = (userID,callback)=>{
+    Interest.findOne({userID:userID},callback);
+};
