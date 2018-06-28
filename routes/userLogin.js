@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const Customer = require('../module/Customer');
 const hashPassword = require('password-hash');
 const jwt = require('jsonwebtoken');
+const Interest = require('../module/CoinInterest');
 
 mongoose.connect('mongodb://localhost/APITest');
 
@@ -30,14 +31,15 @@ router.post('/register', (req, res, next) => {
                         token: null
                     });
                 } else {
-                    let fullname = req.body.fullName;
+                    let firstName = req.body.firstName;
+                    let lastName = req.body.lastName;
                     let email = req.body.email;
-                    let gender = req.body.gender;
-                    let age = req.body.age;
+                    let title = req.body.title;
                     let password = req.body.password;
-                    if (fullname === null || fullname === undefined
-                        || email === null || email === undefined
-                        || password === null || password === undefined) {
+                    if (firstName === null || firstName === undefined ||
+                        lastName === null || lastName === undefined ||
+                        email === null || email === undefined ||
+                        password === null || password === undefined) {
                         res.send({
                             success: false,
                             message: "register fail",
@@ -45,11 +47,8 @@ router.post('/register', (req, res, next) => {
                             token: null
                         })
                     } else {
-                        if (gender === null || gender === undefined) {
-                            gender = '';
-                        }
-                        if (age === null || age === undefined) {
-                            age = -1;
+                        if (title === null || title === undefined) {
+                            title = '';
                         }
                         let passwordToDB = hashPassword.generate(password, {
                             algorithm: 'sha256',
@@ -57,10 +56,10 @@ router.post('/register', (req, res, next) => {
                             iterations: 10
                         });
                         let userToDB = {
-                            fullName: fullname,
+                            firstName: firstName,
+                            lastName: lastName,
                             email: email,
-                            gender: gender,
-                            age: age,
+                            title: title,
                             password: passwordToDB
                         };
                         Customer.addUser(userToDB, (err, userFromDB) => {
@@ -75,6 +74,7 @@ router.post('/register', (req, res, next) => {
                                 let tokenToSend = jwt.sign(payload, userFromDB.email);
                                 console.log(userFromDB.password);
                                 console.log(tokenToSend);
+                                console.log(tokenToSend.length);
                                 res.send({
                                     success: true,
                                     message: 'Register success',
@@ -184,7 +184,8 @@ function verifyToken(req, res, next) {
                                 token: null
                             })
                         } else {
-                            if (user.password !== password || user._id !== userID) {
+                            if (user.password.toString() !== password.toString() ||
+                                user._id.toString() !== userID.toString()) {
                                 res.send({
                                     success: false,
                                     message: "Token Error",
@@ -219,6 +220,104 @@ router.delete('/users/:_id', (req, res) => {
             console.log(err);
         }
         res.json(mes);
+    })
+});
+
+router.post('/addInterest', verifyToken, (req, res) => {
+    let userEmail = req.body.email;
+    let interests = req.body.interests;
+    Customer.getUser(userEmail, (err, user) => {
+        if (err) {
+            console.log(err);
+        } else {
+            let userID = user._id;
+            let length = interests.length;
+            let times = 0;
+            interests.forEach(interest => {
+                if (interest._id === null || interest._id === undefined) {
+                    Interest.AddInterest(userID, interest, (err, intFromDB) => {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            times +=1;
+                            if(length===times){
+                                Interest.getInterest(userID,(err,message)=>{
+                                    if(err) {
+                                        console.log(err);
+                                    }else {
+                                        res.json(message);
+                                    }
+                                })
+                            }
+                        }
+                    })
+                } else {
+                    Interest.updateInterest(userID, interest, (err, intFromDB) => {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            times+=1;
+                            if(length===times){
+                                Interest.getInterest(userID,(err,message)=>{
+                                    if(err) {
+                                        console.log(err);
+                                    }else {
+                                        res.json(message);
+                                    }
+                                })
+                            }
+                        }
+                    })
+                }
+            });
+        }
+    });
+});
+
+router.post('/changeNotificationStatus', verifyToken, (req, res) => {
+    let userEmail = req.body.email;
+    Customer.getUser(userEmail, (err, user) => {
+        if (err) {
+            console.log(err);
+        } else {
+            let userID = user._id;
+            Interest.closeNotificationStatus(userID, (err, interests) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    res.json(interests);
+                }
+            })
+        }
+    })
+});
+
+router.post('/deleteInterest', verifyToken, (req, res) => {
+    let userEmail = req.body.email;
+    let interestIDs = req.body.interests;
+    Customer.getUser(userEmail, (err, user) => {
+        if (err) {
+            console.log(err);
+        } else {
+            let userID = user._id;
+            let length = interestIDs.length;
+            let times = 0;
+            interestIDs.forEach(interest=>{
+                Interest.deleteInterest(userID, interest._id, (err, msg) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        times+=1;
+                        if(times===length){
+                            Interest.getInterest(userID,(err,msg)=>{
+                                res.json(msg);
+                            })
+                        }
+                    }
+                });
+
+            });
+        }
     })
 });
 

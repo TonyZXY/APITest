@@ -1,7 +1,11 @@
 var mongoose = require('mongoose');
 
 var CustomerSchema = mongoose.Schema({
-    fullName:{
+    firstName:{
+        type: String,
+        require: true
+    },
+    lastName:{
         type: String,
         require: true
     },
@@ -9,12 +13,8 @@ var CustomerSchema = mongoose.Schema({
         type: String,
         require: true
     },
-    gender: {
+    title: {
         type: String,
-        require:false
-    },
-    age: {
-        type: Number,
         require:false
     },
     password: {

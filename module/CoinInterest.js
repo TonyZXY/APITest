@@ -12,12 +12,13 @@ const interestSchema = mongoose.Schema({
             market: String,
             price: Number,
             status: Boolean,
-            id: String
+            id: String,
+            isGreater: Number
         }]
     },
     status: {
         type: Boolean,
-        require: true
+        default: true
     }
 });
 
@@ -51,13 +52,13 @@ module.exports.AddInterest = (userID, interest, callback) => {
 };
 
 module.exports.updateInterest = (userID, interest, callback) => {
-    Interest.updateOne({userID: userID, "interest._id": interest._id},
+    Interest.findOneAndUpdate({userID: userID, "interest._id": interest._id},
         {
             $set: {
                 "interest.$": interest
             }
-        }, callback
-    )
+        },{new:true}, callback
+    );
 };
 
 module.exports.closeNotificationStatus = (userID, callback) => {
@@ -79,4 +80,8 @@ module.exports.deleteInterest = (userID, interestID, callback) => {
             }
         }
     }, {new: true}, callback);
+};
+
+module.exports.getInterest = (userID,callback)=>{
+    Interest.findOne({userID:userID},callback);
 };
