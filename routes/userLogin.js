@@ -225,29 +225,31 @@ router.delete('/users/:_id', (req, res) => {
 
 router.post('/addInterest', verifyToken, (req, res) => {
     let userEmail = req.body.email;
-    let interest = req.body.interest;
+    let interests = req.body.interests;
     Customer.getUser(userEmail, (err, user) => {
         if (err) {
             console.log(err);
         } else {
             let userID = user._id;
-            if (interest._id === null || interest._id === undefined) {
-                Interest.AddInterest(userID, interest, (err, intFromDB) => {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        res.json(intFromDB);
-                    }
-                })
-            } else {
-                Interest.updateInterest(userID, interest, (err, intFromDB) => {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        res.json(intFromDB);
-                    }
-                })
-            }
+            interests.forEach(interest => {
+                if (interest._id === null || interest._id === undefined) {
+                    Interest.AddInterest(userID, interest, (err, intFromDB) => {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            res.json(intFromDB);
+                        }
+                    })
+                } else {
+                    Interest.updateInterest(userID, interest, (err, intFromDB) => {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            res.json(intFromDB);
+                        }
+                    })
+                }
+            })
         }
     });
 });

@@ -13,7 +13,7 @@ const interestSchema = mongoose.Schema({
             price: Number,
             status: Boolean,
             id: String,
-            isGreater: Boolean
+            isGreater: Number
         }]
     },
     status: {
