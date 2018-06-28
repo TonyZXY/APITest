@@ -12,6 +12,7 @@ const api = require('./routes/api');
 const login = require('./routes/login');
 const test = require('./routes/test');
 const userLogin = require('./routes/userLogin');
+const deviceManage = require('./routes/deviceManage')
 
 //import news and video module
 const News = require('./module/News.js');
@@ -35,6 +36,7 @@ app.use('/api', api);
 app.use('/userLogin', userLogin);
 app.use('/login',login);
 app.use('/test',test);
+app.use('/deviceManage',deviceManage)
 
 
 //nothing

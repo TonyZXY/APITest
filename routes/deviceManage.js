@@ -16,34 +16,54 @@ const IOSDevice = require('../module/IOSDevice');
 
 router.post('/addIOSDevice', function (req, res) {
     const device = req.body;
-<<<<<<< HEAD
-    Device.getDevice(device.deviceId, function(err,device){
-        if(!device){
-            Device.addNews(device, function (err, news) {
-                if (err) {
-                    console.log(err);
-                }
-                res.json(news);
-            })
-        } else{
-            
-=======
-    IOSDevice.getDevice(device.deviceID, (err, device) => {
+    IOSDevice.getDevice(device.deviceID, (err, deviceInServer) => {
         if (err) {
             console.log(err);
         } else {
-            if (device) {
-                res.json(res);
+            if (deviceInServer) {
+                if(device.notification !== deviceInServer.notification){
+                    //update notification status
+                    IOSDevice.updateNotificationStatus(device.deviceID, function (req, res){
+                        if(err){
+                            console.log(err);
+                        } else{
+                            res.send({n:"update successfully"})
+                        }
+                    })
+                } else{
+                    res.send({
+                        n: "error"
+                    });
+                }
+
             } else {
-                IOSDevice.addDevice(device, (err, device) => {
+                IOSDevice.addDevice(device, (err, deviceAdded) => {
                     if (err) {
                         console.log(err);
                     } else {
-                        res.json(device);
+                        res.json(deviceAdded);
                     }
                 })
             }
->>>>>>> 2b366db2592eb58629f8dc0ad08b229fb37014b9
         }
     })
 });
+
+router.get('/IOSDevice', function(req, res){
+    IOSDevice.getDeviceList(function (err, deviceList) {
+        if (err) {
+            console.log(err);
+        }
+        res.json(deviceList);
+    })
+})
+
+router.delete('/IOSDevice/:_id',function(req,res){
+    const id = req.params._id;
+    IOSDevice.deleteDevice(id, function (err, device) {
+        if (err) {
+            console.log(err);
+        }
+        res.json(device);
+    })
+})
