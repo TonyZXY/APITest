@@ -225,7 +225,7 @@ router.delete('/users/:_id', (req, res) => {
 
 router.post('/addInterest', verifyToken, (req, res) => {
     let userEmail = req.body.email;
-    let interests = req.body.interests;
+    let interests = req.body.interest;
     Customer.getUser(userEmail, (err, user) => {
         if (err) {
             console.log(err);

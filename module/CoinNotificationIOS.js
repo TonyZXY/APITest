@@ -12,4 +12,13 @@ var coinNotificationIosDeviceSchema = mongoose.Schema({
     }
 });
 
+var NotificationIOS = module.exports = mongoose.model('coinNotificationIosDevice', coinNotificationIosDeviceSchema);
+
+module.exports.getNotificationIOSDevice = (callback) => {
+    NotificationIOS.find(callback);
+};
+
+module.exports.getNotificationIOSDeviceByUserID = (userID, callback) => {
+    NotificationIOS.findOne({userID:userID}, callback)
+}
 

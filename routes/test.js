@@ -168,7 +168,33 @@ router.post('/data', function(req, res){
     console.log(coinFrom);
     console.log(coinTo);
     console.log(market);
-    res.send({
-        "price": Algorithm.getPriceFromAPI(coinFrom,coinTo,market)
+    Algorithm.getPriceFromAPI(coinFrom, coinTo, market, function(response){
+        res.send({
+            "priceToshow": response
+        })
     })
 })
+
+router.get('/test2', function(req, res){
+    Interest.getInterestWithNotification(function(err, userList){
+        if(err){
+            console.log(err)
+        }
+        else{
+            res.json(userList)
+        }
+    })
+})
+
+const TradingPair = require('../module/TradingPair')
+router.get('/test3', function(req, res){
+    TradingPair.getTradingPairList(function(err, pairList){
+        if(err){
+            console.log(err)
+        }
+        else{
+            res.json(pairList)
+        }
+    })
+})
+

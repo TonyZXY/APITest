@@ -4,7 +4,7 @@ const request = require('request')
 
 mongoose.connect('mongodb://localhost/APITest');
 
-module.exports.getPriceFromAPI = function (coinFrom, coinTo, market) {
+module.exports.getPriceFromAPI = function (coinFrom, coinTo, market, callback) {
     
     request({
         method: 'GET',
@@ -13,15 +13,12 @@ module.exports.getPriceFromAPI = function (coinFrom, coinTo, market) {
     }, function (error, response, body){
           if(error){
               console.log(error);
-              return error;
+              return callback(error);
           }else{
               jsonObject = JSON.parse(body);
               console.log(jsonObject.RAW.PRICE)
-              return jsonObject.RAW.PRICE;
+              return callback(jsonObject.RAW.PRICE);
           }
     })
-
-    
-
 }
   
