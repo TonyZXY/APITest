@@ -12,5 +12,3 @@ var coinNotificationIosDeviceSchema = mongoose.Schema({
 });
 
 
-
-
