@@ -85,3 +85,7 @@ module.exports.deleteInterest = (userID, interestID, callback) => {
 module.exports.getInterest = (userID,callback)=>{
     Interest.findOne({userID:userID},callback);
 };
+
+module.exports.getTrueInterest = (callback)=>{
+    Interest.find({status:true,interest:{$elemMatch:{status:true}}},callback);
+};

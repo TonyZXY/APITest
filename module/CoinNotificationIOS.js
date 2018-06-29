@@ -1,5 +1,3 @@
-
-
 const mongoose = require('mongoose');
 
 var coinNotificationIosDeviceSchema = mongoose.Schema({
@@ -12,5 +10,7 @@ var coinNotificationIosDeviceSchema = mongoose.Schema({
         require:true
     }
 });
+
+
 
 

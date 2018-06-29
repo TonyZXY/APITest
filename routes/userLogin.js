@@ -321,5 +321,25 @@ router.post('/deleteInterest', verifyToken, (req, res) => {
     })
 });
 
+router.get('/interest',(req,res)=>{
+    Interest.getInterestList((err,msg)=>{
+        if(err){
+            console.log(err);
+        }else {
+            res.json(msg);
+        }
+    })
+});
+
+router.get('/interestOne',(req,res)=>{
+    Interest.getTrueInterest((err,msg)=>{
+        if(err){
+            console.log(err);
+        }else {
+            res.json(msg);
+        }
+    })
+});
+
 module.exports = router;
 
