@@ -51,35 +51,40 @@ setInterval(function() {
             userList.forEach(user =>{
                 userInterestList = user.interest;
                 userInterestList.forEach(interest =>{
-                    TradingPair.getOneTradingPair(interest.coinFrom, interest.coinTo, interest.market, function(err, tradingpair){
-                        if(err){
-                            console.log(err)
-                        } else{
-                            if(!tradingpair){
-                                algorithm.getPriceFromAPI(interest.coinFrom, interest.coinTo, interest.market, function(response){
-                                    tradingpair = new TradingPair();
-                                    tradingpair.coinFrom = interest.coinFrom;
-                                    tradingpair.coinTo = interest.coinTo;
-                                    tradingpair.market = interest.market;
-                                    tradingpair.price = response;
-                                    TradingPair.addTradingPair(tradingpair,function (err, trp) {
-                                        if (err) {
-                                            console.log(err);
-                                        }else{
-                                            console.log("Add "+ trp.coinFrom + " "
-                                            + trp.coinTo + " "+ trp.market+ " "+ trp.price 
-                                            + " to tradingpair schema");
-                                            comparePrice(user.userID, interest.isGreater, trp, interest)
-                                        }
-                                        // res.json(trp);
-                                    })
-                                })
+                    if(interest.status){
+                        TradingPair.getOneTradingPair(interest.coinFrom, interest.coinTo, interest.market, function(err, tradingpair){
+                            if(err){
+                                console.log(err)
                             } else{
-                                comparePrice(user.userID,interest.isGreater, tradingpair, interest);
-                                //compair between the two and if neccessary send notification
+                                if(!tradingpair){
+                                    algorithm.getPriceFromAPI(interest.coinFrom, interest.coinTo, interest.market, function(response){
+                                        tradingpair = new TradingPair();
+                                        tradingpair.coinFrom = interest.coinFrom;
+                                        tradingpair.coinTo = interest.coinTo;
+                                        tradingpair.market = interest.market;
+                                        tradingpair.price = response;
+                                        TradingPair.addTradingPair(tradingpair,function (err, trp) {
+                                            if (err) {
+                                                console.log(err);
+                                            }else{
+                                                console.log("Add "+ trp.coinFrom + " "
+                                                + trp.coinTo + " "+ trp.market+ " "+ trp.price 
+                                                + " to tradingpair schema");
+                                                comparePrice(user.userID, interest.isGreater, trp, interest)
+                                            }
+                                            // res.json(trp);
+                                        })
+                                    })
+                                } else{
+                                    comparePrice(user.userID,interest.isGreater, tradingpair, interest);
+                                    //compair between the two and if neccessary send notification
+                                }
                             }
-                        }
-                    })
+                        })
+                    } else {
+                        console("This interest has been closed on notification")
+                    }
+
                 })
             })
         } else{
