@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const IOSDevice = require('../module/IOSDevice');
 const apn = require('apn');
-
+const NotificationIOS = require('../module/CoinNotificationIOS')
 
 mongoose.connect('mongodb://localhost/APITest');
 
@@ -35,6 +35,18 @@ module.exports.sendFlashNotification = (message) => {
         } else {
             devices.forEach(device => {
                 sendIos(device.deviceID, message);
+            })
+        }
+    })
+};
+
+module.exports.sendAlertNotification = (userid, message) => {
+    NotificationIOS.getNotificationIOSDeviceByUserID(userid, function (err, deviceList) {
+        if(err){
+            console.log(err);
+        } else {
+            deviceList.deviceID.forEach(device =>{
+                sendIos(device, message)
             })
         }
     })

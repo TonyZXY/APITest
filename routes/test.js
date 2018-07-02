@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
+const request = require('request')
 
 const options = {
     user: 'bglappdev100',
@@ -155,3 +156,45 @@ router.post('/interest',(req,res)=>{
         }
     })
 });
+// --------------------------------------------------------------------------------  //
+
+
+
+const Algorithm = require('../functions/coinAlgorithm')
+router.post('/data', function(req, res){
+    coinFrom = req.body.coinFrom;
+    coinTo = req.body.coinTo;
+    market = req.body.market;
+    console.log(coinFrom);
+    console.log(coinTo);
+    console.log(market);
+    Algorithm.getPriceFromAPI(coinFrom, coinTo, market, function(response){
+        res.send({
+            "priceToshow": response
+        })
+    })
+})
+
+router.get('/test2', function(req, res){
+    Interest.getInterestWithNotification(function(err, userList){
+        if(err){
+            console.log(err)
+        }
+        else{
+            res.json(userList)
+        }
+    })
+})
+
+const TradingPair = require('../module/TradingPair')
+router.get('/test3', function(req, res){
+    TradingPair.getTradingPairList(function(err, pairList){
+        if(err){
+            console.log(err)
+        }
+        else{
+            res.json(pairList)
+        }
+    })
+})
+

@@ -34,3 +34,11 @@ module.exports.updateNotificationStatus = (deviceID, callback) => {
 module.exports.getDevice = (deviceID, callback) => {
     IOSDevice.findOne({deviceID: deviceID}, callback);
 };
+
+module.exports.deleteDevice = (id, callback) => {
+    let query = {
+        _id:id
+    };
+    IOSDevice.remove(query,callback);
+}
+
