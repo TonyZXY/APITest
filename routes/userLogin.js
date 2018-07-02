@@ -224,7 +224,7 @@ router.delete('/users/:_id', (req, res) => {
 });
 
 router.post('/addInterest', verifyToken, (req, res) => {
-    let userEmail = req.body.email;
+    let userEmail = req.headers.email;
     let interests = req.body.interests;
     Customer.getUser(userEmail, (err, user) => {
         if (err) {
@@ -275,7 +275,7 @@ router.post('/addInterest', verifyToken, (req, res) => {
 });
 
 router.post('/changeNotificationStatus', verifyToken, (req, res) => {
-    let userEmail = req.body.email;
+    let userEmail = req.headers.email;
     Customer.getUser(userEmail, (err, user) => {
         if (err) {
             console.log(err);
@@ -293,7 +293,7 @@ router.post('/changeNotificationStatus', verifyToken, (req, res) => {
 });
 
 router.post('/deleteInterest', verifyToken, (req, res) => {
-    let userEmail = req.body.email;
+    let userEmail = req.headers.email;
     let interestIDs = req.body.interests;
     Customer.getUser(userEmail, (err, user) => {
         if (err) {
