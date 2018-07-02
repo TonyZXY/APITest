@@ -20,6 +20,8 @@ const NewsFlash = require('../module/NewsFlash.js');
 const Genuine = require('../module/Genuine.js');
 const User = require('../module/User.js');
 const Interest = require('../module/CoinInterest');
+const NotificationB = require('../functions/notification')
+const CoinNotification = require('../module/CoinNotificationIOS')
 
 
 function verifyToken(req, res, next) {
@@ -198,3 +200,13 @@ router.get('/test3', function(req, res){
     })
 })
 
+router.get('/test4', function(req,res){
+    NotificationB.sendFlashNotification("It's a test message from server")
+    res.send({"send": "succeed"})
+})
+router.get('/test5', function(req,res){
+    CoinNotification.deleteDeviceByToken("E012C0DAECC002CA0EE9E34A25DF459AABE3A46F1ED3C528CC8039CBE0880608", (err,resp)=>{
+        res.send({"succeess": "removement"})
+        console.log("already removed 1");
+    })
+})

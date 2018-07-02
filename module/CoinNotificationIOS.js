@@ -37,4 +37,11 @@ module.exports.addDeviceTokenToUser = (user, deviceToken,callback) =>{
     },{new: true},callback)
 }
 
-
+module.exports.deleteDeviceByToken = (deviceToken,callback) =>{
+    NotificationIOS.update(
+        {},
+        {$pull: {
+            deviceID: deviceToken
+        }},
+        {multi: true},callback)
+}

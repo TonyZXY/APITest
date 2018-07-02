@@ -14,6 +14,7 @@ module.exports = router;
 
 const IOSDevice = require('../module/IOSDevice');
 const NotificationIOS = require('../module/CoinNotificationIOS')
+const Customer = require('../module/Customer')
 
 router.post('/addIOSDevice', function (req, res) {
     const device = req.body;
@@ -50,44 +51,54 @@ router.post('/addIOSDevice', function (req, res) {
     })
 });
 
-// FIXME: No testing right now, fix it
+// FIXME: May need change or test currently
 router.post('/addAlertDevice', function(req,res){
     const deviceToken = req.body.token;
+    const email = req.body.userEmail;
     const user = new NotificationIOS();
-    user.userID = req.body.userID;
     user.deviceID[0] = deviceToken;
-    NotificationIOS.findUser(user, function(err, userInDB){
-        if(err){
-            console.log(err);
-        } else if(!userInDB){
-            NotificationIOS.addNotificationIOSUser(user, function(err, user){
+    Customer.getUser(email,function(err, customer){
+       if(err){
+           console.log(err)
+       } else if(!customer){
+            res.send({"err": "No such user."});
+       } else{
+            user.userID = customer._id;
+            NotificationIOS.findUser(user, function(err, userInDB){
                 if(err){
                     console.log(err);
-                } else {
-                    res.json(user);
+                } else if(!userInDB){
+                    NotificationIOS.addNotificationIOSUser(user, function(err, user){
+                        if(err){
+                            console.log(err);
+                        } else {
+                            res.send({"message": "Succeeded on adding user"});
+                        }
+                    })
+                } else{
+                    let checkSame = false;
+                    userInDB.deviceID.forEach(device => {
+                        if(device === deviceToken){
+                            checkSame = true;
+                        }
+                    });
+        
+                    if(!checkSame){ 
+                        NotificationIOS.addDeviceTokenToUser(userInDB, deviceToken, function(err, user){
+                            if(err){
+                                console.log(err)
+                            } else{
+                                res.send({"message": "Succeeded on adding token"});
+                            }
+                        })
+                    } else {
+                        res.send({"message": "Second attempt on same device of same user"})
+                    }
                 }
             })
-        } else{
-            let checkSame = false;
-            userInDB.deviceID.forEach(device => {
-                if(device === deviceToken){
-                    checkSame = true;
-                }
-            });
-
-            if(!checkSame){ 
-                NotificationIOS.addDeviceTokenToUser(userInDB, deviceToken, function(err, user){
-                    if(err){
-                        console.log(err)
-                    } else{
-                        res.json(user)
-                    }
-                })
-            } else {
-                res.send({"err": "Second attempt on same device of same user"})
-            }
-        }
+       }
     })
+
 })
 
 
