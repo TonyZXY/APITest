@@ -43,7 +43,7 @@ setInterval(function() {
 
 
 var minutespartB = 5;
-the_intervalB = minutespartB * 60*1000;
+the_intervalB = minutespartB * 45*1000;
 setInterval(function() {
     console.log("this is runing")
     Interest.getInterestWithNotification(function (err, userList){
@@ -97,27 +97,27 @@ setInterval(function() {
 
 function comparePrice(idofUser,operator, tradepair, interest){
     if(operator === 1 && tradepair.price > interest.price){
-        // notification.sendAlertNotification(idofUser, 
-        //     "Now, "+ interest.coinFrom +" is worth "+ trp.price + " "+ interest.coinTo + " on "+ interest.market +
-        //     ", higher than your expectation of "+ interest.price+ " "+ interest.market)
+        notification.sendAlertNotification(idofUser, 
+            "Now, "+ interest.coinFrom +" is worth "+ tradepair.price + " "+ interest.coinTo + " on "+ interest.market +
+            ", higher than your expectation of "+ interest.price+ " "+ interest.market)
         console.log( "Now, "+idofUser+", "+ interest.coinFrom +" is worth "+ tradepair.price + " "+ interest.coinTo + " on "+ interest.market +
              ", higher than your expectation of "+ interest.price+ " "+ interest.market)
     } else if(operator === 2 && tradepair.price < interest.price){
-        // notification.sendAlertNotification(idofUser, 
-        //     "Now, "+ interest.coinFrom +" is worth "+ trp.price + " "+ interest.coinTo + " on "+ interest.market +
-        //     ", lower than your expectation of "+ interest.price+ " "+ interest.market)
+        notification.sendAlertNotification(idofUser, 
+            "Now, "+ interest.coinFrom +" is worth "+ tradepair.price + " "+ interest.coinTo + " on "+ interest.market +
+            ", lower than your expectation of "+ interest.price+ " "+ interest.market)
         console.log( "Now, "+idofUser+", "+ interest.coinFrom +" is worth "+ tradepair.price + " "+ interest.coinTo + " on "+ interest.market +
         ", lower than your expectation of "+ interest.price+ " "+ interest.market)
     } else if(operator===3 && tradepair.price >= interest.price){
-        // notification.sendAlertNotification(idofUser, 
-        //     "Now, "+ interest.coinFrom +" is worth "+ trp.price + " "+ interest.coinTo + " on "+ interest.market +
-        //     ", higher or equal to your expectation of "+ interest.price+ " "+ interest.market)
+        notification.sendAlertNotification(idofUser, 
+            "Now, "+ interest.coinFrom +" is worth "+ tradepair.price + " "+ interest.coinTo + " on "+ interest.market +
+            ", higher or equal to your expectation of "+ interest.price+ " "+ interest.market)
         console.log( "Now, "+idofUser+", "+ interest.coinFrom +" is worth "+ tradepair.price + " "+ interest.coinTo + " on "+ interest.market +
         ", higher or equal to your expectation of "+ interest.price+ " "+ interest.market)
     } else if(operator ===4 && tradepair.price <= interest.price){
-        // notification.sendAlertNotification(idofUser, 
-        //     "Now, "+ interest.coinFrom +" is worth "+ trp.price + " "+ interest.coinTo + " on "+ interest.market +
-        //     ", lower or equal to your expectation of "+ interest.price+ " "+ interest.market)
+        notification.sendAlertNotification(idofUser, 
+            "Now, "+ interest.coinFrom +" is worth "+ tradepair.price + " "+ interest.coinTo + " on "+ interest.market +
+            ", lower or equal to your expectation of "+ interest.price+ " "+ interest.market)
         console.log( "Now, "+idofUser+", "+ interest.coinFrom +" is worth "+ tradepair.price + " "+ interest.coinTo + " on "+ interest.market +
         ", lower or equal to your expectation of "+ interest.price+ " "+ interest.market)
     } else{

@@ -52,15 +52,40 @@ router.post('/addIOSDevice', function (req, res) {
 
 // FIXME: No testing right now, fix it
 router.post('/addAlertDevice', function(req,res){
-    const deviceToken = req.body.deviceToken;
+    const deviceToken = req.body.token;
     const user = new NotificationIOS();
     user.userID = req.body.userID;
-    user.device.deviceToken[0] = deviceToken;
-    NotificationIOS.addNotificationIOSUser(user, deviceToke, function(err, userInDB){
+    user.deviceID[0] = deviceToken;
+    NotificationIOS.findUser(user, function(err, userInDB){
         if(err){
             console.log(err);
+        } else if(!userInDB){
+            NotificationIOS.addNotificationIOSUser(user, function(err, user){
+                if(err){
+                    console.log(err);
+                } else {
+                    res.json(user);
+                }
+            })
         } else{
-            res.json(userInDB);
+            let checkSame = false;
+            userInDB.deviceID.forEach(device => {
+                if(device === deviceToken){
+                    checkSame = true;
+                }
+            });
+
+            if(!checkSame){ 
+                NotificationIOS.addDeviceTokenToUser(userInDB, deviceToken, function(err, user){
+                    if(err){
+                        console.log(err)
+                    } else{
+                        res.json(user)
+                    }
+                })
+            } else {
+                res.send({"err": "Second attempt on same device of same user"})
+            }
         }
     })
 })
@@ -88,5 +113,14 @@ router.delete('/IOSDevice/:_id',function(req,res){
             console.log(err);
         }
         res.json(device);
+    })
+})
+
+router.get('/NotificationDevice', function(req, res){
+    NotificationIOS.getNotificationIOSDevice(function (err, deviceList) {
+        if (err) {
+            console.log(err);
+        }
+        res.json(deviceList);
     })
 })
