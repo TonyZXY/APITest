@@ -3,9 +3,9 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const Interest = require('../module/CoinInterest');
-const TradingPair = require('../module/TradingPair')
-const algorithm = require('../functions/coinAlgorithm')
-const notification = require('../functions/notification')
+const TradingPair = require('../module/TradingPair');
+const algorithm = require('../functions/coinAlgorithm');
+const notification = require('../functions/notification');
 
 mongoose.connect('mongodb://localhost/APITest');
 
@@ -23,7 +23,7 @@ setInterval(function() {
     } else{
         if(typeof tradingpairList !=='undefined' && tradingpairList.length>0){
             tradingpairList.forEach(trpair => {
-                _id = trpair._id;
+                let _id = trpair._id;
                 algorithm.getPriceFromAPI(trpair.coinFrom, trpair.coinTo, trpair.market,function(response){
                     trpair.price = response;
                     TradingPair.updateTradingPair(_id, trpair, {}, function(err, res){

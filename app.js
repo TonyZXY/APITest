@@ -12,8 +12,9 @@ const api = require('./routes/api');
 const login = require('./routes/login');
 const test = require('./routes/test');
 const userLogin = require('./routes/userLogin');
-const deviceManage = require('./routes/deviceManage')
-const tradingpair = require('./routes/tradingpairManage')
+const deviceManage = require('./routes/deviceManage');
+const tradingpair = require('./routes/tradingpairManage');
+const coin = require('./routes/coin');
 
 //import news and video module
 const News = require('./module/News.js');
@@ -37,8 +38,9 @@ app.use('/api', api);
 app.use('/userLogin', userLogin);
 app.use('/login',login);
 app.use('/test',test);
-app.use('/deviceManage',deviceManage)
-app.use('/tradingpairManage',tradingpair)
+app.use('/deviceManage',deviceManage);
+app.use('/tradingpairManage',tradingpair);
+app.use('/coin',coin);
 
 
 //nothing
