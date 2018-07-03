@@ -9,8 +9,8 @@ mongoose.connect('mongodb://localhost/APITest');
 const optionsToFile = {
     token: {
         key: "cert.p8",
-        keyId: "FWQ4PAZLMF",
-        teamId: "64QSYLCXQ8"
+        keyId: "PFYGPR25U8",
+        teamId: "4SMWL7L89M"
     },
     production: false
 };
