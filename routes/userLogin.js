@@ -91,7 +91,7 @@ router.post('/register', (req, res, next) => {
 });
 
 router.post('/login', (req, res) => {
-    const username = req.body.username;
+    const username = req.body.userEmail;
     const password = req.body.password;
     if (username === null || username === undefined ||
         password === null || password === undefined) {
@@ -141,8 +141,8 @@ router.post('/login', (req, res) => {
 });
 
 function verifyToken(req, res, next) {
-    let token = req.headers.token;
-    let email = req.headers.email;
+    let token = req.body.token;
+    let email = req.body.email;
     if (token === null || token === undefined ||
         email === null || email === undefined) {
         return res.send({
