@@ -94,7 +94,6 @@ async function forCurrency(array){
     for (let i=0;i<currencys.length;i++) {
         forLoop(array,currencys[i]);
         await delay(second*16*1000);
-        loginConsole("Currency Loop. finish "+i+" currency");
     }
 }
 
@@ -103,7 +102,7 @@ async function start() {
     let time = 1;
     do {
         let array = [];
-        loginConsole("start Loop for " + time);
+        loginConsole(" start Loop for " + time);
         time ++;
         forCurrency(array);
         await delay(second*64*1000);
@@ -111,7 +110,7 @@ async function start() {
             if (err) {
                 console.log(err);
             } else {
-                console.log(msg);
+
             }
         });
         loginConsole("Add to database");
@@ -122,12 +121,10 @@ async function start() {
 
 function loginConsole(msg) {
     console.log(
-        new Date(Date.now()).toLocaleString() + "  Time from " + msg + "."
+        new Date(Date.now()).toLocaleString() + msg
     );
 }
 
 module.exports.run = ()=>{
     start()
 };
-
-start();

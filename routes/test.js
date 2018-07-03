@@ -100,10 +100,10 @@ router.post('/news', (req, res) => {
                 if (err) {
                     console.log(err)
                 }
-                loginconsole('News Added: ' + news.title);
+                // loginconsole('News Added: ' + news.title);
             })
         } else {
-            loginconsole('In Database: ' + news.title);
+            // loginconsole('In Database: ' + news.title);
         }
         res.status(200).send('OK');
     })

@@ -194,6 +194,5 @@ module.exports.run = ()=>{
     getLoop();
 };
 
-getLoop();
 
 //_________________________

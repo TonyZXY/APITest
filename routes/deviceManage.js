@@ -13,8 +13,8 @@ mongoose.connect('mongodb://localhost/APITest');
 module.exports = router;
 
 const IOSDevice = require('../module/IOSDevice');
-const NotificationIOS = require('../module/CoinNotificationIOS')
-const Customer = require('../module/Customer')
+const NotificationIOS = require('../module/CoinNotificationIOS');
+const Customer = require('../module/Customer');
 
 router.post('/addIOSDevice', function (req, res) {
     const device = req.body;
@@ -100,14 +100,6 @@ router.post('/addAlertDevice', function(req,res){
     })
 
 });
-
-
-
-
-
-
-
-
 
 router.get('/IOSDevice', function(req, res){
     IOSDevice.getDeviceList(function (err, deviceList) {
