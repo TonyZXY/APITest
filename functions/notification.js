@@ -19,12 +19,13 @@ function sendIos(deviceId, message) {
     let apnprovider = new apn.Provider(optionsToFile);
     let deviceToken = deviceId;
     let notification = new apn.Notification();
+    notification.badge = 1
     notification.alert = message;
-    notification.topic = "BlockChainGlobal.BGLMedia";
+    notification.topic = "com.blockchainglobal.bglmedia";
     apnprovider.send(notification, deviceToken).then(result => {
             console.log(result.failed)
             result.failed.forEach(failure => {
-                if (failure.status === '410') {
+                if (failure.status === '410' || failure.status ==='400') {
                     IOSDevice.deleteDeviceByToken(deviceToken,(err,res) => {
                         if(err){
                             console.log(err);

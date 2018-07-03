@@ -217,3 +217,13 @@ router.get('/test6',(req,res) =>{
         res.json(userList)
     })
 })
+router.post('/flash', function (req, res) {
+    const flashAdded = req.body;
+    NewsFlash.addFlashNews(flashAdded, function (err, flashAdded) {
+        if (err) {
+            console.log(err);
+        }
+        res.json(flashAdded);
+        NotificationB.sendFlashNotification(flashAdded.shortMassage);
+    })
+});

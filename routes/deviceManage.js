@@ -51,7 +51,7 @@ router.post('/addIOSDevice', function (req, res) {
     })
 });
 
-// FIXME: May need change or test currently
+
 router.post('/addAlertDevice', function(req,res){
     const deviceToken = req.body.token;
     const email = req.body.userEmail;
