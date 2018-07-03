@@ -109,7 +109,7 @@ function getNews(content) {
     let httpUrl = content.url;
     if (content.from !== '') {
 
-        httpUrl += '&from=' + content.from;
+        httpUrl += '&from=' + content.from.toISOString();
     }
     console.log('Get Data From URL: ' + httpUrl);
     https.get(httpUrl, (res) => {
@@ -193,5 +193,7 @@ function loginConsole(times) {
 module.exports.run = ()=>{
     getLoop();
 };
+
+getLoop();
 
 //_________________________

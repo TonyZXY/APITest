@@ -205,8 +205,15 @@ router.get('/test4', function(req,res){
     res.send({"send": "succeed"})
 })
 router.get('/test5', function(req,res){
-    CoinNotification.deleteDeviceByToken("E012C0DAECC002CA0EE9E34A25DF459AABE3A46F1ED3C528CC8039CBE0880608", (err,resp)=>{
+    CoinNotification.deleteDeviceByToken(null, (err,resp)=>{
         res.send({"succeess": "removement"})
         console.log("already removed 1");
+    })
+})
+
+const CUstomer = require('../module/Customer')
+router.get('/test6',(req,res) =>{
+    CUstomer.getUserList((err,userList) =>{
+        res.json(userList)
     })
 })
