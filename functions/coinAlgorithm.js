@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const CoinInterest = require('../module/CoinInterest');
-const request = require('request')
+const request = require('request');
 
 mongoose.connect('mongodb://localhost/APITest');
 
