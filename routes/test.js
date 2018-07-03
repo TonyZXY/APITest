@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
+const request = require('request')
 
 const options = {
     user: 'bglappdev100',
@@ -19,6 +20,8 @@ const NewsFlash = require('../module/NewsFlash.js');
 const Genuine = require('../module/Genuine.js');
 const User = require('../module/User.js');
 const Interest = require('../module/CoinInterest');
+const NotificationB = require('../functions/notification')
+const CoinNotification = require('../module/CoinNotificationIOS')
 
 
 function verifyToken(req, res, next) {
@@ -155,3 +158,55 @@ router.post('/interest',(req,res)=>{
         }
     })
 });
+// --------------------------------------------------------------------------------  //
+
+
+
+const Algorithm = require('../functions/coinAlgorithm')
+router.post('/data', function(req, res){
+    coinFrom = req.body.coinFrom;
+    coinTo = req.body.coinTo;
+    market = req.body.market;
+    console.log(coinFrom);
+    console.log(coinTo);
+    console.log(market);
+    Algorithm.getPriceFromAPI(coinFrom, coinTo, market, function(response){
+        res.send({
+            "priceToshow": response
+        })
+    })
+})
+
+router.get('/test2', function(req, res){
+    Interest.getInterestWithNotification(function(err, userList){
+        if(err){
+            console.log(err)
+        }
+        else{
+            res.json(userList)
+        }
+    })
+})
+
+const TradingPair = require('../module/TradingPair')
+router.get('/test3', function(req, res){
+    TradingPair.getTradingPairList(function(err, pairList){
+        if(err){
+            console.log(err)
+        }
+        else{
+            res.json(pairList)
+        }
+    })
+})
+
+router.get('/test4', function(req,res){
+    NotificationB.sendFlashNotification("It's a test message from server")
+    res.send({"send": "succeed"})
+})
+router.get('/test5', function(req,res){
+    CoinNotification.deleteDeviceByToken("E012C0DAECC002CA0EE9E34A25DF459AABE3A46F1ED3C528CC8039CBE0880608", (err,resp)=>{
+        res.send({"succeess": "removement"})
+        console.log("already removed 1");
+    })
+})

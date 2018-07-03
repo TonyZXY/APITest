@@ -85,3 +85,26 @@ module.exports.deleteInterest = (userID, interestID, callback) => {
 module.exports.getInterest = (userID,callback)=>{
     Interest.findOne({userID:userID},callback);
 };
+
+module.exports.getTrueInterest = (callback)=>{
+    Interest.find({status:true,interest:{$elemMatch:{status:true}}},callback);
+};
+
+module.exports.getInterestWithNotification = (callback) =>{
+    Interest.find({status:true},callback)
+    
+    // Interest.aggregate([
+    //     {$match:{status:true}},
+    //     {
+    //        $project: {
+    //           interest: {
+    //              $filter: {
+    //                 input: "$interest",
+    //                 as: "int",
+    //                 cond: {$eq:["$$int.status", true ]}
+    //              }
+    //           }
+    //        }
+    //     }
+    //  ],callback)
+};

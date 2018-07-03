@@ -42,3 +42,7 @@ module.exports.deleteDevice = (id, callback) => {
     IOSDevice.remove(query,callback);
 }
 
+module.exports.deleteDeviceByToken = (deviceID,callback) => {
+    IOSDevice.findOneAndRemove({deviceID:deviceID},callback)
+};
+

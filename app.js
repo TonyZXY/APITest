@@ -12,7 +12,9 @@ const api = require('./routes/api');
 const login = require('./routes/login');
 const test = require('./routes/test');
 const userLogin = require('./routes/userLogin');
-const deviceManage = require('./routes/deviceManage')
+const deviceManage = require('./routes/deviceManage');
+const tradingpair = require('./routes/tradingpairManage');
+const coin = require('./routes/coin');
 
 //import news and video module
 const News = require('./module/News.js');
@@ -36,7 +38,9 @@ app.use('/api', api);
 app.use('/userLogin', userLogin);
 app.use('/login',login);
 app.use('/test',test);
-app.use('/deviceManage',deviceManage)
+app.use('/deviceManage',deviceManage);
+app.use('/tradingpairManage',tradingpair);
+app.use('/coin',coin);
 
 
 //nothing
@@ -53,6 +57,7 @@ console.log(`Running on port ${port}`);
 
 
 /*----------------------------------------------------------------------------*/
+
 /**
  * Please Write Testing Code here
  */
@@ -99,7 +104,14 @@ console.log(`Running on port ${port}`);
 //     },parseInt(limit))
 // });
 
-
+//const al = require('./functions/coinAlgorithm')
+// var minutes = 1, the_interval = minutes * 60*1000;
+// setInterval(function() {
+//   console.log("I am doing my 5 seconds check");
+//   al.getPriceFromAPI("BTC","USD","Kraken", function(response){
+//       console.log(response);
+//   })
+// }, the_interval);
 
 
 

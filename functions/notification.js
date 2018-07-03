@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const IOSDevice = require('../module/IOSDevice');
 const apn = require('apn');
-
+const NotificationIOS = require('../module/CoinNotificationIOS')
 
 mongoose.connect('mongodb://localhost/APITest');
 
@@ -22,8 +22,29 @@ function sendIos(deviceId, message) {
     notification.alert = message;
     notification.topic = "BlockChainGlobal.BGLMedia";
     apnprovider.send(notification, deviceToken).then(result => {
-        console.log(result);
-    });
+            console.log(result.failed)
+            result.failed.forEach(failure => {
+                if (failure.status === '410') {
+                    IOSDevice.deleteDeviceByToken(deviceToken,(err,res) => {
+                        if(err){
+                            console.log(err);
+                        } else{
+                            console.log(deviceToken+" has been deleted from db due to invalid device token")
+                        }
+                    })
+                    NotificationIOS.deleteDeviceByToken(deviceToken,(err,res) => {
+                        if(err){
+                            console.log(err);
+                        } else{
+                            console.log("Remove invalid device token procedure")
+                        }
+                    })
+                } else {
+                    console.log("not this one")
+                }
+            })
+    })
+
     apnprovider.shutdown();
 }
 
@@ -40,14 +61,16 @@ module.exports.sendFlashNotification = (message) => {
     })
 };
 
-// module.exports.sendCoinNotification = (userID, message) => {
-//     IOSDevice.getDevice(userID, (err, devices) => {
-//         if (err) {
-//             console.log(err);
-//         } else {
-//             devices.forEach(device => {
-//                 sendIos(device.deviceID, message);
-//             })
-//         }
-//     })
-// };
+module.exports.sendAlertNotification = (userid, message) => {
+    NotificationIOS.getNotificationIOSDeviceByUserID(userid, function (err, deviceList) {
+        if(err){
+            console.log(err);
+        } else if(!deviceList){
+            console.log("Currently no user is added in the database")
+        }else{
+            deviceList.deviceID.forEach(device =>{
+                sendIos(device, message)
+            })
+        }
+    })
+};

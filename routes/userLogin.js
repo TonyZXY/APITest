@@ -91,7 +91,7 @@ router.post('/register', (req, res, next) => {
 });
 
 router.post('/login', (req, res) => {
-    const username = req.body.username;
+    const username = req.body.userEmail;
     const password = req.body.password;
     if (username === null || username === undefined ||
         password === null || password === undefined) {
@@ -141,8 +141,8 @@ router.post('/login', (req, res) => {
 });
 
 function verifyToken(req, res, next) {
-    let token = req.headers.token;
-    let email = req.headers.email;
+    let token = req.body.token;
+    let email = req.body.email;
     if (token === null || token === undefined ||
         email === null || email === undefined) {
         return res.send({
@@ -225,7 +225,7 @@ router.delete('/users/:_id', (req, res) => {
 
 router.post('/addInterest', verifyToken, (req, res) => {
     let userEmail = req.body.email;
-    let interests = req.body.interests;
+    let interests = req.body.interest;
     Customer.getUser(userEmail, (err, user) => {
         if (err) {
             console.log(err);
@@ -320,6 +320,27 @@ router.post('/deleteInterest', verifyToken, (req, res) => {
         }
     })
 });
+
+router.get('/interest',(req,res)=>{
+    Interest.getInterestList((err,msg)=>{
+        if(err){
+            console.log(err);
+        }else {
+            res.json(msg);
+        }
+    })
+});
+
+router.get('/interestOne',(req,res)=>{
+    Interest.getTrueInterest((err,msg)=>{
+        if(err){
+            console.log(err);
+        }else {
+            res.json(msg);
+        }
+    })
+});
+
 
 module.exports = router;
 
