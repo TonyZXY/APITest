@@ -16,6 +16,9 @@ const deviceManage = require('./routes/deviceManage');
 const tradingpair = require('./routes/tradingpairManage');
 const coin = require('./routes/coin');
 
+const CoinData = require('./dataServices/CoinGlobalAvg');
+const NewsFromNewsAPI = require('./dataServices/NewsFromNewsAPI');
+
 //import news and video module
 const News = require('./module/News.js');
 const Video = require('./module/Video.js');
@@ -52,6 +55,8 @@ app.get('/', function (req, res) {
 var port = 3030;
 app.listen(port);
 console.log(`Running on port ${port}`);
+CoinData.run();
+NewsFromNewsAPI.run();
 
 
 
