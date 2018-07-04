@@ -1,6 +1,6 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var CustomerSchema = mongoose.Schema({
+const CustomerSchema = mongoose.Schema({
     firstName:{
         type: String,
         require: true
@@ -23,7 +23,7 @@ var CustomerSchema = mongoose.Schema({
     }
 });
 
-var Customer = module.exports = mongoose.model('Customer',CustomerSchema);
+const Customer = module.exports = mongoose.model('Customer',CustomerSchema);
 
 module.exports.getUser = (email,callback)=>{
     Customer.findOne({

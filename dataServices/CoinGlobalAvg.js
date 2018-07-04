@@ -21,8 +21,8 @@ const convert = '&convert=';
 
 const currencys = [AUD, EUR, CNY, JPY];
 
-var numberOfCoins = 1596;
-var length = numberOfCoins / 100;
+let numberOfCoins = 1596;
+let length = numberOfCoins / 100;
 
 
 const delay = amount => {

@@ -1,6 +1,6 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var TradingPairSchema = mongoose.Schema({
+const TradingPairSchema = mongoose.Schema({
     coinFrom:{
         type: String,
         require: true
@@ -19,11 +19,11 @@ var TradingPairSchema = mongoose.Schema({
     },
 });
 
-var TradingPair = module.exports = mongoose.model('TradingPair',TradingPairSchema);
+const TradingPair = module.exports = mongoose.model('TradingPair',TradingPairSchema);
 
 module.exports.updateTradingPair = function (id,trpair,option,callback) {
-    var query = {_id:id};
-    var update = {
+    let query = {_id:id};
+    let update = {
         price : trpair.price
     };
     TradingPair.findOneAndUpdate(query,update,option,callback);
@@ -35,7 +35,7 @@ module.exports.addTradingPair = function (trpair,callback) {
 
 module.exports.getTradingPairList = function(callback){
     TradingPair.find(callback);
-}
+};
 
 module.exports.getOneTradingPair = function(coinFrom, coinTo, market, callback){
     TradingPair.findOne({
@@ -43,4 +43,4 @@ module.exports.getOneTradingPair = function(coinFrom, coinTo, market, callback){
         coinTo: coinTo,
         market: market
     },callback);
-}
+};

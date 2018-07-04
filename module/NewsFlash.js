@@ -1,8 +1,8 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 
 //news flash module
-var newsFlashSchrma = mongoose.Schema({
+const newsFlashSchrma = mongoose.Schema({
     shortMassage:{
         type:String,
         require: true
@@ -18,7 +18,7 @@ var newsFlashSchrma = mongoose.Schema({
 });
 
 
-var NewsFlash = module.exports = mongoose.model('NewsFlash',newsFlashSchrma);
+const NewsFlash = module.exports = mongoose.model('NewsFlash',newsFlashSchrma);
 
 
 //get list
@@ -42,8 +42,8 @@ module.exports.addFlashNews = function (flashAdded,callback) {
 
 //update flash News
 module.exports.updateFlashNews = function (id,flash,option,callback) {
-    var query = {_id:id};
-    var update = {
+    let query = {_id:id};
+    let update = {
         shortMassage:flash.shortMassage,
         languageTag:flash.languageTag
     };
@@ -56,13 +56,13 @@ module.exports.searchFlashNews = (languageTag,patten,callback,skip,limit)=>{
 
 //delete news
 module.exports.deleteFlash = function (id,callback) {
-    var query = {_id:id};
+    let query = {_id:id};
     NewsFlash.remove(query,callback);
 };
 
 module.exports.searchFlashTime = (from, to, callback) =>{
-    var dateFrom = new Date(from);
-    var dateTo = new Date(to);
+    let dateFrom = new Date(from);
+    let dateTo = new Date(to);
     dateTo.setDate(dateTo.getDate() + 1);
     NewsFlash.find({
         'publishedTime': {

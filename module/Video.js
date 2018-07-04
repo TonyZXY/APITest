@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 //video mudule
-var videoSchrma = mongoose.Schema({
+const videoSchrma = mongoose.Schema({
     author: {
         type: String,
         require: true
@@ -40,7 +40,7 @@ var videoSchrma = mongoose.Schema({
     }
 });
 
-var Video = module.exports = mongoose.model('Videos', videoSchrma);
+const Video = module.exports = mongoose.model('Videos', videoSchrma);
 
 // get video list
 module.exports.getVideos = function (leTag, callback, skip, limit) {
@@ -63,8 +63,8 @@ module.exports.addVideo = function (videoAdded, callback) {
 
 // update video
 module.exports.updateVideo = function (id, video, option, callback) {
-    var query = {_id: id};
-    var update = {
+    let query = {_id: id};
+    let update = {
         author: video.author,
         title: video.title,
         videoeDescription: video.videoDescription,
@@ -79,7 +79,7 @@ module.exports.updateVideo = function (id, video, option, callback) {
 
 // delete video
 module.exports.deleteVideo = function (id, callback) {
-    var query = {_id: id};
+    let query = {_id: id};
     Video.remove(query, callback);
 };
 
@@ -108,8 +108,8 @@ module.exports.searchVideo = (languageTag, patten, callback, skip, limit) => {
 };
 
 module.exports.searchVideoTime = (from, to, callback) => {
-    var dateFrom = new Date(from);
-    var dateTo = new Date(to);
+    let dateFrom = new Date(from);
+    let dateTo = new Date(to);
     dateTo.setDate(dateTo.getDate() + 1);
     Video.find({
         'publishedTime':{

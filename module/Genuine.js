@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 //genuine module
-var genuineSchema = mongoose.Schema({
+const genuineSchema = mongoose.Schema({
     author: {
         type: String,
         require: true
@@ -36,7 +36,7 @@ var genuineSchema = mongoose.Schema({
     }
 });
 
-var Genuine = module.exports = mongoose.model('Genuine', genuineSchema);
+const Genuine = module.exports = mongoose.model('Genuine', genuineSchema);
 
 
 //get Genuine list
@@ -56,8 +56,8 @@ module.exports.addGenuine = function (genuine, callback) {
 
 //update Genuine message
 module.exports.updateGenuine = function (id, genuine, option, callback) {
-    var query = {_id: id};
-    var update = {
+    let query = {_id: id};
+    let update = {
         author: genuine.author,
         title: genuine.title,
         genuineDescription: genuine.genuineDescription,
@@ -71,7 +71,7 @@ module.exports.updateGenuine = function (id, genuine, option, callback) {
 
 //delete genuine
 module.exports.deleteGenuine = function (id, callback) {
-    var query = {_id: id};
+    let query = {_id: id};
     Genuine.remove(query, callback);
 };
 
@@ -93,8 +93,8 @@ module.exports.searchGenuine = (languageTag, patten, callback, skip, limit) => {
 };
 
 module.exports.searchGenuineTime = (from, to, callback) => {
-    var dateFrom = new Date(from);
-    var dateTo = new Date(to);
+    let dateFrom = new Date(from);
+    let dateTo = new Date(to);
     dateTo.setDate(dateTo.getDate() + 1);
     Genuine.find({
         'publishedTime': {

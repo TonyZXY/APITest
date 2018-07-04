@@ -45,11 +45,11 @@ setInterval(function() {
 var minutespartB = 5;
 the_intervalB = minutespartB * 45*1000;
 setInterval(function() {
-    console.log("this is runing")
+    console.log("this is runing");
     Interest.getInterestWithNotification(function (err, userList){
         if(userList !== null && typeof userList !== 'undefined'){
             userList.forEach(user =>{
-                userInterestList = user.interest;
+                let userInterestList = user.interest;
                 userInterestList.forEach(interest =>{
                     if(interest.status){
                         TradingPair.getOneTradingPair(interest.coinFrom, interest.coinTo, interest.market, function(err, tradingpair){

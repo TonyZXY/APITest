@@ -22,7 +22,7 @@ const interestSchema = mongoose.Schema({
     }
 });
 
-var Interest = module.exports = mongoose.model('Interest', interestSchema);
+const Interest = module.exports = mongoose.model('Interest', interestSchema);
 
 module.exports.getInterestList = (callback) => {
     Interest.find(callback);
