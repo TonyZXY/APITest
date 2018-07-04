@@ -56,7 +56,7 @@ var port = 3030;
 app.listen(port);
 console.log(`Running on port ${port}`);
 CoinData.run();
-NewsFromNewsAPI.run();
+// NewsFromNewsAPI.run();
 
 
 
