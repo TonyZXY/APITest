@@ -30,7 +30,7 @@ const delay = amount => {
         setTimeout(resolve, amount);
     });
 };
-const second = 2;
+const second = 3;
 
 async function forLoop(array,currency) {
     for (let i = 0; i < length; i++) {
