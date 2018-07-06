@@ -82,18 +82,6 @@ router.post('/register', (req, res, next) => {
                                     code: 200,
                                     token: tokenToSend
                                 });
-
-                                Interest.AddInterest(userFromDB._id, [], (err,interest) =>{
-                                    if(err){
-                                        console.log(err)
-                                    } else{
-
-                                    }
-                                    
-                                })
-                                
-
-
                             }
                         });
                     }
