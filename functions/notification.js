@@ -56,7 +56,9 @@ module.exports.sendFlashNotification = (message) => {
             console.log(err);
         } else {
             devices.forEach(device => {
-                sendIos(device.deviceID, message);
+                if(device.notification){
+                    sendIos(device.deviceID, message);
+                }
             })
         }
     })

@@ -61,13 +61,15 @@ module.exports.updateInterest = (userID, interest, callback) => {
     );
 };
 
-module.exports.closeNotificationStatus = (userID, callback) => {
+module.exports.closeNotificationStatus = (userID,userStatus, callback) => {
     Interest.findOne({userID: userID}, (err, msg) => {
         if (err) {
             console.log(err);
         } else {
-            let statusToDB = !msg.status;
-            Interest.findOneAndUpdate({userID: userID}, {$set: {status: statusToDB}}, {new: true}, callback);
+            if(userStatus !== msg.status){
+                Interest.findOneAndUpdate({userID: userID}, {$set: {status: userStatus}}, {new: true}, callback);
+            }
+            
         }
     });
 };
