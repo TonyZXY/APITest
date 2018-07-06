@@ -276,12 +276,13 @@ router.post('/addInterest', verifyToken, (req, res) => {
 
 router.post('/changeNotificationStatus', verifyToken, (req, res) => {
     let userEmail = req.body.email;
+    let userStatus = req.body.userStatus;
     Customer.getUser(userEmail, (err, user) => {
         if (err) {
             console.log(err);
         } else {
             let userID = user._id;
-            Interest.closeNotificationStatus(userID, (err, interests) => {
+            Interest.closeNotificationStatus(userID,userStatus, (err, interests) => {
                 if (err) {
                     console.log(err);
                 } else {

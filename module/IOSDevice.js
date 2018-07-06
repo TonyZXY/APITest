@@ -18,6 +18,9 @@ var IOSDevice = module.exports = mongoose.model('IOSDevice', devicesiosSchema);
 module.exports.addDevice = (device, callback) => {
     IOSDevice.create(device, callback);
 };
+module.exports.getDeviceByToken = (deviceToken, callback) => {
+    IOSDevice.findOne({deviceID: deviceToken}, callback);
+}
 
 
 module.exports.getDeviceList = (callback) => {

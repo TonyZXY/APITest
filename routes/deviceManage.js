@@ -25,7 +25,7 @@ router.post('/addIOSDevice', function (req, res) {
             if (deviceInServer) {
                 if (device.notification !== deviceInServer.notification) {
                     //update notification status
-                    IOSDevice.updateNotificationStatus(device.deviceID, function (req, res) {
+                    IOSDevice.updateNotificationStatus(device.deviceID, function (req, response) {
                         if (err) {
                             console.log(err);
                         } else {
@@ -72,7 +72,7 @@ router.post('/addAlertDevice', function(req,res){
                         if(err){
                             console.log(err);
                         } else {
-                            res.send({"message": "Succeeded on adding user"});
+                            res.send({"message": "Succeeded on update user"});
                         }
                     })
                 } else{
@@ -113,6 +113,16 @@ router.get('/IOSDevice', function(req, res){
 router.delete('/IOSDevice/:_id',function(req,res){
     const id = req.params._id;
     IOSDevice.deleteDevice(id, function (err, device) {
+        if (err) {
+            console.log(err);
+        }
+        res.json(device);
+    })
+});
+
+router.get('/DeviceToken/:_id',function(req,res){
+    const deviceToken = req.params._id;
+    IOSDevice.getDeviceByToken(deviceToken, function (err, device) {
         if (err) {
             console.log(err);
         }
