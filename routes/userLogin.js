@@ -343,9 +343,9 @@ router.get('/interestOne',(req,res)=>{
 });
 
 router.get('/interestOfUser/:_id',(req,res)=>{
-    userEmail= req.params._id;
+    let userEmail= req.params._id;
     Customer.getUser(userEmail,(err, customer) =>{
-        userId = customer._id
+        let userId = customer._id;
         Interest.getInterest(userId, (err,msg)=>{
             if(err){
                 console.log(err);

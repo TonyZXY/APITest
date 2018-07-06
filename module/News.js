@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 //news module
-var newsSchema = mongoose.Schema({
+const newsSchema = mongoose.Schema({
     author: {
         type: String,
         require: true
@@ -44,7 +44,7 @@ var newsSchema = mongoose.Schema({
     }
 });
 
-var News = module.exports = mongoose.model('News', newsSchema);
+const News = module.exports = mongoose.model('News', newsSchema);
 
 // get news list
 module.exports.getNewsList = function (callback, limit) {
@@ -67,10 +67,10 @@ module.exports.addNews = function (newsAdded, callback) {
 
 // update news
 module.exports.updateNews = function (id, news, option, callback) {
-    var query = {
+    let query = {
         _id: id
     };
-    var update = {
+    let update = {
         author: news.author,
         title: news.title,
         newsDescription: news.newsDescription,
@@ -94,7 +94,7 @@ module.exports.getLastTwo = function (callback, limit) {
 
 // delete news
 module.exports.deleteNews = function (id, callback) {
-    var query = {
+    let query = {
         _id: id
     };
     News.remove(query, callback);
@@ -148,8 +148,8 @@ module.exports.searchNews = (languageTag, patten, callback, skip, limit) => {
 };
 
 module.exports.searchNewsTime = (from, to, callback) => {
-    var dateFrom = new Date(from);
-    var dateTo = new Date(to);
+    let dateFrom = new Date(from);
+    let dateTo = new Date(to);
     dateTo.setDate(dateTo.getDate() + 1);
     News.find({
         "publishedTime": {

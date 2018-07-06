@@ -2,7 +2,14 @@ const https = require('https');
 const http = require('http');
 const News = require("../module/News");
 const bodyParser = require("body-parser");
+const mongoose = require('mongoose');
 
+const options = {
+    user: 'bglappdev100',
+    pass: "appdevgkV6="
+};
+
+mongoose.connect('mongodb://localhost/APITest'/**, options**/);
 
 const postNews_options = {
     host: 'localhost',
@@ -13,6 +20,8 @@ const postNews_options = {
         'Content-Type': 'application/json'
     }
 };
+
+
 
 const urlHead = 'https://newsapi.org/v2/';
 const everyThing = 'everything';
@@ -149,13 +158,30 @@ function getNews(content) {
                     news.localeTag = "";
                     content.from = element.publishedAt;
                     // console.log(news);
-                    let req = http.request(postNews_options, (res) => {
-                        // console.log(res);
+                    // let req = http.request(postNews_options, (res) => {
+                    //     // console.log(res);
+                    // });
+                    News.findNews(news.title,news.publishedTime,(err,newsFromDB)=>{
+                        if (err){
+                            console.log(err)
+                        } else {
+                            if (!newsFromDB) {
+                                News.addNews(news,(err,msg)=>{
+                                    if (err) {
+                                        console.log(err);
+                                    }else {
+
+                                    }
+                                })
+                            } else {
+
+                            }
+                        }
                     });
-                    req.write(JSON.stringify(news));
-                    req.end();
+                    // req.write(JSON.stringify(news));
+                    // req.end();
                 });
-                date = new Date(articles[0].publishedAt);
+                let date = new Date(articles[0].publishedAt);
                 date.setSeconds(date.getSeconds() + 1);
                 content.from = date;
             }
@@ -193,6 +219,8 @@ function loginConsole(times) {
 module.exports.run = ()=>{
     getLoop();
 };
+
+getLoop();
 
 
 //_________________________

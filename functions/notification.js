@@ -32,7 +32,7 @@ function sendIos(deviceId, message) {
                         } else{
                             console.log(deviceToken+" has been deleted from db due to invalid device token")
                         }
-                    })
+                    });
                     NotificationIOS.deleteDeviceByToken(deviceToken,(err,res) => {
                         if(err){
                             console.log(err);
@@ -44,7 +44,7 @@ function sendIos(deviceId, message) {
                     console.log("not this one")
                 }
             })
-    })
+    });
 
     apnprovider.shutdown();
 }

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-var coinNotificationIosDeviceSchema = mongoose.Schema({
+const coinNotificationIosDeviceSchema = mongoose.Schema({
     userID: {
         type: String,
         require: true
@@ -11,7 +11,7 @@ var coinNotificationIosDeviceSchema = mongoose.Schema({
     }
 });
 
-var NotificationIOS = module.exports = mongoose.model('coinNotificationIosDevice', coinNotificationIosDeviceSchema);
+const NotificationIOS = module.exports = mongoose.model('coinNotificationIosDevice', coinNotificationIosDeviceSchema);
 
 module.exports.getNotificationIOSDevice = (callback) => {
     NotificationIOS.find(callback);
@@ -44,4 +44,4 @@ module.exports.deleteDeviceByToken = (deviceToken,callback) =>{
             deviceID: deviceToken
         }},
         {multi: true},callback)
-}
+};

@@ -1,6 +1,6 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var devicesiosSchema = mongoose.Schema({
+const devicesiosSchema = mongoose.Schema({
     deviceID: {
         type: String,
         require: true
@@ -12,7 +12,7 @@ var devicesiosSchema = mongoose.Schema({
 });
 
 
-var IOSDevice = module.exports = mongoose.model('IOSDevice', devicesiosSchema);
+const IOSDevice = module.exports = mongoose.model('IOSDevice', devicesiosSchema);
 
 
 module.exports.addDevice = (device, callback) => {
@@ -43,7 +43,7 @@ module.exports.deleteDevice = (id, callback) => {
         _id:id
     };
     IOSDevice.remove(query,callback);
-}
+};
 
 module.exports.deleteDeviceByToken = (deviceID,callback) => {
     IOSDevice.findOneAndRemove({deviceID:deviceID},callback)

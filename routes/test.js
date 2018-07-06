@@ -164,9 +164,9 @@ router.post('/interest',(req,res)=>{
 
 const Algorithm = require('../functions/coinAlgorithm')
 router.post('/data', function(req, res){
-    coinFrom = req.body.coinFrom;
-    coinTo = req.body.coinTo;
-    market = req.body.market;
+    let coinFrom = req.body.coinFrom;
+    let coinTo = req.body.coinTo;
+    let market = req.body.market;
     console.log(coinFrom);
     console.log(coinTo);
     console.log(market);
@@ -175,7 +175,7 @@ router.post('/data', function(req, res){
             "priceToshow": response
         })
     })
-})
+});
 
 router.get('/test2', function(req, res){
     Interest.getInterestWithNotification(function(err, userList){
@@ -186,7 +186,7 @@ router.get('/test2', function(req, res){
             res.json(userList)
         }
     })
-})
+});
 
 const TradingPair = require('../module/TradingPair')
 router.get('/test3', function(req, res){
@@ -198,25 +198,25 @@ router.get('/test3', function(req, res){
             res.json(pairList)
         }
     })
-})
+});
 
 router.get('/test4', function(req,res){
     NotificationB.sendFlashNotification("It's a test message from server")
     res.send({"send": "succeed"})
-})
+});
 router.get('/test5', function(req,res){
     CoinNotification.deleteDeviceByToken(null, (err,resp)=>{
         res.send({"succeess": "removement"})
         console.log("already removed 1");
     })
-})
+});
 
 const CUstomer = require('../module/Customer')
 router.get('/test6',(req,res) =>{
     CUstomer.getUserList((err,userList) =>{
         res.json(userList)
     })
-})
+});
 router.post('/flash', function (req, res) {
     const flashAdded = req.body;
     NewsFlash.addFlashNews(flashAdded, function (err, flashAdded) {

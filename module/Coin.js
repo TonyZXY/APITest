@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-var coinSchema = mongoose.Schema({
+const coinSchema = mongoose.Schema({
     id:{
         type: Number,
         require: true
@@ -31,7 +31,7 @@ var coinSchema = mongoose.Schema({
     last_updated:Number
 });
 
-var Coin = module.exports = mongoose.model('Coin',coinSchema);
+const Coin = module.exports = mongoose.model('Coin',coinSchema);
 
 
 module.exports.getCoinList = (callback)=>{
