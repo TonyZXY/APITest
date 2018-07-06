@@ -82,7 +82,7 @@ setInterval(function() {
                             }
                         })
                     } else {
-                        console("This interest has been closed on notification")
+                        console.log("This interest has been closed on notification")
                     }
 
                 })

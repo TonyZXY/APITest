@@ -87,12 +87,7 @@ router.post('/register', (req, res, next) => {
                                     if(err){
                                         console.log(err)
                                     } else{
-                                        res.send({
-                                            success: true,
-                                            message: 'Register success',
-                                            code: 200,
-                                            token: tokenToSend
-                                        });
+
                                     }
                                     
                                 })
@@ -161,6 +156,7 @@ router.post('/login', (req, res) => {
                             password: userFromDB.password
                         };
                         let tokenToSend = jwt.sign(payload, userFromDB.email);
+                        console.log(tokenToSend);
                         res.send({
                             success: true,
                             message: 'Login Success',
@@ -186,7 +182,8 @@ function verifyToken(req, res, next) {
             token: null
         })
     } else {
-        let payload = jwt.verify(token, email);
+        console.log("token for verify is "+token);
+        let payload = jwt.verify(token.toString(), email.toString());
         if (!payload) {
             return res.send({
                 success: false,
@@ -393,9 +390,7 @@ router.get('/interestOfUser/:_id',(req,res)=>{
                 }
             })
         }
-
     })
-
 });
 
 
