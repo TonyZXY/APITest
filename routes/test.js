@@ -227,3 +227,13 @@ router.post('/flash', function (req, res) {
         NotificationB.sendFlashNotification(flashAdded.shortMassage);
     })
 });
+
+router.get('/test9', (req,res) => {
+    Interest.getInterest('a',(err, interest) =>{
+        if(err){
+            console.log(err)
+        } else{
+            res.json(interest)
+        }
+    })
+})

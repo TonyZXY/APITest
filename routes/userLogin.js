@@ -108,6 +108,22 @@ router.post('/register', (req, res, next) => {
     }
 });
 
+router.post('/test', (req,res)=>{
+    a = req.body.a;
+    Interest.AddInterest(a, [], (err,interest) =>{
+        if(err){
+            console.log(err)
+        } else{
+            res.send({
+                success: true,
+                message: 'Register success',
+                code: 200,
+                // token: tokenToSend
+            });
+        }
+    })
+})
+
 router.post('/login', (req, res) => {
     const username = req.body.userEmail;
     const password = req.body.password;
@@ -363,14 +379,21 @@ router.get('/interestOne',(req,res)=>{
 router.get('/interestOfUser/:_id',(req,res)=>{
     let userEmail= req.params._id;
     Customer.getUser(userEmail,(err, customer) =>{
-        let userId = customer._id;
-        Interest.getInterest(userId, (err,msg)=>{
-            if(err){
-                console.log(err);
-            }else {
-                res.json(msg);
-            }
-        })
+        if(!customer){
+            res.send({
+                "error": "No certain user"
+            })
+        } else{
+            let userId = customer._id;
+            Interest.getInterest(userId, (err,msg)=>{
+                if(err){
+                    console.log(err);
+                }else {
+                    res.json(msg);
+                }
+            })
+        }
+
     })
 
 });
