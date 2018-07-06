@@ -21,7 +21,7 @@ module.exports.getNotificationIOSDeviceByUserID = (userID, callback) => {
     NotificationIOS.findOne({userID:userID}, callback)
 };
 
-module.exports.addNotificationIOSUser = (user,deviceToken, callback)=> {
+module.exports.addNotificationIOSUser = (user, callback)=> {
             NotificationIOS.create(user,callback)
 };
 

@@ -5,6 +5,7 @@ const Customer = require('../module/Customer');
 const hashPassword = require('password-hash');
 const jwt = require('jsonwebtoken');
 const Interest = require('../module/CoinInterest');
+const InterestNotification = require('../module/CoinNotificationIOS');
 
 mongoose.connect('mongodb://localhost/APITest');
 
@@ -81,6 +82,23 @@ router.post('/register', (req, res, next) => {
                                     code: 200,
                                     token: tokenToSend
                                 });
+
+                                Interest.AddInterest(userFromDB._id, [], (err,interest) =>{
+                                    if(err){
+                                        console.log(err)
+                                    } else{
+                                        res.send({
+                                            success: true,
+                                            message: 'Register success',
+                                            code: 200,
+                                            token: tokenToSend
+                                        });
+                                    }
+                                    
+                                })
+                                
+
+
                             }
                         });
                     }
