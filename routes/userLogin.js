@@ -300,7 +300,12 @@ router.post('/changeNotificationStatus', verifyToken, (req, res) => {
         if (err) {
             console.log(err);
         } else {
-            let userID = user._id;
+            if(user === null || user === undefined){
+                res.send({
+                    "err": "No user in Interest"
+                })
+            } else{
+                let userID = user._id;
             Interest.closeNotificationStatus(userID,userStatus, (err, interests) => {
                 if (err) {
                     console.log(err);
@@ -308,6 +313,8 @@ router.post('/changeNotificationStatus', verifyToken, (req, res) => {
                     res.json(interests);
                 }
             })
+            }
+            
         }
     })
 });

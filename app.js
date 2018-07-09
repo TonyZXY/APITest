@@ -56,7 +56,7 @@ app.get('/', function (req, res) {
 let port = 3030;
 app.listen(port);
 console.log(`Running on port ${port}`);
-CoinData.run();
+// CoinData.run();
 // NewsFromNewsAPI.run();
 
 
