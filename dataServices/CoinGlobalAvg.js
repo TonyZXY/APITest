@@ -93,7 +93,7 @@ async function forLoop(array,currency) {
 async function forCurrency(array){
     for (let i=0;i<currencys.length;i++) {
         forLoop(array,currencys[i]);
-        await delay(second*16*1000);
+        await delay(second*17*1000);
     }
 }
 
@@ -105,7 +105,7 @@ async function start() {
         loginConsole(" start Loop for " + time);
         time ++;
         forCurrency(array);
-        await delay(second*64*1000);
+        await delay(second*68*1000);
         Coin.addCoins(array, (err, msg) => {
             if (err) {
                 console.log(err);
@@ -114,7 +114,7 @@ async function start() {
             }
         });
         loginConsole("Add to database");
-        await delay(300000-second*64000);
+        await delay(300000-second*68000);
     } while (true);
 }
 

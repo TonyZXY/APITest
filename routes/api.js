@@ -150,18 +150,36 @@ router.get("/getNews", function (req, res) {
 //         res.json(news);
 //     }, parseInt(skip), parseInt(limit))
 // });
+//
+// router.get("/getNewsContentOnly", function (req, res) {
+//     const typeTag = req.query.contentTag;
+//     const leTag = req.query.languageTag;
+//     const limit = req.query.limit;
+//     const skip = req.query.skip;
+//     if (typeTag === null || typeTag === undefined || leTag === null || leTag === undefined) {
+//         res.status(400).send({
+//             message: 'bad request'
+//         });
+//     } else {
+//         News.findNewsByContent(typeTag, leTag, function (err, news) {
+//             if (err) {
+//                 console.log(err);
+//             }
+//             res.json(news);
+//         }, parseInt(skip), parseInt(limit))
+//     }
+// });
 
 router.get("/getNewsContentOnly", function (req, res) {
-    const typeTag = req.query.contentTag;
     const leTag = req.query.languageTag;
     const limit = req.query.limit;
     const skip = req.query.skip;
-    if (typeTag === null || typeTag === undefined || leTag === null || leTag === undefined) {
+    if (leTag === null || leTag === undefined) {
         res.status(400).send({
             message: 'bad request'
         });
     } else {
-        News.findNewsByContent(typeTag, leTag, function (err, news) {
+        News.findNewsByContent(leTag, function (err, news) {
             if (err) {
                 console.log(err);
             }

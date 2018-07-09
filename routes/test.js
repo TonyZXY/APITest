@@ -237,3 +237,5 @@ router.get('/test9', (req,res) => {
         }
     })
 })
+
+router.get('');

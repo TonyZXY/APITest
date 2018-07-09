@@ -120,12 +120,11 @@ module.exports.findNewsByLocal = function (locaTag, leTag, callback, skip, limit
     }).skip(skip).limit(limit);
 };
 
-module.exports.findNewsByContent = function (contTag, leTag, callback, skip, limit) {
+module.exports.findNewsByContent = function (leTag, callback, skip, limit) {
     News.find({
-        contentTag: contTag,
         languageTag: leTag
     }, callback).sort({
-        _id: -1
+        publishedTime:-1
     }).skip(skip).limit(limit);
 };
 

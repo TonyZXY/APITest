@@ -371,10 +371,16 @@ router.get('/interestOfUser/:_id',(req,res)=>{
         } else{
             let userId = customer._id;
             Interest.getInterest(userId, (err,msg)=>{
-                if(err){
-                    console.log(err);
+                if (!msg){
+                    res.send({
+                        error: "No interest found"
+                    })
                 }else {
-                    res.json(msg);
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        res.json(msg);
+                    }
                 }
             })
         }
