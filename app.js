@@ -16,6 +16,7 @@ const deviceManage = require('./routes/deviceManage');
 const tradingpair = require('./routes/tradingpairManage');
 const coin = require('./routes/coin');
 
+
 const CoinData = require('./dataServices/CoinGlobalAvg');
 // const NewsFromNewsAPI = require('./dataServices/NewsFromNewsAPI');
 
