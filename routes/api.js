@@ -483,6 +483,19 @@ router.get("/searchFlash", (req, res) => {
     }, parseInt(skip), parseInt(limit))
 });
 
+router.get("/searchFlashByTag", (req, res) => {
+    const toSent = req.query.sentTag;
+    const languateTag = req.query.languageTag;
+    const limit = req.query.limit;
+    const skip = req.query.skip;
+    NewsFlash.findFlashByType(toSent, languateTag, (err, flash) => {
+        if (err) {
+            console.log(err);
+        }
+        res.json(flash);
+    }, parseInt(skip), parseInt(limit))
+});
+
 router.get('/searchFlashTime', (req, res) => {
     const from = req.query.from;
     const to = req.query.to;

@@ -66,7 +66,7 @@ module.exports.deleteFlash = function (id,callback) {
 };
 
 module.exports.findFlashByType = function (toSent, laTag, callback, limit) {
-    Video.find({toSent: toSent,languageTag: laTag}, callback).sort({_id: -1}).limit(limit);
+    NewsFlash.find({toSent: toSent,languageTag: laTag}, callback).sort({_id: -1}).limit(limit);
 };
 
 module.exports.searchFlashTime = (from, to, callback) =>{
