@@ -11,10 +11,10 @@ const pool = new Pool({
 module.exports = {
     getDevices: (params, callback) => {
         let text = 'select distinct coins."from",coins."to",interests.price,interests.interest_id,coins.\\n\' +\n' +
-            '        \'market,users.user_id,interests.status, devices.device_token\\n\' +\n' +
+            '        \'market,users.user_id,interests.status, iosdevices.device_token\\n\' +\n' +
             '        \'from (((interests join coins on interests.interest_coin_id = coins.coin_id)\\n\' +\n' +
             '        \'  join users on interests.interest_user_id = users.user_id)\\n\' +\n' +
-            '        \'  join devices on users.user_id = devices.user_id)\\n\' +\n' +
+            '        \'  join iosdevices on users.user_id = iosdevices.user_id)\\n\' +\n' +
             '        \'where status = true and users.interest=true;';
         return pool.query(text, params, callback)
     },
@@ -36,6 +36,10 @@ module.exports = {
     },
     getInterestStatus:(param,callback)=>{
         let query = 'select interest as status from users where email=$1';
+        return pool.query(query,param,callback)
+    },
+    getTradingPair:(param,callback)=>{
+        let query = 'select "from","to",market,coin_id from coins where "from"=$1 and "to"=$2 and market=$3;';
         return pool.query(query,param,callback)
     }
 };

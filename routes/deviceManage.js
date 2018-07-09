@@ -15,6 +15,78 @@ module.exports = router;
 const IOSDevice = require('../module/IOSDevice');
 const NotificationIOS = require('../module/CoinNotificationIOS');
 const Customer = require('../module/Customer');
+const db = require('../functions/postgredb');
+
+function verifyToken(req, res, next) {
+    let token = req.body.token;
+    let email = req.body.email;
+    if (token === null || token === undefined ||
+        email === null || email === undefined) {
+        return res.send({
+            success: false,
+            message: "Token Error",
+            code: 403,
+            token: null
+        })
+    } else {
+        console.log("token for verify is " + token);
+        let payload = jwt.verify(token.toString(), email.toString());
+        if (!payload) {
+            return res.send({
+                success: false,
+                message: "Token Error",
+                code: 403,
+                token: null
+            })
+        } else {
+            let userID = payload.userID;
+            let password = payload.password;
+            if (userID === null || password === null ||
+                userID === undefined || password === undefined) {
+                return res.send({
+                    success: false,
+                    message: "Token Error",
+                    code: 403,
+                    token: null
+                })
+            } else {
+                db.getUser([email], (err, msg) => {
+                    if (err) {
+                        console.log(err);
+                        return res.send({
+                            success: false,
+                            message: 'Token error',
+                            code: 410,
+                            token: null
+                        })
+                    } else {
+                        let user = msg.rows[0];
+                        if (msg.rows[0] === undefined) {
+                            return res.send({
+                                success: false,
+                                message: 'Token Error',
+                                code: 403,
+                                token: null
+                            })
+                        } else {
+                            if (user.password.toString() !== password.toString() ||
+                                (user._id).toString() !== userID.toString()) {
+                                return res.send({
+                                    success: false,
+                                    message: "Token Error",
+                                    code: 403,
+                                    token: false
+                                });
+                            } else {
+                                next()
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    }
+}
 
 router.post('/addIOSDevice', function (req, res) {
     const device = req.body;

@@ -5,7 +5,6 @@ const Customer = require('../module/Customer');
 const hashPassword = require('password-hash');
 const jwt = require('jsonwebtoken');
 const Interest = require('../module/CoinInterest');
-const InterestNotification = require('../module/CoinNotificationIOS');
 const db = require('../functions/postgredb');
 
 mongoose.connect('mongodb://localhost/APITest');
@@ -14,88 +13,7 @@ const agl = 'sha256';
 const inter = 20;
 
 
-// router.post('/register', (req, res, next) => {
-//     const email = req.body.email;
-//     if (email === null || email === undefined) {
-//         res.send({
-//             success: false,
-//             message: 'Bad Request',
-//             code: 400,
-//             token: null
-//         })
-//     } else {
-//         Customer.getUser(email, (err, user) => {
-//             if (err) {
-//                 console.log(err)
-//             } else {
-//                 if (user) {
-//                     res.send({
-//                         success: false,
-//                         message: "email already sign up",
-//                         code: 409,
-//                         token: null
-//                     });
-//                 } else {
-//                     let firstName = req.body.firstName;
-//                     let lastName = req.body.lastName;
-//                     let email = req.body.email;
-//                     let title = req.body.title;
-//                     let password = req.body.password;
-//                     if (firstName === null || firstName === undefined ||
-//                         lastName === null || lastName === undefined ||
-//                         email === null || email === undefined ||
-//                         password === null || password === undefined) {
-//                         res.send({
-//                             success: false,
-//                             message: "register fail",
-//                             code: 406,
-//                             token: null
-//                         })
-//                     } else {
-//                         if (title === null || title === undefined) {
-//                             title = '';
-//                         }
-//                         let passwordToDB = hashPassword.generate(password, {
-//                             algorithm: 'sha256',
-//                             saltLength: 10,
-//                             iterations: 10
-//                         });
-//                         let userToDB = {
-//                             firstName: firstName,
-//                             lastName: lastName,
-//                             email: email,
-//                             title: title,
-//                             password: passwordToDB
-//                         };
-//                         Customer.addUser(userToDB, (err, userFromDB) => {
-//                             if (err) {
-//                                 console.log(err);
-//                             } else {
-//                                 console.log(userFromDB._id);
-//                                 let payload = {
-//                                     userID: userFromDB._id,
-//                                     password: userFromDB.password
-//                                 };
-//                                 let tokenToSend = jwt.sign(payload, userFromDB.email);
-//                                 console.log(userFromDB.password);
-//                                 console.log(tokenToSend);
-//                                 console.log(tokenToSend.length);
-//                                 res.send({
-//                                     success: true,
-//                                     message: 'Register success',
-//                                     code: 200,
-//                                     token: tokenToSend
-//                                 });
-//                             }
-//                         });
-//                     }
-//                 }
-//             }
-//         })
-//     }
-// });
-
-router.post('/register', (req, res, next) => {
+router.post('/register', (req, res) => {
     let email = req.body.email;
     let firstName = req.body.firstName;
     let lastName = req.body.lastName;
@@ -210,56 +128,6 @@ router.post('/login', (req, res) => {
     }
 });
 
-// router.post('/login', (req, res) => {
-//     const username = req.body.userEmail;
-//     const password = req.body.password;
-//     if (username === null || username === undefined ||
-//         password === null || password === undefined) {
-//         res.send({
-//             success: false,
-//             message: "Login Fail",
-//             code: 406,
-//             token: null
-//         })
-//     } else {
-//         Customer.getUser(username, (err, userFromDB) => {
-//             if (err) {
-//                 console.log(err);
-//             } else {
-//                 if (!userFromDB) {
-//                     res.send({
-//                         success: false,
-//                         message: 'Email or Password Error',
-//                         code: 404,
-//                         token: null
-//                     })
-//                 } else {
-//                     if (!hashPassword.verify(password, userFromDB.password)) {
-//                         res.send({
-//                             success: false,
-//                             message: 'Email or Password Error',
-//                             code: 404,
-//                             token: null
-//                         })
-//                     } else {
-//                         let payload = {
-//                             userID: userFromDB._id,
-//                             password: userFromDB.password
-//                         };
-//                         let tokenToSend = jwt.sign(payload, userFromDB.email);
-//                         console.log(tokenToSend);
-//                         res.send({
-//                             success: true,
-//                             message: 'Login Success',
-//                             code: 200,
-//                             token: tokenToSend
-//                         })
-//                     }
-//                 }
-//             }
-//         })
-//     }
-// });
 
 function verifyToken(req, res, next) {
     let token = req.body.token;
@@ -333,26 +201,6 @@ function verifyToken(req, res, next) {
 }
 
 
-router.get('/users', (req, res) => {
-    Customer.getUserList((err, users) => {
-        if (err) {
-            console.log(err)
-        }
-        res.json(users);
-    })
-});
-
-router.delete('/users/:_id', (req, res) => {
-    let id = req.params._id;
-    console.log(id);
-    Customer.removeUser(id, (err, mes) => {
-        if (err) {
-            console.log(err);
-        }
-        res.json(mes);
-    })
-});
-
 router.post('/addInterest', verifyToken, (req, res) => {
     let userEmail = req.body.email;
     let interests = req.body.interest;
@@ -365,6 +213,17 @@ router.post('/addInterest', verifyToken, (req, res) => {
             let times = 0;
             interests.forEach(interest => {
                 if (interest._id === null || interest._id === undefined) {
+                    db.getTradingPair([interest.from,interest.to,interest.market],(err,msg)=>{
+                        if (err) {
+                            console.log(err);
+                            res.send({
+                                success:false,
+                                message:'Database Error',
+                                code: 510,
+
+                            })
+                        }
+                    });
                     Interest.AddInterest(userID, interest, (err, intFromDB) => {
                         if (err) {
                             console.log(err);
