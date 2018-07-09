@@ -14,6 +14,10 @@ const newsFlashSchrma = mongoose.Schema({
     languageTag:{
         type:String,
         require:true
+    },
+    toSent:{
+        type: Boolean,
+        require: true
     }
 });
 
@@ -45,7 +49,8 @@ module.exports.updateFlashNews = function (id,flash,option,callback) {
     let query = {_id:id};
     let update = {
         shortMassage:flash.shortMassage,
-        languageTag:flash.languageTag
+        languageTag:flash.languageTag,
+        toSent: flash.toSent
     };
     NewsFlash.findOneAndUpdate(query,update,option,callback);
 };

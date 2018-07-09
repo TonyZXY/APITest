@@ -422,7 +422,10 @@ router.post('/flash', verifyToken, function (req, res) {
             console.log(err);
         }
         res.json(flashAdded);
-        Notification.sendFlashNotification(flashAdded.shortMassage);
+        if(flashAdded.toSent){
+            Notification.sendFlashNotification(flashAdded.shortMassage);
+        }
+        
     })
 });
 
