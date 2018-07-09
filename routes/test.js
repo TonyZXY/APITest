@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-const request = require('request')
+const request = require('request');
+
+const db = require('../functions/postgredb');
 
 const options = {
     user: 'bglappdev100',
@@ -55,7 +57,6 @@ function verifyToken(req, res, next) {
         }
     }
 }
-
 
 
 router.get("/users", verifyToken, function (req, res) {
@@ -114,9 +115,6 @@ function loginconsole(message) {
 }
 
 
-
-
-
 router.post('/login', (req, res) => {
     const username = req.body.username;
     const password = req.body.passowrd;
@@ -138,7 +136,7 @@ router.post('/login', (req, res) => {
     }
 });
 
-router.post('/interest',(req,res)=>{
+router.post('/interest', (req, res) => {
     const userID = req.body.userID;
     const coinFrom = req.body.coinFrom;
     const coinTo = req.body.coinTo;
@@ -150,8 +148,8 @@ router.post('/interest',(req,res)=>{
         market: market,
         price: price
     };
-    Interest.AddInterest(userID,interets,(err,msg)=>{
-        if (err){
+    Interest.AddInterest(userID, interets, (err, msg) => {
+        if (err) {
             console.log(err);
         } else {
             res.json(msg);
@@ -161,59 +159,58 @@ router.post('/interest',(req,res)=>{
 // --------------------------------------------------------------------------------  //
 
 
-
 const Algorithm = require('../functions/coinAlgorithm')
-router.post('/data', function(req, res){
+router.post('/data', function (req, res) {
     let coinFrom = req.body.coinFrom;
     let coinTo = req.body.coinTo;
     let market = req.body.market;
     console.log(coinFrom);
     console.log(coinTo);
     console.log(market);
-    Algorithm.getPriceFromAPI(coinFrom, coinTo, market, function(response){
+    Algorithm.getPriceFromAPI(coinFrom, coinTo, market, function (response) {
         res.send({
             "priceToshow": response
         })
     })
 });
 
-router.get('/test2', function(req, res){
-    Interest.getInterestWithNotification(function(err, userList){
-        if(err){
+router.get('/test2', function (req, res) {
+    Interest.getInterestWithNotification(function (err, userList) {
+        if (err) {
             console.log(err)
         }
-        else{
+        else {
             res.json(userList)
         }
     })
 });
 
 const TradingPair = require('../module/TradingPair')
-router.get('/test3', function(req, res){
-    TradingPair.getTradingPairList(function(err, pairList){
-        if(err){
+router.get('/test3', function (req, res) {
+    TradingPair.getTradingPairList(function (err, pairList) {
+        if (err) {
             console.log(err)
         }
-        else{
+        else {
             res.json(pairList)
         }
     })
 });
 
-router.get('/test4', function(req,res){
+router.get('/test4', function (req, res) {
     NotificationB.sendFlashNotification("It's a test message from server")
     res.send({"send": "succeed"})
 });
-router.get('/test5', function(req,res){
-    CoinNotification.deleteDeviceByToken(null, (err,resp)=>{
+router.get('/test5', function (req, res) {
+    CoinNotification.deleteDeviceByToken(null, (err, resp) => {
         res.send({"succeess": "removement"})
         console.log("already removed 1");
     })
 });
 
 const CUstomer = require('../module/Customer')
-router.get('/test6',(req,res) =>{
-    CUstomer.getUserList((err,userList) =>{
+router.get('/test6', (req, res) => {
+    CUstomer.getUserList((err, userList) => {
         res.json(userList)
     })
 });
@@ -228,14 +225,93 @@ router.post('/flash', function (req, res) {
     })
 });
 
-router.get('/test9', (req,res) => {
-    Interest.getInterest('a',(err, interest) =>{
-        if(err){
+router.get('/test9', (req, res) => {
+    Interest.getInterest('a', (err, interest) => {
+        if (err) {
             console.log(err)
-        } else{
+        } else {
             res.json(interest)
         }
     })
 })
 
-router.get('');
+router.get('/testQuery', (req, res) => {
+    db.getDevices([], (err, msg) => {
+        if (err) {
+            console.log(err)
+        } else {
+            console.log(msg.rows);
+            res.send(msg.rows);
+        }
+    })
+});
+
+router.get('/testUsers', (req, res) => {
+    db.getUser(['test123@gmail.com'], (err, msg) => {
+        if (err) {
+            console.log(err)
+        } else {
+            console.log(msg.rows[0]);
+            res.send(msg.rows);
+        }
+    })
+});
+
+router.get('/testRegister', (req, res) => {
+    db.registerUser(['testFirst', 'testLast', 'test123891231@test.com', 'asdqdqwdqwqd', 'Mr', 'EN', 'asdqwdqwdqd'], (err, msg) => {
+        if (err) {
+            console.log(err);
+            res.send({
+                error: true,
+                message: err.detail
+            });
+        } else {
+            console.log(msg);
+            res.send(msg);
+        }
+    })
+});
+
+router.get('/getInterest', (req, res) => {
+    db.getInterest(['test123@gmail.com'], (err, msg) => {
+        if (err) {
+            console.log(err);
+            res.send(err.detail);
+        } else {
+            console.log(msg.rows);
+            if (msg.rows[0] === undefined) {
+                res.send({
+                    success: false,
+                    message: "interest not found",
+                    code: 404,
+                    data: null
+                })
+            } else {
+                res.send({
+                    success: true,
+                    message: "interest in data",
+                    code: 200,
+                    data: msg.rows
+                });
+            }
+        }
+    })
+});
+
+router.get('/testStatus', (req, res) => {
+    db.getInterestStatus(['test1234@gmail.com'], (err, msg) => {
+        if (err) {
+            console.log(err);
+            res.send(err);
+        } else {
+            console.log(msg.rows[0]);
+
+            res.send(msg.rows);
+        }
+    })
+});
+
+router.get('/verify',(req,res)=>{
+    let token = req.body.token;
+    let email = req.body.email;
+});
