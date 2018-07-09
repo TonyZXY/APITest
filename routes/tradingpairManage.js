@@ -72,7 +72,6 @@ setInterval(function() {
                                                 + " to tradingpair schema");
                                                 comparePrice(user.userID, interest.isGreater, trp, interest)
                                             }
-                                            // res.json(trp);
                                         })
                                     })
                                 } else{
@@ -95,6 +94,7 @@ setInterval(function() {
 
 
 
+//TODO: notification time algorithm
 function comparePrice(idofUser,operator, tradepair, interest){
     if(operator === 1 && tradepair.price > interest.price){
         // notification.sendAlertNotification(idofUser, 
@@ -102,27 +102,65 @@ function comparePrice(idofUser,operator, tradepair, interest){
         //     ", higher than your expectation of "+ interest.price+ " "+ interest.market)
         console.log( "Now, "+idofUser+", "+ interest.coinFrom +" is worth "+ tradepair.price + " "+ interest.coinTo + " on "+ interest.market +
              ", higher than your expectation of "+ interest.price+ " "+ interest.market)
+        interest.status = false
+        Interest.AddInterest(idofUser,interest, (err, msg) =>{
+            if(err){
+                console.log(err)
+
+            } else{
+                console.log("Sent already")
+            }
+        })
     } else if(operator === 2 && tradepair.price < interest.price){
         // notification.sendAlertNotification(idofUser, 
         //     "Now, "+ interest.coinFrom +" is worth "+ tradepair.price + " "+ interest.coinTo + " on "+ interest.market +
         //     ", lower than your expectation of "+ interest.price+ " "+ interest.market)
         console.log( "Now, "+idofUser+", "+ interest.coinFrom +" is worth "+ tradepair.price + " "+ interest.coinTo + " on "+ interest.market +
         ", lower than your expectation of "+ interest.price+ " "+ interest.market)
+        interest.status = false
+        Interest.AddInterest(idofUser,interest, (err, msg) =>{
+            if(err){
+                console.log(err)
+
+            } else{
+                console.log("Sent already")
+            }
+        })
     } else if(operator===3 && tradepair.price >= interest.price){
         // notification.sendAlertNotification(idofUser, 
         //     "Now, "+ interest.coinFrom +" is worth "+ tradepair.price + " "+ interest.coinTo + " on "+ interest.market +
         //     ", higher or equal to your expectation of "+ interest.price+ " "+ interest.market)
         console.log( "Now, "+idofUser+", "+ interest.coinFrom +" is worth "+ tradepair.price + " "+ interest.coinTo + " on "+ interest.market +
         ", higher or equal to your expectation of "+ interest.price+ " "+ interest.market)
+        interest.status = false
+        Interest.AddInterest(idofUser,interest, (err, msg) =>{
+            if(err){
+                console.log(err)
+
+            } else{
+                console.log("Sent already")
+            }
+        })
     } else if(operator ===4 && tradepair.price <= interest.price){
         // notification.sendAlertNotification(idofUser, 
         //     "Now, "+ interest.coinFrom +" is worth "+ tradepair.price + " "+ interest.coinTo + " on "+ interest.market +
         //     ", lower or equal to your expectation of "+ interest.price+ " "+ interest.market)
         console.log( "Now, "+idofUser+", "+ interest.coinFrom +" is worth "+ tradepair.price + " "+ interest.coinTo + " on "+ interest.market +
         ", lower or equal to your expectation of "+ interest.price+ " "+ interest.market)
+        interest.status = false
+        Interest.AddInterest(idofUser,interest, (err, msg) =>{
+            if(err){
+                console.log(err)
+
+            } else{
+                console.log("Sent already")
+            }
+        })
     } else{
         console.log("No notification");
     }
 }
+
+
 
 
