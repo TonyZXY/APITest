@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
 const Interest = require('../module/CoinInterest');
 const TradingPair = require('../module/TradingPair');
 const algorithm = require('../functions/coinAlgorithm');
@@ -10,38 +9,6 @@ const notification = require('../functions/notification');
 mongoose.connect('mongodb://localhost/APITest');
 
 module.exports = router;
-
-
-
-var minutes = 2;
-the_interval = minutes * 60*1000;
-setInterval(function() {
-  console.log("Check for update");
-  TradingPair.getTradingPairList( function (err,tradingpairList){
-    if(err){
-        console.log(err)
-    } else{
-        if(typeof tradingpairList !=='undefined' && tradingpairList.length>0){
-            tradingpairList.forEach(trpair => {
-                let _id = trpair._id;
-                algorithm.getPriceFromAPI(trpair.coinFrom, trpair.coinTo, trpair.market,function(response){
-                    trpair.price = response;
-                    TradingPair.updateTradingPair(_id, trpair, {}, function(err, res){
-                        if(err){
-                            console.log(err);
-                        } else{
-                            console.log("This "+ trpair._id+ "is updated")
-                        }
-                    })
-                })
-            });
-        }
-    }
-})
-
-}, the_interval);
-
-
 var minutespartB = 5;
 the_intervalB = minutespartB * 45*1000;
 setInterval(function() {
@@ -94,7 +61,6 @@ setInterval(function() {
 
 
 
-//TODO: notification time algorithm
 function comparePrice(idofUser,operator, tradepair, interest){
     if(operator === 1 && tradepair.price > interest.price){
         // notification.sendAlertNotification(idofUser, 
