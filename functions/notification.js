@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
-const IOSDevice = require('../module/IOSDevice');
 const apn = require('apn');
-const NotificationIOS = require('../module/CoinNotificationIOS')
 const db = require('../functions/postgredb')
 
 mongoose.connect('mongodb://localhost/APITest');

@@ -12,8 +12,6 @@ mongoose.connect('mongodb://localhost/APITest');
 
 module.exports = router;
 
-const IOSDevice = require('../module/IOSDevice');
-const NotificationIOS = require('../module/CoinNotificationIOS');
 const db = require('../functions/postgredb');
 
 function verifyToken(req, res, next) {
