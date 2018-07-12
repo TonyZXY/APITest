@@ -180,14 +180,14 @@ module.exports = {
         return pool.query(query,param,callback);
     },
 
-    //TODO: USE This to get ALL Trading pair before you want to Update the price
+    //FIXME: USE This to get ALL Trading pair before you want to Update the price
     getAllTradingPair:(callback)=>{
         let param = [];
         let query = 'Select * from coins;';
         return pool.query(query,param,callback);
     },
 
-    //TODO: Get All IOS devices for push News Flash notification
+    //FIXME: Get All IOS devices for push News Flash notification
     getAllIOSDeviceForFlashNotification:(callback)=>{
         let param = [];
         let query = 'SELECT iosdevices.device_token \n' +
