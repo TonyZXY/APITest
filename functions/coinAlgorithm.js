@@ -64,7 +64,7 @@ const CoinFilter = require('../module/Coinfilter')
                                     if(err){
                                         console.log(err)
                                      } else {
-                                         console.log(coinToAdd)
+                                         // console.log(coinToAdd)
                                      }
                                  })
                                
