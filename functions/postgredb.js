@@ -12,7 +12,7 @@ module.exports = {
     getIOSDevicesForCompare: (callback) => {
         let params = [];
         let text = 'select distinct users.user_id,coins."from",coins."to",interests.price as inPirce,coins.price as coPrice,\n' +
-            '  interests.isgreater,coins.market,interests.status, iosdevices.device_token,iosdevices.number\n' +
+            '  interests.isgreater,coins.market,interests.status, iosdevices.device_token,iosdevices.number,interests.interest_id\n' +
             'from (((interests join coins on interests.interest_coin_id = coins.coin_id)\n' +
             'join users on interests.interest_user_id = users.user_id)\n' +
             'join iosdevices on users.user_id = iosdevices.device_user_id)\n' +
