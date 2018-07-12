@@ -2,7 +2,7 @@ const {Pool} = require('pg');
 
 const pool = new Pool({
     user: 'tonyzheng',
-    host: 'localhost',
+    host: '10.10.6.18',
     database: 'postgres',
     password: 'bcgtest',
     port: 5432
@@ -12,7 +12,7 @@ module.exports = {
     getIOSDevicesForCompare: (callback) => {
         let params = [];
         let text = 'select distinct users.user_id,coins."from",coins."to",interests.price as inPrice,coins.price as coPrice,\n' +
-            '  interests.isgreater,coins.market,interests.status, iosdevices.device_token,iosdevices.number,interests.interest_id\n' +
+            '  interests.isgreater,coins.market,interests.status, iosdevices.device_token,iosdevices.number,interests.interest_id, interests.frequence \n' +
             'from (((interests join coins on interests.interest_coin_id = coins.coin_id)\n' +
             'join users on interests.interest_user_id = users.user_id)\n' +
             'join iosdevices on users.user_id = iosdevices.device_user_id)\n' +
