@@ -51,6 +51,14 @@ function sendIos(deviceId, message) {
 
 
 module.exports.sendFlashNotification = (message) => {
+    
+
+
+
+
+
+
+
     IOSDevice.getDeviceList((err, devices) => {
         if (err) {
             console.log(err);

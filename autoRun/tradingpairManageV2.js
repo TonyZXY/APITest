@@ -6,9 +6,9 @@ const coinAlgorithm = require('../functions/coinAlgorithm')
 
 module.exports = router;
 
-// var minute =0.05
-// the_internal = minute * 60 * 1000;
-// setInterval(function(){
+var minute =0.05
+the_internal = minute * 60 * 1000;
+setInterval(function(){
     console.log("compare starts");
     db.getIOSDevicesForCompare((err, list)=>{
         if(err){
@@ -16,19 +16,24 @@ module.exports = router;
         } else{
 
             if(list.rows[0]===null || typeof list.rows[0]===undefined){
-                //TODO: No data in database
+                console.log("No data in database")
             }
             else{
                 list.rows.forEach(row => {
-                    //TODO: Compare price
                     if(row.coprice === null || typeof row.coprice === undefined){
-                        //TODO: Update price to db
                         coinAlgorithm.getPriceFromAPI(row.from, row.to, row.market, (response) =>{
                             if(err){
                                 console.log(err)
                             } else{
                                 coprice = response
-                                comparePrice(row.from, row.to, row.market, row.inprice, coprice, row.isgreater, row.device_token,row.number)
+                                db.updateTradingPair(row.coinid, coprice, (err,response) =>{
+                                    if(err){
+                                        console.log(err)
+                                    } else{
+                                        comparePrice(row.from, row.to, row.market, row.inprice, coprice, row.isgreater, row.device_token,row.number)
+                                    }
+                                })
+                                
                             }
                         })
                         
@@ -41,9 +46,9 @@ module.exports = router;
         }
        
     })
-// }, the_internal);
+}, the_internal);
 
-    function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, badgeNumber){
+function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, badgeNumber){
        
         // TODO: Update frequncy of interest
      
