@@ -31,7 +31,7 @@ module.exports.findCoinBySymbol = (coin, callback) =>{
         } else if(!coinToSearch){
             CoinFilter.create(coin,callback);
         } else{
-            console.log("this has been added")
+            // console.log("this has been added")
         }
     });
 }

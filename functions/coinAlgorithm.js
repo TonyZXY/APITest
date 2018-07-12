@@ -4,7 +4,7 @@ const logger = require('./logger')
 
 mongoose.connect('mongodb://localhost/APITest');
 
-module.exports.getPriceFromAPI = function (coinFrom, coinTo, market, callback) {
+module.exports.getPriceFromAPI = function (coinFrom, coinTo, market, callback){
     request({
         method: 'GET',
         uri: 'https://min-api.cryptocompare.com/data/generateAvg?fsym='+coinFrom+'&tsym='+coinTo+'&e='+market,
@@ -64,7 +64,7 @@ const CoinFilter = require('../module/Coinfilter')
                                     if(err){
                                         console.log(err)
                                      } else {
-                                         console.log(coinToAdd)
+                                        //  console.log(coinToAdd)
                                      }
                                  })
                                
