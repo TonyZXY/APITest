@@ -53,7 +53,7 @@ app.get('/', function (req, res) {
 });
 
 //start application
-let port = 3020;
+let port = 3030;
 app.listen(port);
 console.log(`Running on port ${port}`);
 // CoinData.run();
