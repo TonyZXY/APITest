@@ -124,11 +124,13 @@ module.exports = {
         return pool.query(query, param, callback);
     },
 
+
     updateInterestPrice: (id, price, isGreater, callback) => {
         let param = [price,isGreater,id];
         let query = 'Update interests set (price,isgreater) = ($1,$2) where interest_id=$3 returning *;';
         return pool.query(query,param,callback);
     },
+
 
     updateInterestCoin:(id,coinID,price,isGreater,callback)=>{
         let param = [price,isGreater,coinID,id];
@@ -136,11 +138,13 @@ module.exports = {
         return pool.query(query,param,callback);
     },
 
+
     addIOSDevice:(email,token,callback)=>{
         let param = [email,token];
         let query = 'insert into iosdevices (device_user_id, device_token) VALUES ((SELECT user_id from users where email=$1),$2) returning *;';
         return pool.query(query,param,callback);
     },
+
 
     deleteIOSDevice:(token,callback)=>{
         let param = [token];
@@ -148,15 +152,73 @@ module.exports = {
         return pool.query(query,param,callback);
     },
 
+
     addIOSDeviceNumber: (token,callback)=>{
         let param = [token];
         let query = 'update iosdevices set number = number+1 where device_token=$1 returning device_token,number;';
         return pool.query(query,param,callback);
     },
 
+
     setIOSDeviceNumberToZero: (token,callback)=>{
         let param = [token];
         let query = 'update iosdevices set number = 0 where device_token=$1 returning device_token,number;';
         return pool.query(query,param,callback);
-    }
+    },
+
+
+    updateFlashNotificationStatus:(email,status,callback)=>{
+        let param = [email,status];
+        let query = 'update users set flash=$2 where email=$1 returning user_id,flash;';
+        return pool.query(query,param,callback);
+    },
+
+    //TODO: Update One trading pair price
+    updateTradingPair:(id,price,callback)=>{
+        let param = [price,id];
+        let query = 'Update coins set price=$1 where coin_id=$2 returning *;';
+        return pool.query(query,param,callback);
+    },
+
+    //TODO: USE This to get ALL Trading pair before you want to Update the price
+    getAllTradingPair:(callback)=>{
+        let param = [];
+        let query = 'Select * from coins;';
+        return pool.query(query,param,callback);
+    },
+
+
+
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

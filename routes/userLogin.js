@@ -256,7 +256,7 @@ router.post('/editInterestStatus', verifyToken, (req, res) => {
             let interests = msg.rows;
             res.send({
                 success: true,
-                message: 'Success update Interest ststua',
+                message: 'Success update Interest ststus',
                 code: 200,
                 data: interests
             })
@@ -264,22 +264,7 @@ router.post('/editInterestStatus', verifyToken, (req, res) => {
     });
 });
 
-router.post('/changeInterestNotification', verifyToken, (req, res) => {
-    let userEmail = req.body.email;
-    let status = req.body.status;
-    db.updateInterestNotificationStatus(userEmail, status, (err, msg) => {
-        if (err) {
-            databaseError(err, res);
-        } else {
-            res.send({
-                success: true,
-                message: 'Successfully Update notification status',
-                code: 200,
-                data: msg.rows[0].interest
-            })
-        }
-    })
-});
+
 
 
 router.post('/editInterest', verifyToken, (req, res) => {
@@ -408,7 +393,7 @@ router.post('/getInterest', verifyToken, (req, res) => {
 });
 
 
-router.post('/getStatus', verifyToken, (req, res) => {
+router.post('/getInterestStatus', verifyToken, (req, res) => {
     let userEmail = req.body.email;
     db.getInterestStatus(userEmail, (err, msg) => {
         if (err) {
