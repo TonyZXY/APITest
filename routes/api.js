@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const Notification = require('../functions/notification');
+const logger = require('../functions/logger')
 
 
 
@@ -20,7 +21,7 @@ const News = require('../module/News.js');
 const Video = require('../module/Video.js');
 const NewsFlash = require('../module/NewsFlash.js');
 const Genuine = require('../module/Genuine.js');
-
+// address = req.connection.remoteAddress
 
 function verifyToken(req, res, next) {
     if (!req.headers.authorization) {
@@ -71,6 +72,8 @@ router.get('/news', function (req, res) {
     News.getNewsList(function (err, newsList) {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress
+            logger.logIntoFile('error.log','error','api',address, err)
         }
         res.json(newsList);
     })
@@ -81,6 +84,8 @@ router.get('/news/:_id', function (req, res) {
     News.getNewsByID(req.params._id, function (err, news) {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(news);
     })
@@ -92,6 +97,8 @@ router.post('/news', verifyToken, function (req, res) {
     News.addNews(newsAdded, function (err, news) {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(news);
     })
@@ -104,6 +111,8 @@ router.put('/news/:_id', verifyToken, function (req, res) {
     News.updateNews(id, news, {}, function (err, news) {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(news);
     })
@@ -115,6 +124,8 @@ router.delete('/news/:_id', verifyToken, function (req, res) {
     News.deleteNews(id, function (err, news) {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(news);
     })
@@ -132,6 +143,8 @@ router.get("/getNews", function (req, res) {
         News.findNewsByTag(loTag, typeTag, lanTag, function (err, news) {
             if (err) {
                 console.log(err);
+                address = req.connection.remoteAddress;
+                logger.logIntoFile('error.log','error','api',address, err);
             }
             res.json(news);
         }, parseInt(limit))
@@ -182,6 +195,8 @@ router.get("/getNewsContentOnly", function (req, res) {
         News.findNewsByContent(leTag, function (err, news) {
             if (err) {
                 console.log(err);
+                address = req.connection.remoteAddress;
+                logger.logIntoFile('error.log','error','api',address, err);
             }
             res.json(news);
         }, parseInt(skip), parseInt(limit))
@@ -220,6 +235,8 @@ router.get("/searchnews", (req, res) => {
         News.searchNews(languageTag, patten, (err, news) => {
             if (err) {
                 console.log(err);
+                address = req.connection.remoteAddress;
+                logger.logIntoFile('error.log','error','api',address, err);
             }
             res.json(news);
         }, parseInt(skip), parseInt(limit))
@@ -235,6 +252,8 @@ router.get("/searchNewsTime", (req, res) => {
         News.searchNewsTime(from, to, (err, news) => {
             if (err) {
                 console.log(err);
+                address = req.connection.remoteAddress;
+                logger.logIntoFile('error.log','error','api',address, err);
             }
             res.json(news);
         })
@@ -264,6 +283,8 @@ router.get('/videos', function (req, res) {
     Video.getVideos(leTag, function (err, video) {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(video);
     }, parseInt(skip), parseInt(limit))
@@ -273,6 +294,8 @@ router.get('/video', (req, res) => {
     Video.getVideoList((err, video) => {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(video);
     })
@@ -283,6 +306,8 @@ router.get('/videos/:_id', function (req, res) {
     Video.getVideoByID(req.params._id, function (err, video) {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(video);
     })
@@ -294,6 +319,8 @@ router.post('/videos', verifyToken, function (req, res) {
     Video.addVideo(videoAdded, function (err, video) {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(video);
     })
@@ -306,6 +333,8 @@ router.put('/videos/:_id', verifyToken, function (req, res) {
     Video.updateVideo(id, videoAdded, {}, function (err, video) {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(video);
     })
@@ -317,6 +346,8 @@ router.delete('/videos/:_id', verifyToken, function (req, res) {
     Video.deleteVideo(id, function (err, video) {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(video);
     })
@@ -334,6 +365,8 @@ router.get("/getVideo", function (req, res) {
         Video.findVideoByTag(loTag, tyTag, lanTag, function (err, video) {
             if (err) {
                 console.log(err);
+                address = req.connection.remoteAddress;
+                logger.logIntoFile('error.log','error','api',address, err);
             }
             res.json(video);
         }, parseInt(limit))
@@ -346,6 +379,8 @@ router.get("/getVideoLocaleOnly", function (req, res) {
     Video.findVideoByLocale(loTag, function (err, video) {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(video);
     }, parseInt(limit))
@@ -358,6 +393,8 @@ router.get("/getVideoTypeOnly", function (req, res) {
     Video.findVideoByType(tyTag, laTag, function (err, video) {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(video);
     }, parseInt(limit))
@@ -371,6 +408,8 @@ router.get("/searchVideo", (req, res) => {
     Video.searchVideo(languateTag, patten, (err, video) => {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(video);
     }, parseInt(skip), parseInt(limit))
@@ -382,6 +421,8 @@ router.get('/searchVideoTime', (req, res) => {
     Video.searchVideoTime(from, to, (err, videos) => {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(videos)
     })
@@ -406,6 +447,8 @@ router.get('/flash', function (req, res) {
     NewsFlash.getFlashList(leTag, function (err, newsFlash) {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(newsFlash);
     })
@@ -416,6 +459,8 @@ router.get('/flashList/:_id', function (req, res) {
     NewsFlash.getFlashByID(req.params._id, function (err, newsFlash) {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(newsFlash);
     })
@@ -425,6 +470,8 @@ router.get('/flashList', function (req, res) {
     NewsFlash.getFlash((err, newsFlash) => {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(newsFlash);
     })
@@ -438,6 +485,8 @@ router.post('/flash', verifyToken, function (req, res) {
     NewsFlash.addFlashNews(flashAdded, function (err, flashAdded) {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(flashAdded);
         if(flashAdded.toSent){
@@ -454,6 +503,8 @@ router.put('/flash/:_id', verifyToken, function (req, res) {
     NewsFlash.updateFlashNews(id, flashAdded, {}, function (err, flash) {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(flash);
     })
@@ -465,6 +516,8 @@ router.delete('/flash/:_id', verifyToken, function (req, res) {
     NewsFlash.deleteFlash(id, function (err, newsFlash) {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(newsFlash);
     })
@@ -478,6 +531,8 @@ router.get("/searchFlash", (req, res) => {
     NewsFlash.searchFlashNews(languateTag, patten, (err, flash) => {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(flash);
     }, parseInt(skip), parseInt(limit))
@@ -489,6 +544,8 @@ router.get('/searchFlashTime', (req, res) => {
     NewsFlash.searchFlashTime(from, to, (err, flash) => {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(flash);
     })
@@ -514,6 +571,8 @@ router.get('/genuine', function (req, res) {
     Genuine.getGenuineList(function (err, genuine) {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(genuine);
     })
@@ -524,6 +583,8 @@ router.get('/genuine/:_id', function (req, res) {
     Genuine.getGenuineByID(req.params._id, function (err, genuine) {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(genuine);
     })
@@ -535,6 +596,8 @@ router.post('/genuine', verifyToken, function (req, res) {
     Genuine.addGenuine(genuineAdd, function (err, genuine) {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(genuine);
     })
@@ -547,6 +610,8 @@ router.put('/genuine/:_id', verifyToken, function (req, res) {
     Genuine.updateGenuine(id, genuineAdd, {}, function (err, genuine) {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(genuine);
     })
@@ -558,6 +623,8 @@ router.delete('/genuine/:_id', verifyToken, function (req, res) {
     Genuine.deleteGenuine(id, function (err, genuine) {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(genuine);
     })
@@ -575,6 +642,8 @@ router.get("/getgenuine", function (req, res) {
         Genuine.findGenuineByTag(geTag, leTag, function (err, genuine) {
             if (err) {
                 console.log(err);
+                address = req.connection.remoteAddress;
+                logger.logIntoFile('error.log','error','api',address, err);
             }
             res.json(genuine);
         }, parseInt(skip), parseInt(limit))
@@ -590,6 +659,8 @@ router.get("/searchgenuine", (req, res) => {
     Genuine.searchGenuine(languageTag, patten, (err, genuine) => {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(genuine);
     }, parseInt(skip), parseInt(limit))
@@ -601,6 +672,8 @@ router.get('/searchGenuineTime', (req, res) => {
     Genuine.searchGenuineTime(from, to, (err, genuine) => {
         if (err) {
             console.log(err);
+            address = req.connection.remoteAddress;
+            logger.logIntoFile('error.log','error','api',address, err);
         }
         res.json(genuine);
     })

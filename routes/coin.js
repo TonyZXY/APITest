@@ -48,3 +48,27 @@ router.delete('/delete',(req,res)=>{
         }
     })
 });
+const CoinFilter = require('../module/Coinfilter')
+const coinAlgrithm = require('../functions/coinAlgorithm')
+coinAlgrithm.compareTwoAPI();
+router.get('/getCoinList',(req,res)=>{
+    CoinFilter.getCoinList((err,coinList)=>{
+        if(err){
+            console.log(err)
+        } else{
+            console.log(coinList.length)
+            res.json(coinList)
+        }
+    })
+})
+router.delete('/deleteCoin/:_id',(req,res)=>{
+    const id = req.params._id
+    CoinFilter.deleteCoinById(id, (err,coin)=>{
+        console.log(id);
+        if(err){
+            console.log(err)
+        } else{
+            res.json(coin)
+        }
+    })
+})
