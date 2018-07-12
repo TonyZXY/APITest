@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-const request = require('request');
 
 const db = require('../functions/postgredb');
 
@@ -20,10 +19,9 @@ const News = require('../module/News.js');
 const Video = require('../module/Video.js');
 const NewsFlash = require('../module/NewsFlash.js');
 const Genuine = require('../module/Genuine.js');
-const User = require('../module/User.js');
 const Interest = require('../module/CoinInterest');
 const NotificationB = require('../functions/notification')
-const CoinNotification = require('../module/CoinNotificationIOS')
+const CoinNotification = require('../module/CoinNotificationIOS');
 
 
 function verifyToken(req, res, next) {

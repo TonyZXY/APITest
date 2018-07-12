@@ -14,7 +14,6 @@ module.exports = router;
 
 const IOSDevice = require('../module/IOSDevice');
 const NotificationIOS = require('../module/CoinNotificationIOS');
-const Customer = require('../module/Customer');
 const db = require('../functions/postgredb');
 
 function verifyToken(req, res, next) {

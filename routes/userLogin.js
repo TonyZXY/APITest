@@ -1,13 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
-const Customer = require('../module/Customer');
 const hashPassword = require('password-hash');
 const jwt = require('jsonwebtoken');
-const Interest = require('../module/CoinInterest');
 const db = require('../functions/postgredb');
 
-mongoose.connect('mongodb://localhost/APITest');
 
 const agl = 'sha256';
 const inter = 20;
