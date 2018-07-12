@@ -170,12 +170,6 @@ router.get('/test5', function (req, res) {
     })
 });
 
-const CUstomer = require('../module/Customer')
-router.get('/test6', (req, res) => {
-    CUstomer.getUserList((err, userList) => {
-        res.json(userList)
-    })
-});
 router.post('/flash', function (req, res) {
     const flashAdded = req.body;
     NewsFlash.addFlashNews(flashAdded, function (err, flashAdded) {
