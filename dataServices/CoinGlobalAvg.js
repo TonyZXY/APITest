@@ -128,3 +128,5 @@ function loginConsole(msg) {
 module.exports.run = ()=>{
     start()
 };
+
+start();

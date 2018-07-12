@@ -1,45 +1,162 @@
-const { Pool } = require('pg');
+const {Pool} = require('pg');
 
 const pool = new Pool({
-    user:'tonyzheng',
-    host:'localhost',
-    database:'tonyzheng',
-    password:'bcgtest',
-    port:5432
+    user: 'tonyzheng',
+    host: 'localhost',
+    database: 'postgres',
+    password: 'bcgtest',
+    port: 5432
 });
 
 module.exports = {
-    getDevices: (params, callback) => {
-        let text = 'select distinct coins."from",coins."to",interests.price,interests.interest_id,coins.\\n\' +\n' +
-            '        \'market,users.user_id,interests.status, iosdevices.device_token\\n\' +\n' +
-            '        \'from (((interests join coins on interests.interest_coin_id = coins.coin_id)\\n\' +\n' +
-            '        \'  join users on interests.interest_user_id = users.user_id)\\n\' +\n' +
-            '        \'  join iosdevices on users.user_id = iosdevices.user_id)\\n\' +\n' +
-            '        \'where status = true and users.interest=true;';
+    getIOSDevicesForCompare: (callback) => {
+        let params = [];
+        let text = 'select distinct users.user_id,coins."from",coins."to",interests.price as inPirce,coins.price as coPrice,\n' +
+            '  interests.isgreater,coins.market,interests.status, iosdevices.device_token,iosdevices.number\n' +
+            'from (((interests join coins on interests.interest_coin_id = coins.coin_id)\n' +
+            'join users on interests.interest_user_id = users.user_id)\n' +
+            'join iosdevices on users.user_id = iosdevices.device_user_id)\n' +
+            ' where status = true and users.interest=true;';
         return pool.query(text, params, callback)
     },
-    getUser: (param, callback)=>{
+
+
+    getUser: (email, callback) => {
+        let param = [email];
         let text = 'select user_id as _id,password,salt,email from users where email=$1';
-        return pool.query(text,param,callback)
+        return pool.query(text, param, callback)
     },
-    registerUser:(param,callback)=>{
+
+
+    registerUser: (firstName, lastName, email, password, title, language, salt, callback) => {
+        let param = [firstName, lastName, email, password, title, language, salt];
         let text = 'INSERT INTO "public"."users" ("first_name", "last_name", "email", "password", "title", "language", "salt")\n' +
             'VALUES ($1, $2,$3, $4, $5, $6, $7) RETURNING *;';
-        return pool.query(text,param,callback)
+        return pool.query(text, param, callback)
     },
-    getInterest:(param,callback)=>{
+
+
+    getInterests: (email, callback) => {
+        let param = [email];
         let query = 'select coins."from",coins."to",interests.price,interests.interest_id as _id,interests.isGreater,interests.status,coins.market\n' +
             'from ((interests join coins on interests.interest_coin_id = coins.coin_id)\n' +
             '  join users on interests.interest_user_id = users.user_id)\n' +
             'where users.email=$1;';
-        return pool.query(query,param,callback)
+        return pool.query(query, param, callback)
     },
-    getInterestStatus:(param,callback)=>{
-        let query = 'select interest as status from users where email=$1';
-        return pool.query(query,param,callback)
+
+
+    getInterestStatus: (email, callback) => {
+        let param = [email];
+        let query = 'select interest as status from users where email=$1;';
+        return pool.query(query, param, callback)
     },
-    getTradingPair:(param,callback)=>{
-        let query = 'select "from","to",market,coin_id from coins where "from"=$1 and "to"=$2 and market=$3;';
-        return pool.query(query,param,callback)
+
+
+    getTradingPair: (from, to, market, callback) => {
+        let param = [from, to, market];
+        let query = 'select "from","to",market,coin_id as _id from coins where "from"=$1 and "to"=$2 and market=$3;';
+        return pool.query(query, param, callback)
+    },
+
+
+    addTradingPair: (from, to, market, callback) => {
+        let param = [from, to, market];
+        let query = 'insert into coins ("from", "to", market) values ($1,$2,$3) returning coin_id as _id;';
+        return pool.query(query, param, callback)
+    },
+
+
+    addInterestWithOutTradingPair: (email, coinID, price, isGreater, callback) => {
+        let param = [email, coinID, price, isGreater];
+        let query = 'insert into interests (interest_user_id, interest_coin_id, price, isGreater) values ((SELECT user_id from users where email=$1),$2,$3,$4) returning *;';
+        return pool.query(query, param, callback)
+    },
+
+
+    addInterestWithTradingPair: (email, coinID, price, isGreater, callback) => {
+        let param = [email, coinID, price, isGreater];
+        let query = 'insert into interests (interest_user_id, interest_coin_id, price, isGreater) values ((SELECT user_id from users where email=$1),$2,$3,$4) returning *;';
+        return pool.query(query, param, callback)
+    },
+
+
+    changeInterestStatus: (interests, callback) => {
+        let query = 'update interests set\n' +
+            '  status = c.status\n' +
+            'from (values\n';
+        let str = '';
+        interests.forEach(element => {
+            str += '(' + element.id + ',' + element.status + '),';
+        });
+        query += str.substring(0, str.length - 1);
+        query += ') as c(id,status)\n' +
+            'where c.id = interests.interest_id returning interest_id as _id,status;';
+        return pool.query(query, [], callback);
+    },
+
+
+    updateInterestNotificationStatus: (email, status, callback) => {
+        let param = [status, email];
+        let query = 'update users set interest=$1 where email=$2 returning interest;';
+        return pool.query(query, param, callback);
+    },
+
+
+    deleteInterest: (interests, callback) => {
+        let query = 'delete from interests\n' +
+            'where interest_id in (';
+        let str = '';
+        interests.forEach(element => {
+            str += element._id + ',';
+        });
+        query += str.substring(0, str.length - 1);
+        query += ') returning interest_id as _id;';
+        return pool.query(query, [], callback);
+    },
+
+
+    getInterest: (id, callback) => {
+        let param = [id];
+        let query = 'select coins."from",coins."to",coins.market,interests.interest_id,interests.price,interests.isgreater,interests.frequence\n' +
+            'from (interests join coins on interests.interest_coin_id = coins.coin_id)\n' +
+            'where interest_id=$1;';
+        return pool.query(query, param, callback);
+    },
+
+    updateInterestPrice: (id, price, isGreater, callback) => {
+        let param = [price,isGreater,id];
+        let query = 'Update interests set (price,isgreater) = ($1,$2) where interest_id=$3 returning *;';
+        return pool.query(query,param,callback);
+    },
+
+    updateInterestCoin:(id,coinID,price,isGreater,callback)=>{
+        let param = [price,isGreater,coinID,id];
+        let query = 'Update interests set (price,isgreater,interest_coin_id) = ($1,$2,$3) where interest_id=$4 returning *;';
+        return pool.query(query,param,callback);
+    },
+
+    addIOSDevice:(email,token,callback)=>{
+        let param = [email,token];
+        let query = 'insert into iosdevices (device_user_id, device_token) VALUES ((SELECT user_id from users where email=$1),$2) returning *;';
+        return pool.query(query,param,callback);
+    },
+
+    deleteIOSDevice:(token,callback)=>{
+        let param = [token];
+        let query = 'DELETE FROM iosdevices where device_token=$1;';
+        return pool.query(query,param,callback);
+    },
+
+    addIOSDeviceNumber: (token,callback)=>{
+        let param = [token];
+        let query = 'update iosdevices set number = number+1 where device_token=$1 returning device_token,number;';
+        return pool.query(query,param,callback);
+    },
+
+    setIOSDeviceNumberToZero: (token,callback)=>{
+        let param = [token];
+        let query = 'update iosdevices set number = 0 where device_token=$1 returning device_token,number;';
+        return pool.query(query,param,callback);
     }
 };

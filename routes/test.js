@@ -115,47 +115,9 @@ function loginconsole(message) {
 }
 
 
-router.post('/login', (req, res) => {
-    const username = req.body.username;
-    const password = req.body.passowrd;
-    console.log(req.body);
-    if (username === 'a' && (password !== null || password !== undefined)) {
-        res.send({
-            success: true,
-            message: 'Login success',
-            code: 200,
-            token: 'Token is here'
-        })
-    } else {
-        res.send({
-            success: false,
-            message: 'Login false',
-            code: 403,
-            token: null
-        })
-    }
-});
 
-router.post('/interest', (req, res) => {
-    const userID = req.body.userID;
-    const coinFrom = req.body.coinFrom;
-    const coinTo = req.body.coinTo;
-    const price = req.body.price;
-    const market = req.body.market;
-    let interets = {
-        coinFrom: coinFrom,
-        coinTo: coinTo,
-        market: market,
-        price: price
-    };
-    Interest.AddInterest(userID, interets, (err, msg) => {
-        if (err) {
-            console.log(err);
-        } else {
-            res.json(msg);
-        }
-    })
-});
+
+
 // --------------------------------------------------------------------------------  //
 
 
@@ -233,85 +195,5 @@ router.get('/test9', (req, res) => {
             res.json(interest)
         }
     })
-})
-
-router.get('/testQuery', (req, res) => {
-    db.getDevices([], (err, msg) => {
-        if (err) {
-            console.log(err)
-        } else {
-            console.log(msg.rows);
-            res.send(msg.rows);
-        }
-    })
 });
 
-router.get('/testUsers', (req, res) => {
-    db.getUser(['test123@gmail.com'], (err, msg) => {
-        if (err) {
-            console.log(err)
-        } else {
-            console.log(msg.rows[0]);
-            res.send(msg.rows);
-        }
-    })
-});
-
-router.get('/testRegister', (req, res) => {
-    db.registerUser(['testFirst', 'testLast', 'test123891231@test.com', 'asdqdqwdqwqd', 'Mr', 'EN', 'asdqwdqwdqd'], (err, msg) => {
-        if (err) {
-            console.log(err);
-            res.send({
-                error: true,
-                message: err.detail
-            });
-        } else {
-            console.log(msg);
-            res.send(msg);
-        }
-    })
-});
-
-router.get('/getInterest', (req, res) => {
-    db.getInterest(['test123@gmail.com'], (err, msg) => {
-        if (err) {
-            console.log(err);
-            res.send(err.detail);
-        } else {
-            console.log(msg.rows);
-            if (msg.rows[0] === undefined) {
-                res.send({
-                    success: false,
-                    message: "interest not found",
-                    code: 404,
-                    data: null
-                })
-            } else {
-                res.send({
-                    success: true,
-                    message: "interest in data",
-                    code: 200,
-                    data: msg.rows
-                });
-            }
-        }
-    })
-});
-
-router.get('/testStatus', (req, res) => {
-    db.getInterestStatus(['test1234@gmail.com'], (err, msg) => {
-        if (err) {
-            console.log(err);
-            res.send(err);
-        } else {
-            console.log(msg.rows[0]);
-
-            res.send(msg.rows);
-        }
-    })
-});
-
-router.get('/verify',(req,res)=>{
-    let token = req.body.token;
-    let email = req.body.email;
-});

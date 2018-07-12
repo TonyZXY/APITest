@@ -36,12 +36,10 @@ router.post('/register', (req, res) => {
             saltLength: 15,
             iterations: inter
         });
-        console.log(passwordHash);
         let st = passwordHash.split('$');
         let passwordToDB = st[3];
         let salt = st[1];
-        console.log('password: ' + passwordToDB + " salt: " + salt);
-        db.registerUser([firstName, lastName, email, passwordToDB, title, 'EN', salt], (err, msg) => {
+        db.registerUser(firstName, lastName, email, passwordToDB, title, 'EN', salt, (err, msg) => {
             if (err) {
                 res.send({
                     success: false,
@@ -56,7 +54,6 @@ router.post('/register', (req, res) => {
                     password: user.password
                 };
                 let tokenToSend = jwt.sign(payload, user.email);
-                console.log(tokenToSend);
                 res.send({
                     success: true,
                     message: 'Register success',
@@ -80,7 +77,7 @@ router.post('/login', (req, res) => {
             token: null
         })
     } else {
-        db.getUser([userName], (err, msg) => {
+        db.getUser(userName, (err, msg) => {
             if (err) {
                 console.log(err);
                 res.send({
@@ -141,7 +138,6 @@ function verifyToken(req, res, next) {
             token: null
         })
     } else {
-        console.log("token for verify is " + token);
         let payload = jwt.verify(token.toString(), email.toString());
         if (!payload) {
             return res.send({
@@ -162,7 +158,7 @@ function verifyToken(req, res, next) {
                     token: null
                 })
             } else {
-                db.getUser([email], (err, msg) => {
+                db.getUser(email, (err, msg) => {
                     if (err) {
                         console.log(err);
                         return res.send({
@@ -203,139 +199,235 @@ function verifyToken(req, res, next) {
 
 router.post('/addInterest', verifyToken, (req, res) => {
     let userEmail = req.body.email;
-    let interests = req.body.interest;
-    Customer.getUser(userEmail, (err, user) => {
+    let interest = req.body.interest;
+    db.getTradingPair(interest.from, interest.to, interest.market, (err, msg) => {
         if (err) {
-            console.log(err);
+            databaseError(err, res);
         } else {
-            let userID = user._id;
-            let length = interests.length;
-            let times = 0;
-            interests.forEach(interest => {
-                if (interest._id === null || interest._id === undefined) {
-                    db.getTradingPair([interest.from,interest.to,interest.market],(err,msg)=>{
-                        if (err) {
-                            console.log(err);
-                            res.send({
-                                success:false,
-                                message:'Database Error',
-                                code: 510,
+            if (msg.rows[0] === null || msg.rows[0] === undefined) {
+                db.addTradingPair(interest.from, interest.to, interest.market, (err, msg) => {
+                    if (err) {
+                        databaseError(err, res);
+                    } else {
+                        let coinID = msg.rows[0]._id;
+                        db.addInterestWithOutTradingPair(userEmail, coinID, interest.price, interest.isGreater, (err, msg) => {
+                            if (err) {
+                                databaseError(err, res);
+                            } else {
+                                let coin = msg.rows[0];
+                                res.send({
+                                    success: true,
+                                    message: "Interest Add to database",
+                                    code: 200,
+                                    data: coin
+                                })
+                            }
+                        })
+                    }
+                })
+            } else {
+                let coinID = msg.rows[0]._id;
+                db.addInterestWithTradingPair(userEmail, coinID, interest.price, interest.isGreater, (err, msg) => {
+                    if (err) {
+                        databaseError(err, res);
+                    } else {
+                        let coin = msg.rows[0];
+                        res.send({
+                            success: true,
+                            message: "Interest Add to database",
+                            code: 200,
+                            data: coin
+                        })
+                    }
+                })
+            }
+        }
+    })
+});
 
-                            })
-                        }
-                    });
-                    Interest.AddInterest(userID, interest, (err, intFromDB) => {
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            times += 1;
-                            if (length === times) {
-                                Interest.getInterest(userID, (err, message) => {
-                                    if (err) {
-                                        console.log(err);
-                                    } else {
-                                        res.json(message);
-                                    }
-                                })
-                            }
-                        }
-                    })
-                } else {
-                    Interest.updateInterest(userID, interest, (err, intFromDB) => {
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            times += 1;
-                            if (length === times) {
-                                Interest.getInterest(userID, (err, message) => {
-                                    if (err) {
-                                        console.log(err);
-                                    } else {
-                                        res.json(message);
-                                    }
-                                })
-                            }
-                        }
-                    })
-                }
-            });
+
+router.post('/editInterestStatus', verifyToken, (req, res) => {
+    let userEmail = req.body.email;
+    let interests = req.body.interest;
+    db.changeInterestStatus(interests, (err, msg) => {
+        if (err) {
+            databaseError(err, res);
+        } else {
+            let interests = msg.rows;
+            res.send({
+                success: true,
+                message: 'Success update Interest ststua',
+                code: 200,
+                data: interests
+            })
         }
     });
 });
 
-router.post('/changeNotificationStatus', verifyToken, (req, res) => {
+router.post('/changeInterestNotification', verifyToken, (req, res) => {
     let userEmail = req.body.email;
-    let userStatus = req.body.userStatus;
-    Customer.getUser(userEmail, (err, user) => {
+    let status = req.body.status;
+    db.updateInterestNotificationStatus(userEmail, status, (err, msg) => {
         if (err) {
-            console.log(err);
+            databaseError(err, res);
         } else {
-            let userID = user._id;
-            Interest.closeNotificationStatus(userID, userStatus, (err, interests) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    res.json(interests);
-                }
+            res.send({
+                success: true,
+                message: 'Successfully Update notification status',
+                code: 200,
+                data: msg.rows[0].interest
             })
         }
     })
 });
 
-router.post('/deleteInterest', verifyToken, (req, res) => {
+
+router.post('/editInterest', verifyToken, (req, res) => {
     let userEmail = req.body.email;
-    let interestIDs = req.body.interests;
-    Customer.getUser(userEmail, (err, user) => {
+    let interest = req.body.interest;
+    db.getInterest(interest.id, (err, msg) => {
         if (err) {
-            console.log(err);
+            databaseError(err, res);
         } else {
-            let userID = user._id;
-            let length = interestIDs.length;
-            let times = 0;
-            interestIDs.forEach(interest => {
-                Interest.deleteInterest(userID, interest._id, (err, msg) => {
+            let interestFromDB = msg.rows[0];
+            if (interestFromDB.from === interest.from &&
+                interestFromDB.to === interest.to &&
+                interestFromDB.market === interest.market) {
+                // TODO update frequency
+                db.updateInterestPrice(interest.id, interest.price, interest.isGreater, (err, msg) => {
                     if (err) {
-                        console.log(err);
+                        databaseError(err, res);
                     } else {
-                        times += 1;
-                        if (times === length) {
-                            Interest.getInterest(userID, (err, msg) => {
-                                res.json(msg);
+                        res.send({
+                            success: true,
+                            message: "Successfully Update interest",
+                            code: 200,
+                            data: msg.rows[0]
+                        })
+                    }
+                })
+            } else {
+                // TODO update frequency
+                db.getTradingPair(interest.from, interest.to, interest.market, (err, msg) => {
+                    if (err) {
+                        databaseError(err, res);
+                    } else {
+                        if (msg.rows[0] === null || msg.rows[0] === undefined) {
+                            db.addTradingPair(interest.from, interest.to, interest.market, (err, msg) => {
+                                if (err) {
+                                    databaseError(err, res);
+                                } else {
+                                    let coinID = msg.rows[0]._id;
+                                    db.updateInterestCoin(interest.id, coinID, interest.price, interest.isGreater, (err, msg) => {
+                                        if (err) {
+                                            databaseError(err, res);
+                                        } else {
+                                            res.send({
+                                                success: true,
+                                                message: "Successfully update interest",
+                                                code: 200,
+                                                data: msg.rows[0]
+                                            })
+                                        }
+                                    })
+                                }
+                            })
+                        } else {
+                            let coinID = msg.rows[0]._id;
+                            db.updateInterestCoin(interest.id, coinID, interest.price, interest.isGreater, (err, msg) => {
+                                if (err) {
+                                    databaseError(err, res);
+                                } else {
+                                    res.send({
+                                        success: true,
+                                        message: "Successfully update interest",
+                                        code: 200,
+                                        data: msg.rows[0]
+                                    })
+                                }
                             })
                         }
                     }
-                });
-
-            });
+                })
+            }
         }
     })
 });
 
-router.get('/interestOfUser/:_id', (req, res) => {
-    let userEmail = req.params._id;
-    Customer.getUser(userEmail, (err, customer) => {
-        if (!customer) {
-            res.send({
-                "error": "No certain user"
-            })
+
+function databaseError(err, res) {
+    console.log(err);
+    res.send({
+        success: false,
+        message: 'Database Error',
+        code: 510
+    })
+}
+
+
+router.post('/deleteInterest', verifyToken, (req, res) => {
+    let interests = req.body.interest;
+    db.deleteInterest(interests, (err, msg) => {
+        if (err) {
+            databaseError(err, res);
         } else {
-            let userId = customer._id;
-            Interest.getInterest(userId, (err, msg) => {
-                if (!msg) {
-                    res.send({
-                        error: "No interest found"
-                    })
-                } else {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        res.json(msg);
-                    }
-                }
+            res.send({
+                success: true,
+                message: "Successfully delete Interest",
+                code: 200,
+                data: msg.rows
+            })
+        }
+    });
+});
+
+
+router.post('/getInterest', verifyToken, (req, res) => {
+    let userEmail = req.body.email;
+    db.getInterests(userEmail, (err, msg) => {
+        if (err) {
+            databaseError(err, res);
+        } else {
+            if (msg.rows[0] === undefined) {
+                res.send({
+                    success: false,
+                    message: "interest not found",
+                    code: 404,
+                    data: null
+                })
+            } else {
+                res.send({
+                    success: true,
+                    message: "Interest In Database",
+                    code: 200,
+                    data: msg.rows
+                });
+            }
+        }
+    })
+});
+
+
+router.post('/getStatus', verifyToken, (req, res) => {
+    let userEmail = req.body.email;
+    db.getInterestStatus(userEmail, (err, msg) => {
+        if (err) {
+            databaseError(err);
+        } else {
+            res.send({
+                success: true,
+                message: "Interest Status found",
+                code: 200,
+                data: msg.rows[0]
             })
         }
     })
 });
+
+
+
+
+
 
 
 module.exports = router;

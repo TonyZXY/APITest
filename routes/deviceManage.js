@@ -210,3 +210,49 @@ router.get('/NotificationDevice', function(req, res){
         res.json(deviceList);
     })
 });
+
+
+
+function databaseError(err, res) {
+    console.log(err);
+    res.send({
+        success: false,
+        message: 'Database Error',
+        code: 510
+    })
+}
+
+router.post('/addIOSDevice',verifyToken,(req,res)=>{
+    let userEmail = req.body.email;
+    let deviceToken = req.body.deviceToken;
+    db.addIOSDevice(userEmail,deviceToken,(err,msg)=>{
+        if (err){
+            databaseError(err,res);
+        } else {
+            res.send({
+                success: true,
+                message: "Successfully add IOS device",
+                code:200,
+                data: msg.rows[0]
+            })
+        }
+    })
+});
+
+
+router.post('/receivedNotification',verifyToken,(req,res)=>{
+    let token = req.body.deviceToken;
+    db.setIOSDeviceNumberToZero(token,(err,msg)=>{
+        if (err) {
+            databaseError(err,res);
+        } else {
+            res.send({
+                success: true,
+                message: "Change Notification to Zero",
+                code: 200,
+                data: msg.rows[0]
+            })
+        }
+    })
+});
+
