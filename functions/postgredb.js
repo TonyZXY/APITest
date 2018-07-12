@@ -187,8 +187,14 @@ module.exports = {
         return pool.query(query,param,callback);
     },
 
-
-
+    //TODO: Get All IOS devices for push News Flash notification
+    getAllIOSDeviceForFlashNotification:(callback)=>{
+        let param = [];
+        let query = 'SELECT iosdevices.device_token \n' +
+            'from (users join iosdevices on users.user_id=iosdevices.device_user_id) \n' +
+            'where users.flash = true;';
+        return pool.query(query,param,callback);
+    }
 };
 
 
