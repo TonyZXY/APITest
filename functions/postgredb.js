@@ -12,7 +12,7 @@ module.exports = {
     getIOSDevicesForCompare: (callback) => {
         let params = [];
         let text = 'select distinct users.user_id,coins."from",coins."to",interests.price as inPrice,coins.price as coPrice,\n' +
-            '  interests.isgreater,coins.market,interests.status, iosdevices.device_token,iosdevices.number,interests.interest_id, interests.frequence \n' +
+            '  interests.isgreater,coins.market,interests.status, iosdevices.device_token,iosdevices.number,interests.interest_id, interests.frequence, coins.coin_id as coinid\n' +
             'from (((interests join coins on interests.interest_coin_id = coins.coin_id)\n' +
             'join users on interests.interest_user_id = users.user_id)\n' +
             'join iosdevices on users.user_id = iosdevices.device_user_id)\n' +
@@ -173,21 +173,21 @@ module.exports = {
         return pool.query(query,param,callback);
     },
 
-    //TODO: Update One trading pair price
+    //FIXME: Update One trading pair price
     updateTradingPair:(id,price,callback)=>{
         let param = [price,id];
-        let query = 'Update coins set price=$1 where coin_id=$2 returning *;';
+        let query = 'update coins set price=$1 where coin_id=$2 returning *;';
         return pool.query(query,param,callback);
     },
 
-    //TODO: USE This to get ALL Trading pair before you want to Update the price
+    //FIXME: USE This to get ALL Trading pair before you want to Update the price
     getAllTradingPair:(callback)=>{
         let param = [];
         let query = 'Select * from coins;';
         return pool.query(query,param,callback);
     },
 
-    //TODO: Get All IOS devices for push News Flash notification
+    //FIXME: Get All IOS devices for push News Flash notification
     getAllIOSDeviceForFlashNotification:(callback)=>{
         let param = [];
         let query = 'SELECT iosdevices.device_token \n' +
