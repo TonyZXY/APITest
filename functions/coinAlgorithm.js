@@ -12,7 +12,7 @@ module.exports.getPriceFromAPI = function (coinFrom, coinTo, market, callback){
     }, function (error, response, body){
           if(error){
             console.log(error);
-            logger.logIntoFile('error.log','error','coinAlgorithm','CryptoCompareAPI', error);
+            logger.APIConnectionError('coinAlgorithm','CryptoCompareAPI', error);
             return callback(error);
           }else{
             let jsonObject = JSON.parse(body);
@@ -33,7 +33,7 @@ const CoinFilter = require('../module/Coinfilter');
     }, function (error, response, body){
           if(error){
             console.log(error);
-            logger.logIntoFile('error.log','error','coinAlgorithm','CryptoCompareAPI', error);
+            logger.APIConnectionError('coinAlgorithm','CryptoCompareAPI', error);
             return callback(error);
           }else{
             let jsonObject1 = JSON.parse(body);
@@ -44,7 +44,7 @@ const CoinFilter = require('../module/Coinfilter');
             }, function (error, response, body2){
                   if(error){
                     console.log(error);
-                    logger.logIntoFile('error.log','error','coinAlgorithm','CryptoCompareAPI', error);
+                    logger.APIConnectionError('coinAlgorithm','CryptoCompareAPI', error);
                     return callback(error);
                   }else{
                     let jsonObject = JSON.parse(body2);
@@ -62,7 +62,8 @@ const CoinFilter = require('../module/Coinfilter');
                                 coin.logoUrl = coin1.ImageUrl;
                                 CoinFilter.findCoinBySymbol(coin,(err,coinToAdd) =>{
                                     if(err){
-                                        console.log(err)
+                                        console.log(err);
+                                        logger.databaseError('coinAlgorithm','server', error)
                                      } else {
                                          // console.log(coinToAdd)
                                      }

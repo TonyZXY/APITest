@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const logger = require('../functions/logger')
 
 const coinFilterSchema = mongoose.Schema({
     coinName:{
@@ -28,6 +29,7 @@ module.exports.findCoinBySymbol = (coin, callback) =>{
     CoinFilter.findOne({coinSymbol:coin.coinSymbol},(err,coinToSearch)=>{
         if(err){
             console.log(err);
+            logger.databaseError("Coinfilter","server", err);
         } else if(!coinToSearch){
             CoinFilter.create(coin,callback);
         } else{

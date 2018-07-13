@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
+const logger = require('../functions/logger')
 
 const options = {
     user: 'bglappdev100',
@@ -108,6 +109,8 @@ router.post('/addIOSDevice',verifyToken,(req,res)=>{
     db.addIOSDevice(userEmail,deviceToken,(err,msg)=>{
         if (err){
             databaseError(err,res);
+            let address = req.connection.remoteAddress;
+            logger.databaseError('deviceManage',address, err);
         } else {
             res.send({
                 success: true,
@@ -125,6 +128,8 @@ router.post('/receivedNotification',verifyToken,(req,res)=>{
     db.setIOSDeviceNumberToZero(token,(err,msg)=>{
         if (err) {
             databaseError(err,res);
+            let address = req.connection.remoteAddress;
+            logger.databaseError('deviceManage',address, err);
         } else {
             res.send({
                 success: true,
@@ -143,6 +148,8 @@ router.post('/changeInterestNotification', verifyToken, (req, res) => {
     db.updateInterestNotificationStatus(userEmail, status, (err, msg) => {
         if (err) {
             databaseError(err, res);
+            let address = req.connection.remoteAddress;
+            logger.databaseError('deviceManage',address, err);
         } else {
             res.send({
                 success: true,
@@ -160,6 +167,8 @@ router.post('/changeFlashNotificationStatus', verifyToken,(req,res)=>{
     db.updateFlashNotificationStatus(userEmail,status,(err,msg)=>{
         if (err) {
             databaseError(err,res);
+            let address = req.connection.remoteAddress;
+            logger.databaseError('deviceManage',address, err);
         } else {
             res.send({
                 success: true,

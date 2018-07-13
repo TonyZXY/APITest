@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const apn = require('apn');
 const db = require('../functions/postgredb');
+const logger = require('../functions/logger')
 
 mongoose.connect('mongodb://localhost/APITest');
 
@@ -18,7 +19,7 @@ function sendIos(deviceId, message, badgeNumber) {
     let apnprovider = new apn.Provider(optionsToFile);
     let deviceToken = deviceId;
     let notification = new apn.Notification();
-    notification.badge = 1;
+    notification.badge = badgeNumber;
     notification.alert = message;
     notification.topic = "com.blockchainglobal.bglmedia";
     apnprovider.send(notification, deviceToken).then(result => {
@@ -28,6 +29,8 @@ function sendIos(deviceId, message, badgeNumber) {
                     db.deleteIOSDevice(deviceId,(err,res)=>{
                         if(err){
                             console.log(err);
+                            logger.databaseError("notification","server",err)
+
                         } else{
                             console.log(deviceToken+" has been deleted from db due to invalid device token")
                         }
@@ -37,23 +40,25 @@ function sendIos(deviceId, message, badgeNumber) {
                 }
             })
     });
+    
 
     apnprovider.shutdown();
 }
 
 
 module.exports.sendFlashNotification = (message) => {
-    
     db.getAllIOSDeviceForFlashNotification((err, list) =>{
         if(err){
             console.log(err)
+            logger.databaseError("notification","server",err)
         } else{
             if(list.rows[0] === null || list.rows[0]===undefined){
                 console.log("No device in device database")
+                logger.databaseError("notification","db","No device in device database")
             } else {
                 list.rows.forEach(row=>{
                     db.addIOSDeviceNumber(row.device_token,(err, msg)=>{
-                        sendIos(row.device_token,message,row.device_token+1)
+                        sendIos(row.device_token,message,msg.rows[0].number)
                     })
                     
                 })

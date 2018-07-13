@@ -3,6 +3,7 @@ const router = express.Router();
 const hashPassword = require('password-hash');
 const jwt = require('jsonwebtoken');
 const db = require('../functions/postgredb');
+const logger = require('../functions/logger')
 
 
 const agl = 'sha256';
@@ -76,6 +77,8 @@ router.post('/login', (req, res) => {
         db.getUser(userName, (err, msg) => {
             if (err) {
                 console.log(err);
+                let address = req.connection.remoteAddress;
+                logger.databaseError('userLogin',address, err);
                 res.send({
                     success: false,
                     message: 'login error',
@@ -85,6 +88,8 @@ router.post('/login', (req, res) => {
             } else {
                 if (msg.rows[0] === undefined) {
                     console.log('no user found');
+                    let address = req.connection.remoteAddress;
+                    logger.databaseError('userLogin',address, 'No user is found');
                     res.send({
                         success: false,
                         message: 'Email or Password Error',
@@ -157,6 +162,8 @@ function verifyToken(req, res, next) {
                 db.getUser(email, (err, msg) => {
                     if (err) {
                         console.log(err);
+                        let address = req.connection.remoteAddress;
+                        logger.databaseError('userLogin',address, err);
                         return res.send({
                             success: false,
                             message: 'Token error',
@@ -199,16 +206,22 @@ router.post('/addInterest', verifyToken, (req, res) => {
     db.getTradingPair(interest.from, interest.to, interest.market, (err, msg) => {
         if (err) {
             databaseError(err, res);
+            let address = req.connection.remoteAddress;
+            logger.databaseError('userLogin',address, err);
         } else {
             if (msg.rows[0] === null || msg.rows[0] === undefined) {
                 db.addTradingPair(interest.from, interest.to, interest.market, (err, msg) => {
                     if (err) {
                         databaseError(err, res);
+                        let address = req.connection.remoteAddress;
+                        logger.databaseError('userLogin',address, err);
                     } else {
                         let coinID = msg.rows[0]._id;
                         db.addInterestWithOutTradingPair(userEmail, coinID, interest.price, interest.isGreater, (err, msg) => {
                             if (err) {
                                 databaseError(err, res);
+                                let address = req.connection.remoteAddress;
+                                logger.databaseError('userLogin',address, err);
                             } else {
                                 let coin = msg.rows[0];
                                 res.send({
@@ -226,6 +239,8 @@ router.post('/addInterest', verifyToken, (req, res) => {
                 db.addInterestWithTradingPair(userEmail, coinID, interest.price, interest.isGreater, (err, msg) => {
                     if (err) {
                         databaseError(err, res);
+                        let address = req.connection.remoteAddress;
+                        logger.databaseError('userLogin',address, err);
                     } else {
                         let coin = msg.rows[0];
                         res.send({
@@ -248,6 +263,8 @@ router.post('/editInterestStatus', verifyToken, (req, res) => {
     db.changeInterestStatus(interests, (err, msg) => {
         if (err) {
             databaseError(err, res);
+            let address = req.connection.remoteAddress;
+            logger.databaseError('userLogin',address, err);
         } else {
             let interests = msg.rows;
             res.send({
@@ -269,6 +286,8 @@ router.post('/editInterest', verifyToken, (req, res) => {
     db.getInterest(interest.id, (err, msg) => {
         if (err) {
             databaseError(err, res);
+            let address = req.connection.remoteAddress;
+            logger.databaseError('userLogin',address, err);
         } else {
             let interestFromDB = msg.rows[0];
             if (interestFromDB.from === interest.from &&
@@ -278,6 +297,8 @@ router.post('/editInterest', verifyToken, (req, res) => {
                 db.updateInterestPrice(interest.id, interest.price, interest.isGreater, (err, msg) => {
                     if (err) {
                         databaseError(err, res);
+                        let address = req.connection.remoteAddress;
+                        logger.databaseError('userLogin',address, err);
                     } else {
                         res.send({
                             success: true,
@@ -292,16 +313,22 @@ router.post('/editInterest', verifyToken, (req, res) => {
                 db.getTradingPair(interest.from, interest.to, interest.market, (err, msg) => {
                     if (err) {
                         databaseError(err, res);
+                        let address = req.connection.remoteAddress;
+                        logger.databaseError('userLogin',address, err);
                     } else {
                         if (msg.rows[0] === null || msg.rows[0] === undefined) {
                             db.addTradingPair(interest.from, interest.to, interest.market, (err, msg) => {
                                 if (err) {
                                     databaseError(err, res);
+                                    let address = req.connection.remoteAddress;
+                                    logger.databaseError('userLogin',address, err);
                                 } else {
                                     let coinID = msg.rows[0]._id;
                                     db.updateInterestCoin(interest.id, coinID, interest.price, interest.isGreater, (err, msg) => {
                                         if (err) {
                                             databaseError(err, res);
+                                            let address = req.connection.remoteAddress;
+                                            logger.databaseError('userLogin',address, err);
                                         } else {
                                             res.send({
                                                 success: true,
@@ -318,6 +345,8 @@ router.post('/editInterest', verifyToken, (req, res) => {
                             db.updateInterestCoin(interest.id, coinID, interest.price, interest.isGreater, (err, msg) => {
                                 if (err) {
                                     databaseError(err, res);
+                                    let address = req.connection.remoteAddress;
+                                    logger.databaseError('userLogin',address, err);
                                 } else {
                                     res.send({
                                         success: true,
@@ -351,6 +380,8 @@ router.post('/deleteInterest', verifyToken, (req, res) => {
     db.deleteInterest(interests, (err, msg) => {
         if (err) {
             databaseError(err, res);
+            let address = req.connection.remoteAddress;
+            logger.databaseError('userLogin',address, err);
         } else {
             res.send({
                 success: true,
@@ -368,6 +399,8 @@ router.post('/getInterest', verifyToken, (req, res) => {
     db.getInterests(userEmail, (err, msg) => {
         if (err) {
             databaseError(err, res);
+            let address = req.connection.remoteAddress;
+            logger.databaseError('userLogin',address, err);
         } else {
             if (msg.rows[0] === undefined) {
                 res.send({
@@ -394,6 +427,8 @@ router.post('/getInterestStatus', verifyToken, (req, res) => {
     db.getInterestStatus(userEmail, (err, msg) => {
         if (err) {
             databaseError(err);
+            let address = req.connection.remoteAddress;
+            logger.databaseError('userLogin',address, err);
         } else {
             res.send({
                 success: true,
