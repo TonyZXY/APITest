@@ -1,8 +1,8 @@
-const coinAlgorithm = require('../functions/coinAlgorithm')
-const db = require('../functions/postgredb')
+const coinAlgorithm = require('../functions/coinAlgorithm');
+const db = require('../functions/postgredb');
 
-var minute = 2
-the_internal = minute * 60 *1000
+let minute = 2;
+the_internal = minute * 60 *1000;
 setInterval(function(){
     console.log("Check for update");
     db.getAllTradingPair((err,list) =>{
@@ -13,7 +13,7 @@ setInterval(function(){
         } else{
             list.rows.forEach(tradingpair => {
                     coinAlgorithm.getPriceFromAPI(tradingpair.from, tradingpair.to, tradingpair.market, (response) =>{
-                        price = response;
+                        let price = response;
                         if(tradingpair.price === null || tradingpair.price === undefined || price !== tradingpair.price){
                         db.updateTradingPair(tradingpair.coin_id, price, (err,msg) =>{
                             if(err){

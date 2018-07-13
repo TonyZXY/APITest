@@ -20,4 +20,4 @@ module.exports.logIntoFile = (filename, levelToSet, labelToSet, addressToLog, me
         message: messageToLog,
         address: addressToLog
     })
-}
+};
