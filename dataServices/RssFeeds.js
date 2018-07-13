@@ -40,14 +40,14 @@ async function runBitcoinist() {
                         }else {
                             num += 1;
                             if (num === length){
-                                console.log("update bitcoinist");
+                                loginConsole("update bitcoinist");
                             }
                         }
                     })
                 } else {
                     num += 1;
                     if (num === length){
-                        console.log("update bitcoinsit");
+                        loginConsole("update bitcoinsit");
                     }
                 }
             }
@@ -84,14 +84,14 @@ async function runBitcoinCom() {
                         }else {
                             num += 1;
                             if (num === length){
-                                console.log("update bitcoin.com");
+                                loginConsole("update bitcoin.com");
                             }
                         }
                     })
                 } else {
                     num += 1;
                     if (num === length){
-                        console.log("update bitcoin.com");
+                        loginConsole("update bitcoin.com");
                     }
                 }
             }
@@ -128,14 +128,14 @@ async function runCoinDesk() {
                         }else {
                             num += 1;
                             if (num === length){
-                                console.log("update coindesk.com");
+                                loginConsole("update coindesk.com");
                             }
                         }
                     })
                 } else {
                     num += 1;
                     if (num === length){
-                        console.log("update coindesk.com");
+                        loginConsole("update coindesk.com");
                     }
                 }
             }
@@ -173,14 +173,14 @@ async function runBtcManager() {
                         }else {
                             num += 1;
                             if (num === length){
-                                console.log("update btcmanager.com");
+                                loginConsole("update btcmanager.com");
                             }
                         }
                     })
                 } else {
                     num += 1;
                     if (num === length){
-                        console.log("update btcmanager.com");
+                        loginConsole("update btcmanager.com");
                     }
                 }
             }
@@ -219,14 +219,14 @@ async function runEthnews() {
                         }else {
                             num += 1;
                             if (num === length){
-                                console.log("update ethnews.com");
+                                loginConsole("update ethnews.com");
                             }
                         }
                     })
                 } else {
                     num += 1;
                     if (num === length){
-                        console.log("update ethnews.com");
+                        loginConsole("update ethnews.com");
                     }
                 }
             }
@@ -264,14 +264,14 @@ async function runCointelegraph() {
                         }else {
                             num += 1;
                             if (num === length){
-                                console.log("update cointelegraph.com");
+                                loginConsole("update cointelegraph.com");
                             }
                         }
                     })
                 } else {
                     num += 1;
                     if (num === length){
-                        console.log("update cointelegraph.com");
+                        loginConsole("update cointelegraph.com");
                     }
                 }
             }
@@ -282,22 +282,22 @@ async function runCointelegraph() {
 
 async function runGet(){
     runBitcoinCom();
-    console.log("run bitcoin.com");
+    loginConsole("run bitcoin.com");
     await delay(7000);
     runBitcoinist();
-    console.log("run bitcoinist.com");
+    loginConsole("run bitcoinist.com");
     await delay(7000);
     runBtcManager();
-    console.log("run btcmanager.com");
+    loginConsole("run btcmanager.com");
     await delay(7000);
     runCoinDesk();
-    console.log("run coindesk.com");
+    loginConsole("run coindesk.com");
     await delay(7000);
     runCointelegraph();
-    console.log("run cointelegraph.com");
+    loginConsole("run cointelegraph.com");
     await delay(7000);
     runEthnews();
-    console.log("run ethnews.com");
+    loginConsole("run ethnews.com");
     await delay(7000);
 }
 
@@ -314,6 +314,12 @@ async function getLoop(){
         await delay(300*1000);
         time ++;
     } while (true)
+}
+
+function loginConsole(msg) {
+    console.log(
+        new Date(Date.now()).toLocaleString() +"  " + msg
+    );
 }
 
 getLoop();
