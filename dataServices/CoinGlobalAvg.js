@@ -1,6 +1,7 @@
 const https = require('https');
 const Coin = require('../module/Coin');
 const mongoose = require('mongoose');
+const logger = require('../functions/logger')
 
 const options = {
     user: 'bglappdev100',
@@ -42,7 +43,6 @@ async function forLoop(array, currency) {
                 data += d;
             });
             res.on("end", () => {
-                console.log(data);
                 let dataJSON = JSON.parse(data);
                 let coinData = dataJSON.data;
                 numberOfCoins = dataJSON.metadata.num_cryptocurrencies;
@@ -88,6 +88,7 @@ async function forLoop(array, currency) {
             })
         }).on('error', (err) => {
             console.log("error on get: " + err);
+            logger.APIConnectionError("CoinGlobalAvg","MarketCap",err);
             throw new Error(err);
         });
         await delay(second * 1000);

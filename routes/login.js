@@ -4,6 +4,7 @@ const router = express.Router();
 const hashPassword = require('password-hash');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
+const logger = require('../functions/logger')
 
 
 const options = {
@@ -22,6 +23,8 @@ router.post("/set", (req, res) => {
     User.setUpUsers(user, (err, user) => {
         if (err) {
             console.log(err);
+            let address = req.connection.remoteAddress;
+            logger.databaseError('login',address, err);
         }
         res.json(user)
     })
@@ -29,7 +32,14 @@ router.post("/set", (req, res) => {
 
 router.get("/get", (req, res) => {
     User.get((err, user) => {
-        res.json(user);
+        if(err){
+            console.log(err);
+        }else{
+           res.json(user);
+           let address = req.connection.remoteAddress;
+           logger.databaseError('login',address, err); 
+        }
+        
     })
 });
 
@@ -39,6 +49,8 @@ router.post("/", (req, res) => {
     User.getPassword(username, (err, user) => {
         if (err) {
             console.log(err);
+            let address = req.connection.remoteAddress;
+            logger.databaseError('login',address, err);
         } else {
             if (!user) {
                 res.send({login: false}).status(401)

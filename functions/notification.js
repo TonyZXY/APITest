@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const apn = require('apn');
 const db = require('../functions/postgredb');
+const logger = require('../functions/logger')
 
 mongoose.connect('mongodb://localhost/APITest');
 
@@ -18,11 +19,7 @@ function sendIos(deviceId, message, badgeNumber) {
     let apnprovider = new apn.Provider(optionsToFile);
     let deviceToken = deviceId;
     let notification = new apn.Notification();
-<<<<<<< HEAD
     notification.badge = badgeNumber;
-=======
-    notification.badge = 1;
->>>>>>> 17f33d8253c311142a1eb501580844ad21ea97db
     notification.alert = message;
     notification.topic = "com.blockchainglobal.bglmedia";
     apnprovider.send(notification, deviceToken).then(result => {
@@ -32,6 +29,8 @@ function sendIos(deviceId, message, badgeNumber) {
                     db.deleteIOSDevice(deviceId,(err,res)=>{
                         if(err){
                             console.log(err);
+                            logger.databaseError("notification","server",err)
+
                         } else{
                             console.log(deviceToken+" has been deleted from db due to invalid device token")
                         }
@@ -51,9 +50,11 @@ module.exports.sendFlashNotification = (message) => {
     db.getAllIOSDeviceForFlashNotification((err, list) =>{
         if(err){
             console.log(err)
+            logger.databaseError("notification","server",err)
         } else{
             if(list.rows[0] === null || list.rows[0]===undefined){
                 console.log("No device in device database")
+                logger.databaseError("notification","db","No device in device database")
             } else {
                 list.rows.forEach(row=>{
                     db.addIOSDeviceNumber(row.device_token,(err, msg)=>{

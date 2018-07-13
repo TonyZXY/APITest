@@ -1,16 +1,12 @@
-<<<<<<< HEAD
-const coinAlgorithm = require('../functions/coinAlgorithm')
-const db = require('../functions/postgredb')
-const logger = require('../functions/logger')
 
-var minute = 2;
-=======
 const coinAlgorithm = require('../functions/coinAlgorithm');
 const db = require('../functions/postgredb');
 
+let secondTime = 0; // limit 50
+let minuteTime = 0; // limit 2000
+let hourTime = 0;  // limit 100000
 let minute = 2;
->>>>>>> 17f33d8253c311142a1eb501580844ad21ea97db
-the_internal = minute * 60 *1000;
+let the_internal = minute * 60 *1000;
 setInterval(function(){
     db.getAllTradingPair((err,list) =>{
         if(err){
@@ -21,7 +17,6 @@ setInterval(function(){
             logger.databaseError("AutoUpdateTradingPair", "db", "currently no trading pair in database");
         } else{
             list.rows.forEach(tradingpair => {
-<<<<<<< HEAD
                     coinAlgorithm.getPriceFromAPI(tradingpair.from, tradingpair.to, tradingpair.market, (err, response) =>{
                         if(err){
                             console.log(err);
@@ -36,16 +31,7 @@ setInterval(function(){
                                     } else {
                                     }
                                 });
-=======
-                    coinAlgorithm.getPriceFromAPI(tradingpair.from, tradingpair.to, tradingpair.market, (response) =>{
-                        let price = response;
-                        if(tradingpair.price === null || tradingpair.price === undefined || price !== tradingpair.price){
-                        db.updateTradingPair(tradingpair.coin_id, price, (err,msg) =>{
-                            if(err){
-                                console.log(err)
-                            } else {
-                                console.log("update 1")
->>>>>>> 17f33d8253c311142a1eb501580844ad21ea97db
+
                             }
                         }
                        

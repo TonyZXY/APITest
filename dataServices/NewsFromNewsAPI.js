@@ -3,6 +3,7 @@ const http = require('http');
 const News = require("../module/News");
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
+const logger = require('../functions/logger')
 
 const options = {
     user: 'bglappdev100',
@@ -125,6 +126,7 @@ function getNews(content) {
         let data = '';
         res.on('error', (err)=>{
             console.log("error in receiving data: "+err);
+            logger.APIConnectionError('NewsFromNewsAPI', httpUrl, err);
             delay(2000);
             getLoop();
         });
@@ -168,12 +170,14 @@ function getNews(content) {
                     // });
                     News.findNews(news.title,news.publishedTime,(err,newsFromDB)=>{
                         if (err){
-                            console.log(err)
+                            console.log(err);
+                            logger.databaseError('NewsFromNewsAPI', 'server', err)
                         } else {
                             if (!newsFromDB) {
                                 News.addNews(news,(err,msg)=>{
                                     if (err) {
                                         console.log(err);
+                                        logger.databaseError('NewsFromNewsAPI', 'server', err)
                                     }else {
 
                                     }
