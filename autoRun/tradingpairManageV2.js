@@ -3,32 +3,36 @@ const router = express.Router();
 const db = require('../functions/postgredb')
 const notification = require('../functions/notification')
 const coinAlgorithm = require('../functions/coinAlgorithm')
+const logger = require('../functions/logger')
 
 module.exports = router;
 
-var minute =0.05
+var minute = 5;
 the_internal = minute * 60 * 1000;
 setInterval(function(){
-    console.log("compare starts");
     db.getIOSDevicesForCompare((err, list)=>{
         if(err){
-            console.log(err)
-        } else{
+            console.log(err);
+            logger.databaseError("TradingpairManage","server", err);
 
+        } else{
             if(list.rows[0]===null || typeof list.rows[0]===undefined){
-                console.log("No data in database")
+                console.log("No data in database");
+                logger.databaseError("TradingpairManage","db", "No data in database");
             }
             else{
                 list.rows.forEach(row => {
                     if(row.coprice === null || typeof row.coprice === undefined){
-                        coinAlgorithm.getPriceFromAPI(row.from, row.to, row.market, (response) =>{
+                        coinAlgorithm.getPriceFromAPI(row.from, row.to, row.market, (err,response) =>{
                             if(err){
-                                console.log(err)
+                                console.log(err);
+                                logger.APIConnectionError("TradingpairManage","CryptoCompare",err);
                             } else{
-                                coprice = response
+                                let coprice = response;
                                 db.updateTradingPair(row.coinid, coprice, (err,response) =>{
                                     if(err){
-                                        console.log(err)
+                                        console.log(err);
+                                        logger.databaseError("TradingpairManage","server", err);
                                     } else{
                                         comparePrice(row.from, row.to, row.market, row.inprice, coprice, row.isgreater, row.device_token,row.number)
                                     }
@@ -58,7 +62,7 @@ function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, ba
                     console.log(err)
                 } else {
                     message = "Now, " + from +" is worth "+ coPrice + " "+ to + " on "+ market + ", higher than your expectation of "+ inPrice 
-                    // notification.sendAlert(deviceId, badgeNumber+1, message)
+                    // notification.sendAlert(deviceId, message, badgeNumber+1)
                     console.log(deviceId+"      "+(badgeNumber+1)+"       "+message)
                 }
             })
@@ -69,7 +73,7 @@ function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, ba
                     console.log(err)
                 } else {
                     message = "Now, " + from +" is worth "+ coPrice + " "+ to + " on "+ market + ", lower than your expectation of "+ inPrice 
-                    // notification.sendAlert(deviceId, badgeNumber+1, message)
+                    // notification.sendAlert(deviceId, message, badgeNumber+1)
                     console.log(deviceId+"      "+(badgeNumber+1)+"       "+message)
                 }
             })
@@ -79,7 +83,7 @@ function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, ba
                     console.log(err)
                 } else {
                     message = "Now, " + from +" is worth "+ coPrice + " "+ to + " on "+ market + ", higher or equal to your expectation of "+ inPrice 
-                    // notification.sendAlert(deviceId, badgeNumber+1, message)
+                    // notification.sendAlert(deviceId, message, badgeNumber+1)
                     console.log(deviceId+"      "+(badgeNumber+1)+"       "+message)
                 }
             })
@@ -89,7 +93,7 @@ function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, ba
                     console.log(err)
                 } else {
                     message = "Now, " + from +" is worth "+ coPrice + " "+ to + " on "+ market + ", lower or equal to your expectation of "+ inPrice 
-                    // notification.sendAlert(deviceId, badgeNumber+1, message)
+                    // notification.sendAlert(deviceId, message, badgeNumber+1)
                     console.log(deviceId+"      "+(badgeNumber+1)+"       "+message)
                 }
             })
