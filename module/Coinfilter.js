@@ -14,7 +14,7 @@ const coinFilterSchema = mongoose.Schema({
         require:true
     }
 
-})
+});
 const CoinFilter = module.exports = mongoose.model('CoinFilter',coinFilterSchema);
 
 module.exports.getCoinList = (callback)=>{
@@ -34,7 +34,7 @@ module.exports.findCoinBySymbol = (coin, callback) =>{
             // console.log("this has been added")
         }
     });
-}
+};
 module.exports.deleteCoinById = (id, callback) => {
     CoinFilter.findOneAndRemove({_id:id},callback)
-}
+};

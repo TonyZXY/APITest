@@ -28,4 +28,5 @@ module.exports.databaseError = (labelToSet, addressToLog, messageToLog) =>{
 };
 module.exports.APIConnectionError = (labelToSet,APIToLog,messageToLog) =>{
     logIntoFile("api_error.log", "error",labelToSet,APIToLog,messageToLog);
+
 };

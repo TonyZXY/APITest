@@ -32,7 +32,7 @@ const delay = amount => {
 };
 const second = 3;
 
-async function forLoop(array,currency) {
+async function forLoop(array, currency) {
     for (let i = 0; i < length; i++) {
         let start = i * 100 + 1;
         let url = urlHead + startStr + start + convert + currency;
@@ -42,6 +42,7 @@ async function forLoop(array,currency) {
                 data += d;
             });
             res.on("end", () => {
+                console.log(data);
                 let dataJSON = JSON.parse(data);
                 let coinData = dataJSON.data;
                 numberOfCoins = dataJSON.metadata.num_cryptocurrencies;
@@ -85,37 +86,44 @@ async function forLoop(array,currency) {
                     }
                 })
             })
+        }).on('error', (err) => {
+            console.log("error on get: " + err);
+            throw new Error(err);
         });
-        await delay(second*1000);
+        await delay(second * 1000);
     }
 }
 
-async function forCurrency(array){
-    for (let i=0;i<currencys.length;i++) {
-        forLoop(array,currencys[i]);
-        await delay(second*17*1000);
+async function forCurrency(array) {
+    for (let i = 0; i < currencys.length; i++) {
+        forLoop(array, currencys[i]);
+        await delay(second * 17 * 1000);
     }
 }
 
 
-async function start() {
+async function startcall() {
     let time = 1;
-    do {
-        let array = [];
-        loginConsole(" start Loop for " + time);
-        time ++;
-        forCurrency(array);
-        await delay(second*68*1000);
-        Coin.addCoins(array, (err, msg) => {
-            if (err) {
-                console.log(err);
-            } else {
+    try {
+        do {
+            let array = [];
+            loginConsole(" start Loop for " + time);
+            time++;
+            forCurrency(array);
+            await delay(second * 68 * 1000);
+            Coin.addCoins(array, (err, msg) => {
+                if (err) {
+                    console.log(err);
+                } else {
 
-            }
-        });
-        loginConsole("Add to database");
-        await delay(300000-second*68000);
-    } while (true);
+                }
+            });
+            loginConsole("Add to database");
+            await delay(300000 - second * 68000);
+        } while (true);
+    } catch (e) {
+        console.log(e);
+    }
 }
 
 
@@ -125,8 +133,9 @@ function loginConsole(msg) {
     );
 }
 
-module.exports.run = ()=>{
-    start()
+module.exports.run = () => {
+    startcall()
 };
 
-start();
+startcall();
+

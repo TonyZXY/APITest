@@ -1,14 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../functions/postgredb')
-const notification = require('../functions/notification')
-const coinAlgorithm = require('../functions/coinAlgorithm')
-const logger = require('../functions/logger')
+const db = require('../functions/postgredb');
+const notification = require('../functions/notification');
+const coinAlgorithm = require('../functions/coinAlgorithm');
 
 module.exports = router;
 
-var minute = 5;
-the_internal = minute * 60 * 1000;
+let minute =0.05;
+let the_internal = minute * 60 * 1000;
 setInterval(function(){
     db.getIOSDevicesForCompare((err, list)=>{
         if(err){
@@ -61,8 +60,9 @@ function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, ba
                 if(err){
                     console.log(err)
                 } else {
-                    message = "Now, " + from +" is worth "+ coPrice + " "+ to + " on "+ market + ", higher than your expectation of "+ inPrice 
-                    // notification.sendAlert(deviceId, message, badgeNumber+1)
+
+                    let message = "Now, " + from +" is worth "+ coPrice + " "+ to + " on "+ market + ", higher than your expectation of "+ inPrice;
+                    // notification.sendAlert(deviceId, badgeNumber+1, message)
                     console.log(deviceId+"      "+(badgeNumber+1)+"       "+message)
                 }
             })
@@ -72,8 +72,9 @@ function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, ba
                 if(err){
                     console.log(err)
                 } else {
-                    message = "Now, " + from +" is worth "+ coPrice + " "+ to + " on "+ market + ", lower than your expectation of "+ inPrice 
-                    // notification.sendAlert(deviceId, message, badgeNumber+1)
+
+                    let message = "Now, " + from +" is worth "+ coPrice + " "+ to + " on "+ market + ", lower than your expectation of "+ inPrice ;
+                    // notification.sendAlert(deviceId, badgeNumber+1, message)
                     console.log(deviceId+"      "+(badgeNumber+1)+"       "+message)
                 }
             })
@@ -82,8 +83,9 @@ function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, ba
                 if(err){
                     console.log(err)
                 } else {
-                    message = "Now, " + from +" is worth "+ coPrice + " "+ to + " on "+ market + ", higher or equal to your expectation of "+ inPrice 
-                    // notification.sendAlert(deviceId, message, badgeNumber+1)
+
+                    let message = "Now, " + from +" is worth "+ coPrice + " "+ to + " on "+ market + ", higher or equal to your expectation of "+ inPrice ;
+                    // notification.sendAlert(deviceId, badgeNumber+1, message)
                     console.log(deviceId+"      "+(badgeNumber+1)+"       "+message)
                 }
             })
@@ -92,8 +94,8 @@ function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, ba
                 if(err){
                     console.log(err)
                 } else {
-                    message = "Now, " + from +" is worth "+ coPrice + " "+ to + " on "+ market + ", lower or equal to your expectation of "+ inPrice 
-                    // notification.sendAlert(deviceId, message, badgeNumber+1)
+                    let message = "Now, " + from +" is worth "+ coPrice + " "+ to + " on "+ market + ", lower or equal to your expectation of "+ inPrice ;
+                    // notification.sendAlert(deviceId, badgeNumber+1, message)
                     console.log(deviceId+"      "+(badgeNumber+1)+"       "+message)
                 }
             })

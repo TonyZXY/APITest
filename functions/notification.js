@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const apn = require('apn');
-const db = require('../functions/postgredb')
+const db = require('../functions/postgredb');
 
 mongoose.connect('mongodb://localhost/APITest');
 
@@ -18,11 +18,15 @@ function sendIos(deviceId, message, badgeNumber) {
     let apnprovider = new apn.Provider(optionsToFile);
     let deviceToken = deviceId;
     let notification = new apn.Notification();
+<<<<<<< HEAD
     notification.badge = badgeNumber;
+=======
+    notification.badge = 1;
+>>>>>>> 17f33d8253c311142a1eb501580844ad21ea97db
     notification.alert = message;
     notification.topic = "com.blockchainglobal.bglmedia";
     apnprovider.send(notification, deviceToken).then(result => {
-            console.log(result.failed)
+            console.log(result.failed);
             result.failed.forEach(failure => {
                 if (failure.status === '410' || failure.status ==='400') {
                     db.deleteIOSDevice(deviceId,(err,res)=>{
@@ -65,4 +69,4 @@ module.exports.sendFlashNotification = (message) => {
 
 module.exports.sendAlert = (deviceId, message,badgeNumber) => {
     sendIos(deviceId, message,badgeNumber)
-}
+};

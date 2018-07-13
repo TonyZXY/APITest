@@ -123,6 +123,11 @@ function getNews(content) {
     console.log('Get Data From URL: ' + httpUrl);
     https.get(httpUrl, (res) => {
         let data = '';
+        res.on('error', (err)=>{
+            console.log("error in receiving data: "+err);
+            delay(2000);
+            getLoop();
+        });
         res.on('data', function (d) {
             data += d;
         });
