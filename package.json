@@ -16,6 +16,7 @@
     "password-hash": "^1.2.2",
     "pg": "^7.4.3",
     "request": "^2.87.0",
+    "rss-parser": "^3.4.2",
     "winston": "^3.0.0"
   },
   "author": "Tony Zheng",

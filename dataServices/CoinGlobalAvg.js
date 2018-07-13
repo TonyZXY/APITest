@@ -42,7 +42,7 @@ async function forLoop(array, currency) {
                 data += d;
             });
             res.on("end", () => {
-                console.log(data);
+                // console.log(data);
                 let dataJSON = JSON.parse(data);
                 let coinData = dataJSON.data;
                 numberOfCoins = dataJSON.metadata.num_cryptocurrencies;

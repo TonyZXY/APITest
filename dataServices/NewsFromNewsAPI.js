@@ -152,7 +152,7 @@ function getNews(content) {
                         news.imageURL = element.urlToImage;
                     }
                     news.url = element.url;
-                    news.contentTag = content.contentTag;
+                    news.contentTag = [content.contentTag];
                     news.publishedTime = element.publishedAt;
                     if (element.source.name === null) {
                         news.source = content.source;
