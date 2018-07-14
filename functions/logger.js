@@ -1,12 +1,12 @@
 /*jshint esversion: 6 */
 const { createLogger, format, transports } = require('winston');
 const { combine, timestamp, label, printf } = format;
-const consolelog = new transports.Console;
+const consolelog = new transports.Console();
 const myFormat = printf(info => {
     return `${info.timestamp} [${info.label}]<${info.address}> ${info.level}: ${info.message}`;
   });
 
-module.exports.logIntoFile = (filename, levelToSet, labelToSet, addressToLog, messageToLog) =>{
+function logIntoFile (filename, levelToSet, labelToSet, addressToLog, messageToLog) {
     const logger = createLogger({
         format: combine(
             label({ label: labelToSet }),
@@ -14,7 +14,8 @@ module.exports.logIntoFile = (filename, levelToSet, labelToSet, addressToLog, me
             myFormat
           )
     });
-    logger.add(filename);
+    file = new transports.File({filename: filename})
+    logger.add(file);
     logger.add(consolelog);
     logger.log({
         level: levelToSet,
@@ -23,6 +24,7 @@ module.exports.logIntoFile = (filename, levelToSet, labelToSet, addressToLog, me
     });
 };
 
+// logIntoFile('err.log','error','logger','here','message');
 module.exports.databaseError = (labelToSet, addressToLog, messageToLog) =>{
     logIntoFile("database_error.log","error",labelToSet, addressToLog, messageToLog);
 };
