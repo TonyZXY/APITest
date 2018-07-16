@@ -91,7 +91,7 @@ module.exports = {
         });
         query += str.substring(0, str.length - 1);
         query += ') as c(id,status)\n' +
-            'where c.id = interests.interest_id returning interest_id as _id,status;';
+            'where c.id = interests.interest_id returning interest_id as _id,interests.status;';
         return pool.query(query, [], callback);
     },
 

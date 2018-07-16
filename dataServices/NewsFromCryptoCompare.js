@@ -94,7 +94,6 @@ module.exports.run = ()=>{
 };
 
 
-getLoop();
 
 function loginConsole(times) {
     console.log(new Date(Date.now()).toLocaleString() + '  Run for ' + times + ' times.');

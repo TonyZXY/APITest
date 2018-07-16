@@ -23,7 +23,7 @@ function sendIos(deviceId, message, badgeNumber) {
     notification.alert = message;
     notification.topic = "com.blockchainglobal.bglmedia";
     apnprovider.send(notification, deviceToken).then(result => {
-            console.log(result.failed);
+            console.log(result);
             result.failed.forEach(failure => {
                 if (failure.status === '410' || failure.status ==='400') {
                     db.deleteIOSDevice(deviceId,(err,res)=>{
@@ -53,7 +53,7 @@ module.exports.sendFlashNotification = (message) => {
             logger.databaseError("notification","server",err)
         } else{
             if(list.rows[0] === null || list.rows[0]===undefined){
-                console.log("No device in device database")
+                console.log("No device in device database");
                 logger.databaseError("notification","db","No device in device database")
             } else {
                 list.rows.forEach(row=>{

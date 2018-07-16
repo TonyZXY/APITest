@@ -140,5 +140,3 @@ module.exports.run = () => {
     startcall()
 };
 
-startcall();
-
