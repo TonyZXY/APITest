@@ -44,7 +44,7 @@ const newsSchema = mongoose.Schema({
     }
 });
 
-const News = module.exports = mongoose.model('News', newsSchema);
+const News = module.exports = mongoose.model('NewsTest', newsSchema);
 
 // get news list
 module.exports.getNewsList = function (callback, limit) {
@@ -163,10 +163,10 @@ module.exports.searchNewsTime = (from, to, callback) => {
  *  This is the Area that for testing code
  */
 
-module.exports.findNews = (title, source, callback) => {
+module.exports.findNews = (title, publishedTime, callback) => {
     News.findOne({
         title: title,
-        source: source
+        publishedTime: publishedTime
     }, callback);
 };
 

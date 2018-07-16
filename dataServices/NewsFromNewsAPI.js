@@ -168,7 +168,7 @@ function getNews(content) {
                     // let req = http.request(postNews_options, (res) => {
                     //     // console.log(res);
                     // });
-                    News.findNews(news.title,news.publishedTime,(err,newsFromDB)=>{
+                    News.findNews(news.title,news.source,(err,newsFromDB)=>{
                         if (err){
                             console.log(err);
                             logger.databaseError('NewsFromNewsAPI', 'server', err)

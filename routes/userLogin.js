@@ -203,6 +203,7 @@ function verifyToken(req, res, next) {
 router.post('/addInterest', verifyToken, (req, res) => {
     let userEmail = req.body.email;
     let interest = req.body.interest;
+    console.log(interest);
     db.getTradingPair(interest.from, interest.to, interest.market, (err, msg) => {
         if (err) {
             databaseError(err, res);
@@ -422,7 +423,7 @@ router.post('/getInterest', verifyToken, (req, res) => {
 });
 
 
-router.post('/getInterestStatus', verifyToken, (req, res) => {
+router.post('/getNotificationStatus', verifyToken, (req, res) => {
     let userEmail = req.body.email;
     db.getInterestStatus(userEmail, (err, msg) => {
         if (err) {
@@ -439,6 +440,9 @@ router.post('/getInterestStatus', verifyToken, (req, res) => {
         }
     })
 });
+
+
+
 
 
 
