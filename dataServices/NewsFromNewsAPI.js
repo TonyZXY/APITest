@@ -122,6 +122,7 @@ function getNews(content) {
         httpUrl += '&from=' + content.from.toISOString();
     }
     console.log('Get Data From URL: ' + httpUrl);
+    logger.APIUpdateLog("NewsFromNewsAPI","News API", "Get Data From URL: "+ httpUrl);
     https.get(httpUrl, (res) => {
         let data = '';
         res.on('error', (err)=>{

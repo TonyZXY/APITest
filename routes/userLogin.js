@@ -203,7 +203,7 @@ function verifyToken(req, res, next) {
 router.post('/addInterest', verifyToken, (req, res) => {
     let userEmail = req.body.email;
     let interest = req.body.interest;
-    console.log(interest);
+    // console.log(interest);
     db.getTradingPair(interest.from, interest.to, interest.market, (err, msg) => {
         if (err) {
             databaseError(err, res);
