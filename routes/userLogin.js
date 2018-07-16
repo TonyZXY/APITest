@@ -16,6 +16,7 @@ router.post('/register', (req, res) => {
     let lastName = req.body.lastName;
     let title = req.body.title;
     let password = req.body.password;
+    let address = req.connection.remoteAddress;
     if (firstName === null || firstName === undefined ||
         lastName === null || lastName === undefined ||
         email === null || email === undefined ||
@@ -27,6 +28,7 @@ router.post('/register', (req, res) => {
             code: 400,
             token: null
         });
+        logger.userRegistrationLoginLog(address,"Invalid params");
     } else {
         let passwordHash = hashPassword.generate(password, {
             algorithm: agl,
@@ -45,6 +47,7 @@ router.post('/register', (req, res) => {
                     token: null
                 })
                 logger.databaseError("userLogin",req.connection.remoteAddress, err);
+                logger.userRegistrationLoginLog(address,"May be already registed in: " + email);
             } else {
                 let user = msg.rows[0];
                 let payload = {
@@ -58,6 +61,7 @@ router.post('/register', (req, res) => {
                     code: 200,
                     token: tokenToSend
                 })
+                logger.userRegistrationLoginLog(address,"Registed Successfully in: " + email);
             }
         });
     }
@@ -66,6 +70,7 @@ router.post('/register', (req, res) => {
 router.post('/login', (req, res) => {
     let userName = req.body.email;
     let password = req.body.password;
+    let address = req.connection.remoteAddress;
     if (userName === null || userName === undefined ||
         password === null || password === undefined) {
         res.send({
@@ -74,11 +79,11 @@ router.post('/login', (req, res) => {
             code: 406,
             token: null
         })
+        logger.userRegistrationLoginLog(address,"Invalid params");
     } else {
         db.getUser(userName, (err, msg) => {
             if (err) {
                 console.log(err);
-                let address = req.connection.remoteAddress;
                 logger.databaseError('userLogin',address, err);
                 res.send({
                     success: false,
@@ -86,12 +91,10 @@ router.post('/login', (req, res) => {
                     code: 406,
                     token: null,
                 })
-                logger.databaseError("userLogin",req.connection.remoteAddress,err);
             } else {
                 if (msg.rows[0] === undefined) {
                     console.log('no user found');
-                    let address = req.connection.remoteAddress;
-                    logger.databaseError('userLogin',address, 'No user is found');
+                    logger.userRegistrationLoginLog('userLogin',address, 'No user is found');
                     res.send({
                         success: false,
                         message: 'Email or Password Error',
@@ -108,6 +111,7 @@ router.post('/login', (req, res) => {
                             code: 404,
                             token: null
                         })
+                        logger.userRegistrationLoginLog('userLogin',address, 'Password Error in: '+ email);
                     } else {
                         let payload = {
                             userID: user._id,
@@ -120,6 +124,7 @@ router.post('/login', (req, res) => {
                             code: 200,
                             token: tokenToSend
                         })
+                        logger.userRegistrationLoginLog(address,"Login Successfully in: " + email);
                     }
                 }
             }
@@ -131,17 +136,21 @@ router.post('/login', (req, res) => {
 function verifyToken(req, res, next) {
     let token = req.body.token;
     let email = req.body.email;
+    let address = req.connection.remoteAddress;
     if (token === null || token === undefined ||
         email === null || email === undefined) {
+            logger.userRegistrationLoginLog(address,"Invalid param number in Token: " + token);
         return res.send({
             success: false,
             message: "Token Error",
             code: 403,
             token: null
         })
+        
     } else {
         let payload = jwt.verify(token.toString(), email.toString());
         if (!payload) {
+            logger.userRegistrationLoginLog(address,"No payload in Token: " + token);
             return res.send({
                 success: false,
                 message: "Token Error",
@@ -153,6 +162,7 @@ function verifyToken(req, res, next) {
             let password = payload.password;
             if (userID === null || password === null ||
                 userID === undefined || password === undefined) {
+                    logger.userRegistrationLoginLog(address,"Empty userID or Password in Token: " + token + "       \(Email is:" + email + " \)");
                 return res.send({
                     success: false,
                     message: "Token Error",

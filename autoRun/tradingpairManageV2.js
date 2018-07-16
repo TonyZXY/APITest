@@ -34,7 +34,7 @@ setInterval(function(){
                                         console.log(err);
                                         logger.databaseError("TradingpairManage","server", err);
                                     } else{
-                                        comparePrice(row.from, row.to, row.market, row.inprice, coprice, row.isgreater, row.device_token,row.number)
+                                        comparePrice(row.from, row.to, row.market, row.inprice, coprice, row.isgreater, row.device_token,row.number, row.interest_id)
                                     }
                                 })
                             }
@@ -50,7 +50,7 @@ setInterval(function(){
     })
 }, the_internal);
 
-function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, badgeNumber){
+function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, badgeNumber,interestID){
        
         // TODO: Update frequncy of interest
      
@@ -62,7 +62,16 @@ function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, ba
 
                     let message = "Now, " + from +" is worth "+ coPrice + " "+ to + " on "+ market + ", higher than your expectation of "+ inPrice;
                     notification.sendAlert(deviceId, badgeNumber+1, message);
+                    
                     console.log(deviceId+"      "+(badgeNumber+1)+"       "+message);
+                    db.changeInterestStatus([{
+                        id: interestID,
+                        status: false
+                    }], (err,msg)=>{
+                        if(err){
+                            logger.databaseError("tradingpairManage",'server',err);
+                        }
+                    })
                 }
             })
 
@@ -75,6 +84,14 @@ function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, ba
                     let message = "Now, " + from +" is worth "+ coPrice + " "+ to + " on "+ market + ", lower than your expectation of "+ inPrice ;
                     notification.sendAlert(deviceId, badgeNumber+1, message);
                     console.log(deviceId+"      "+(badgeNumber+1)+"       "+message);
+                    db.changeInterestStatus([{
+                        id: interestID,
+                        status: false
+                    }], (err,msg)=>{
+                        if(err){
+                            logger.databaseError("tradingpairManage",'server',err);
+                        }
+                    })
                 }
             })
         } else if( operator === 3 && coPrice >= inPrice){
@@ -86,6 +103,14 @@ function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, ba
                     let message = "Now, " + from +" is worth "+ coPrice + " "+ to + " on "+ market + ", higher or equal to your expectation of "+ inPrice ;
                     notification.sendAlert(deviceId, badgeNumber+1, message);
                     console.log(deviceId+"      "+(badgeNumber+1)+"       "+message);
+                    db.changeInterestStatus([{
+                        id: interestID,
+                        status: false
+                    }], (err,msg)=>{
+                        if(err){
+                            logger.databaseError("tradingpairManage",'server',err);
+                        }
+                    })
                 }
             })
         } else if( operator ===4 && coPrice <= inPrice){
@@ -96,6 +121,14 @@ function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, ba
                     let message = "Now, " + from +" is worth "+ coPrice + " "+ to + " on "+ market + ", lower or equal to your expectation of "+ inPrice ;
                     notification.sendAlert(deviceId, badgeNumber+1, message);
                     console.log(deviceId+"      "+(badgeNumber+1)+"       "+message);
+                    db.changeInterestStatus([{
+                        id: interestID,
+                        status: false
+                    }], (err,msg)=>{
+                        if(err){
+                            logger.databaseError("tradingpairManage",'server',err);
+                        }
+                    })
                 }
             })
         }
