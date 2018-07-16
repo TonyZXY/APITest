@@ -36,5 +36,17 @@ module.exports.APIUpdateLog = (labelToSet,APIToLog,messageToLog) =>{
     logIntoFile("api_update.log","info",labelToSet,APIToLog,messageToLog);
 };
 module.exports.databaseUpdateLog = (labelToSet,addressToLog,messageToLog) => {
-    logIntoFile("database_update.log", "info", labelToSet,addressToLog,messageToLog)
+    logIntoFile("database_update.log", "info", labelToSet,addressToLog,messageToLog);
+};
+module.exports.userRegistrationLoginLog = (address, messageToLog) =>{
+    logIntoFile("user_registration_login.log","info", "userLogin",address,messageToLog);
+};
+module.exports.newsFlashLog = (address, messageToLog)=>{
+    logIntoFile("newsflash.log","info","api",address, messageToLog);
+};
+module.exports.deviceManageLog = (address, messageToLog) =>{
+    logIntoFile("device_management.log","info","deviceManage",address, messageToLog);
+};
+module.exports.adminLoginLog = (address, messageToLog) =>{
+    logIntoFile("admin_login.log","info","login",address, messageToLog);
 };
