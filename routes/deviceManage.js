@@ -51,6 +51,8 @@ function verifyToken(req, res, next) {
                 db.getUser(email, (err, msg) => {
                     if (err) {
                         console.log(err);
+                        let address = req.connect.remoteAddress
+                        logger.databaseError("deviceManage",address, err);
                         return res.send({
                             success: false,
                             message: 'Token error',
@@ -60,6 +62,8 @@ function verifyToken(req, res, next) {
                     } else {
                         let user = msg.rows[0];
                         if (msg.rows[0] === undefined) {
+                            let address = req.connect.remoteAddress
+                            logger.databaseError("deviceManage",address, "No user in database");
                             return res.send({
                                 success: false,
                                 message: 'Token Error',

@@ -1,8 +1,9 @@
 const https = require('https');
 const http = require('http');
 const News = require("../module/News");
+const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
-const logger = require('../functions/logger');
+const logger = require('../functions/logger')
 
 const options = {
     user: 'bglappdev100',
@@ -121,7 +122,7 @@ function getNews(content) {
         httpUrl += '&from=' + content.from.toISOString();
     }
     console.log('Get Data From URL: ' + httpUrl);
-    logger.APIUpdateLog("NewsFromNewsAPI","News API", "Get Data From URL: "+ httpUrl);
+    logger.APIUpdateLog("NewsFromNewsAPI",httpUrl, "Get Data From URL: "+ httpUrl);
     https.get(httpUrl, (res) => {
         let data = '';
         res.on('error', (err)=>{
@@ -136,6 +137,8 @@ function getNews(content) {
         res.on('end', function () {
             let dataJSON = JSON.parse(data);
             console.log('Total find results: ' + dataJSON.totalResults);
+            logger.APIUpdateLog("NewsFromNewsAPI",httpUrl, "Total find results: "+ dataJSON.totalResults);
+            logger.APIUpdateLog()
             if (dataJSON.totalResults !== 0) {
                 let articles = dataJSON.articles;
                 console.log('Numbers of Data Got: '+articles.length);
@@ -196,6 +199,7 @@ function getNews(content) {
             }
         });
     })
+    logger.APIUpdateLog("NewsFromNewsAPI",httpUrl, "News API Updated")
 }
 
 const delay = (amount) => {

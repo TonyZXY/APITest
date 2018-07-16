@@ -68,6 +68,8 @@ function getNews() {
                 });
             });
         });
+
+        logger.APIUpdateLog('NewsFromCryptoCompare', 'CryptoCompare', 'Crypto Compare News Updated')
     });
 }
 

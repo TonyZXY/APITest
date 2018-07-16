@@ -34,6 +34,8 @@ router.get("/get", (req, res) => {
     User.get((err, user) => {
         if(err){
             console.log(err);
+            let address = req.connection.remoteAddress;
+            logger.databaseError('login',address, err);
         }else{
            res.json(user);
            let address = req.connection.remoteAddress;
