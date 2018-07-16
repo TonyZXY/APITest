@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const apn = require('apn');
 const db = require('../functions/postgredb');
-const logger = require('../functions/logger')
+const logger = require('../functions/logger');
 
 mongoose.connect('mongodb://localhost/APITest');
 
@@ -49,7 +49,7 @@ function sendIos(deviceId, message, badgeNumber) {
 module.exports.sendFlashNotification = (message) => {
     db.getAllIOSDeviceForFlashNotification((err, list) =>{
         if(err){
-            console.log(err)
+            console.log(err);
             logger.databaseError("notification","server",err)
         } else{
             if(list.rows[0] === null || list.rows[0]===undefined){

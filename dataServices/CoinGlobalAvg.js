@@ -1,7 +1,7 @@
 const https = require('https');
 const Coin = require('../module/Coin');
 const mongoose = require('mongoose');
-const logger = require('../functions/logger')
+const logger = require('../functions/logger');
 
 const options = {
     user: 'bglappdev100',

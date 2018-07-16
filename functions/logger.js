@@ -15,7 +15,7 @@ function logIntoFile (filename, levelToSet, labelToSet, addressToLog, messageToL
             myFormat
           )
     });
-    file = new transports.File({filename: filename})
+    let file = new transports.File({filename: filename});
     logger.add(file);
     logger.add(consolelog);
     logger.log({

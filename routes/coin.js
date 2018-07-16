@@ -61,7 +61,7 @@ coinAlgrithm.compareTwoAPI();
 router.get('/getCoinList',(req,res)=>{
     CoinFilter.getCoinList((err,coinList)=>{
         if(err){
-            console.log(err)
+            console.log(err);
             let address = req.connection.remoteAddress;
             logger.databaseError('coin',address, err);
         } else{

@@ -163,10 +163,6 @@ function getNews(content) {
                     news.languageTag = content.languageTag;
                     news.localeTag = "";
                     content.from = element.publishedAt;
-                    // console.log(news);
-                    // let req = http.request(postNews_options, (res) => {
-                    //     // console.log(res);
-                    // });
                     News.findNews(news.title,news.source,(err,newsFromDB)=>{
                         if (err){
                             console.log(err);
@@ -186,8 +182,6 @@ function getNews(content) {
                             }
                         }
                     });
-                    // req.write(JSON.stringify(news));
-                    // req.end();
                 });
                 let date = new Date(articles[0].publishedAt);
                 date.setSeconds(date.getSeconds() + 1);
