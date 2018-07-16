@@ -25,7 +25,7 @@ function logIntoFile (filename, levelToSet, labelToSet, addressToLog, messageToL
     });
 }
 
-// logIntoFile('err.log','error','logger','here','message');
+// logIntoFile("err.log","error","logger","here","message");
 module.exports.databaseError = (labelToSet, addressToLog, messageToLog) =>{
     logIntoFile("database_error.log","error",labelToSet, addressToLog, messageToLog);
 };

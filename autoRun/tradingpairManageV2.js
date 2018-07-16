@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require('../functions/postgredb');
 const notification = require('../functions/notification');
 const coinAlgorithm = require('../functions/coinAlgorithm');
-const logger = require("../functions/logger");
+const logger = require('../functions/logger');
 
 module.exports = router;
 
@@ -48,6 +48,9 @@ setInterval(function(){
                 });
             }
         }
+
+        console.log("Compared once")
+        logger.databaseUpdateLog("TradingpairManage","server","Trading pair in database has been compared once.")
        
     })
 }, the_internal);

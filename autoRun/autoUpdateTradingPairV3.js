@@ -22,12 +22,11 @@ async function tradingpairUpdate(){
             logger.databaseError("AutoUpdateTradingPair", "db", "currently no trading pair in database");
             } else{
                 updateList(list.rows)
-            
-                console.log("update one time");
-            //FIXME: need log here
             }
         
         })
+        console.log("update one time");
+        logger.APIUpdateLog("AutoUpdateTradingPair","CryptoCompare","CryptoCompare trading pair updated")
         await delay(120000)
     }while(true)  
 }
@@ -42,17 +41,17 @@ async function updateList(list){
     } else if(list.length>=50 && list.length<2000) {
         for(i=0;i<list.length; i++) {
             updateTradingPair(list[i]);
-            if(i%50===0){
+            if(i%50===0 && i !==0){
                 await delay(1000);
             }
         }
-        // await delay(8000);
+        // await delay(12000 - );
     } else if(list.length>=2000 && list.length<4000) {
         for(i=0;i<list.length; i++) {
             updateTradingPair(list[i]);
-            if(i%50===0 && i%2000 !==0){
+            if(i%50===0 && i%2000 !==0 && i !==0){
                 await delay(1000);
-            } else if(i%2000===0){
+            } else if(i%2000===0 && i !== 0){
                 await delay(20000);
             }
         }
@@ -79,8 +78,9 @@ function updateTradingPair(tradingpair){
         }
     });
 }
+tradingpairUpdate();
 
-
+// TODO: future function for more trading pairs
 //else if (list.length>=2000 && list.length< 100000){
     //     for(i=0;i<list.length; i++) {
     //         updateTradingPair(list[i]);
