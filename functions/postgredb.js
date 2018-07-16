@@ -91,7 +91,7 @@ module.exports = {
         });
         query += str.substring(0, str.length - 1);
         query += ') as c(id,status)\n' +
-            'where c.id = interests.interest_id returning interest_id as _id,status;';
+            'where c.id = interests.interest_id returning interest_id as _id,c.status;';
         return pool.query(query, [], callback);
     },
 
@@ -172,22 +172,18 @@ module.exports = {
     //     let query = 'update users set flash=$2 where email=$1 returning user_id,flash;';
     //     return pool.query(query,param,callback);
     // },
-
-    //FIXME: Update One trading pair price
     updateTradingPair:(id,price,callback)=>{
         let param = [price,id];
         let query = 'update coins set price=$1 where coin_id=$2 returning *;';
         return pool.query(query,param,callback);
     },
 
-    //FIXME: USE This to get ALL Trading pair before you want to Update the price
     getAllTradingPair:(callback)=>{
         let param = [];
         let query = 'Select * from coins;';
         return pool.query(query,param,callback);
     },
 
-    //FIXME: Get All IOS devices for push News Flash notification
     getAllIOSDeviceForFlashNotification:(callback)=>{
         let param = [];
         let query = 'SELECT iosdevices.device_token \n' +
