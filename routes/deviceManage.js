@@ -27,7 +27,6 @@ function verifyToken(req, res, next) {
             token: null
         })
     } else {
-        console.log("token for verify is " + token);
         let payload = jwt.verify(token.toString(), email.toString());
         if (!payload) {
             return res.send({
