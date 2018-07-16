@@ -4,7 +4,7 @@ const router = express.Router();
 const hashPassword = require('password-hash');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-const logger = require('../functions/logger')
+const logger = require('../functions/logger');
 
 
 const options = {

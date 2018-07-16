@@ -24,7 +24,7 @@ async function tradingpairUpdate(){
                 updateList(list.rows)
             }
         
-        })
+        });
         console.log("update one time");
         logger.APIUpdateLog("AutoUpdateTradingPair","CryptoCompare","CryptoCompare trading pair updated")
         await delay(120000)

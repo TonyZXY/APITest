@@ -37,21 +37,16 @@ setInterval(function(){
                                         comparePrice(row.from, row.to, row.market, row.inprice, coprice, row.isgreater, row.device_token,row.number)
                                     }
                                 })
-                                
                             }
                         })
-                        
-                        
                     } else{
                         comparePrice(row.from, row.to, row.market, row.inprice, row.coprice, row.isgreater, row.device_token,row.number)
                     }
                 });
             }
         }
-
-        console.log("Compared once")
+        console.log("Compared once");
         logger.databaseUpdateLog("TradingpairManage","server","Trading pair in database has been compared once.")
-       
     })
 }, the_internal);
 
@@ -66,8 +61,8 @@ function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, ba
                 } else {
 
                     let message = "Now, " + from +" is worth "+ coPrice + " "+ to + " on "+ market + ", higher than your expectation of "+ inPrice;
-                    // notification.sendAlert(deviceId, badgeNumber+1, message)
-                    console.log(deviceId+"      "+(badgeNumber+1)+"       "+message)
+                    notification.sendAlert(deviceId, badgeNumber+1, message);
+                    console.log(deviceId+"      "+(badgeNumber+1)+"       "+message);
                 }
             })
 
@@ -78,8 +73,8 @@ function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, ba
                 } else {
 
                     let message = "Now, " + from +" is worth "+ coPrice + " "+ to + " on "+ market + ", lower than your expectation of "+ inPrice ;
-                    // notification.sendAlert(deviceId, badgeNumber+1, message)
-                    console.log(deviceId+"      "+(badgeNumber+1)+"       "+message)
+                    notification.sendAlert(deviceId, badgeNumber+1, message);
+                    console.log(deviceId+"      "+(badgeNumber+1)+"       "+message);
                 }
             })
         } else if( operator === 3 && coPrice >= inPrice){
@@ -89,8 +84,8 @@ function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, ba
                 } else {
 
                     let message = "Now, " + from +" is worth "+ coPrice + " "+ to + " on "+ market + ", higher or equal to your expectation of "+ inPrice ;
-                    // notification.sendAlert(deviceId, badgeNumber+1, message)
-                    console.log(deviceId+"      "+(badgeNumber+1)+"       "+message)
+                    notification.sendAlert(deviceId, badgeNumber+1, message);
+                    console.log(deviceId+"      "+(badgeNumber+1)+"       "+message);
                 }
             })
         } else if( operator ===4 && coPrice <= inPrice){
@@ -99,8 +94,8 @@ function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, ba
                     console.log(err)
                 } else {
                     let message = "Now, " + from +" is worth "+ coPrice + " "+ to + " on "+ market + ", lower or equal to your expectation of "+ inPrice ;
-                    // notification.sendAlert(deviceId, badgeNumber+1, message)
-                    console.log(deviceId+"      "+(badgeNumber+1)+"       "+message)
+                    notification.sendAlert(deviceId, badgeNumber+1, message);
+                    console.log(deviceId+"      "+(badgeNumber+1)+"       "+message);
                 }
             })
         }

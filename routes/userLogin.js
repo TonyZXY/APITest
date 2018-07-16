@@ -110,11 +110,10 @@ router.post('/login', (req, res) => {
                         })
                     } else {
                         let payload = {
-                            userID: user.user_id,
+                            userID: user._id,
                             password: user.password
                         };
                         let tokenToSend = jwt.sign(payload, user.email);
-                        console.log(tokenToSend);
                         res.send({
                             success: true,
                             message: 'Login Success',
