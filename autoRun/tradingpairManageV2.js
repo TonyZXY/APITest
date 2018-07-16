@@ -7,7 +7,7 @@ const logger = require('../functions/logger');
 
 module.exports = router;
 
-let minute = 0.05;
+let minute = 5;
 let the_internal = minute * 60 * 1000;
 setInterval(function () {
     db.getIOSDevicesForCompare((err, list) => {
@@ -61,7 +61,7 @@ function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, ba
             } else {
 
                 let message = "Now, " + from + " is worth " + coPrice + " " + to + " on " + market + ", higher than your expectation of " + inPrice;
-                notification.sendAlert(deviceId, badgeNumber + 1, message);
+                notification.sendAlert(deviceId, message, badgeNumber + 1);
                 console.log(deviceId + "      " + (badgeNumber + 1) + "       " + message);
                 db.changeInterestStatus([{
                     id: interestID,
@@ -81,7 +81,7 @@ function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, ba
             } else {
 
                 let message = "Now, " + from + " is worth " + coPrice + " " + to + " on " + market + ", lower than your expectation of " + inPrice;
-                notification.sendAlert(deviceId, badgeNumber + 1, message);
+                notification.sendAlert(deviceId, message, badgeNumber + 1);
                 console.log(deviceId + "      " + (badgeNumber + 1) + "       " + message);
                 db.changeInterestStatus([{
                     id: interestID,
@@ -100,7 +100,7 @@ function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, ba
             } else {
 
                 let message = "Now, " + from + " is worth " + coPrice + " " + to + " on " + market + ", higher or equal to your expectation of " + inPrice;
-                notification.sendAlert(deviceId, badgeNumber + 1, message);
+                notification.sendAlert(deviceId, message, badgeNumber + 1);
                 console.log(deviceId + "      " + (badgeNumber + 1) + "       " + message);
                 db.changeInterestStatus([{
                     id: interestID,
@@ -118,7 +118,7 @@ function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, ba
                 console.log(err)
             } else {
                 let message = "Now, " + from + " is worth " + coPrice + " " + to + " on " + market + ", lower or equal to your expectation of " + inPrice;
-                notification.sendAlert(deviceId, badgeNumber + 1, message);
+                notification.sendAlert(deviceId, message, badgeNumber + 1);
                 console.log(deviceId + "      " + (badgeNumber + 1) + "       " + message);
                 db.changeInterestStatus([{
                     id: interestID,
