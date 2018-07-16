@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../functions/postgredb');
-const notification = require('../functions/notification');
+const notification = require('../notification_alert/notification_alert');
 const coinAlgorithm = require('../dataServices/coinAlgorithm');
 const logger = require('../functions/logger');
 
