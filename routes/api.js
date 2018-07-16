@@ -489,6 +489,8 @@ router.post('/flash', verifyToken, function (req, res) {
             logger.databaseError('apifile',address, err);
         }
         res.json(flashAdded);
+        let address2 = req.connection.remoteAddress;
+        logger.databaseUpdateLog("NewsFlashApi",address2,"A News Flash added ("+flashAdded._id+")")
         if(flashAdded.toSent){
             Notification.sendFlashNotification(flashAdded.shortMassage);
         }

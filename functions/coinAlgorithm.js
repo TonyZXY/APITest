@@ -77,4 +77,5 @@ const CoinFilter = require('../module/Coinfilter');
             })
          } 
     })
+    logger.APIUpdateLog("CoinAlgorithm","server","Compare and filter on Cyrpto Compare and Market Cap")
  } 

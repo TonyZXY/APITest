@@ -44,6 +44,7 @@ router.post('/register', (req, res) => {
                     code: 409,
                     token: null
                 })
+                logger.databaseError("userLogin",req.connection.remoteAddress, err);
             } else {
                 let user = msg.rows[0];
                 let payload = {
@@ -85,6 +86,7 @@ router.post('/login', (req, res) => {
                     code: 406,
                     token: null,
                 })
+                logger.databaseError("userLogin",req.connection.remoteAddress,err);
             } else {
                 if (msg.rows[0] === undefined) {
                     console.log('no user found');

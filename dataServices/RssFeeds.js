@@ -1,3 +1,4 @@
+const logger = require('../functions/logger')
 let Parser = require('rss-parser');
 let parser = new Parser({
     customFields: {
@@ -32,11 +33,13 @@ async function runBitcoinist() {
         News.findNews(news.title,news.source,(err,newsFromDB)=>{
             if (err){
                 console.log(err)
+                logger.databaseError("RssFeeds","bitcoinist",err);
             } else {
                 if (!newsFromDB) {
                     News.addNews(news,(err,msg)=>{
                         if (err) {
                             console.log(err);
+                            logger.databaseError("RssFeeds","bitcoinist",err);
                         }else {
                             num += 1;
                             if (num === length){
@@ -76,11 +79,13 @@ async function runBitcoinCom() {
         News.findNews(news.title,news.source,(err,newsFromDB)=>{
             if (err){
                 console.log(err)
+                logger.databaseError("RssFeeds","bitcoin.com",err);
             } else {
                 if (!newsFromDB) {
                     News.addNews(news,(err,msg)=>{
                         if (err) {
                             console.log(err);
+                            logger.databaseError("RssFeeds","bitcoi.com",err);
                         }else {
                             num += 1;
                             if (num === length){
@@ -120,11 +125,13 @@ async function runCoinDesk() {
         News.findNews(news.title,news.source,(err,newsFromDB)=>{
             if (err){
                 console.log(err)
+                logger.databaseError("RssFeeds","coindesk",err);
             } else {
                 if (!newsFromDB) {
                     News.addNews(news,(err,msg)=>{
                         if (err) {
                             console.log(err);
+                            logger.databaseError("RssFeeds","coindesk",err);
                         }else {
                             num += 1;
                             if (num === length){
@@ -165,11 +172,13 @@ async function runBtcManager() {
         News.findNews(news.title,news.source,(err,newsFromDB)=>{
             if (err){
                 console.log(err)
+                logger.databaseError("RssFeeds","btcmanager",err);
             } else {
                 if (!newsFromDB) {
                     News.addNews(news,(err,msg)=>{
                         if (err) {
                             console.log(err);
+                            logger.databaseError("RssFeeds","btcmanager",err);
                         }else {
                             num += 1;
                             if (num === length){
@@ -210,12 +219,14 @@ async function runEthnews() {
         news.localeTag = '';
         News.findNews(news.title,news.source,(err,newsFromDB)=>{
             if (err){
-                console.log(err)
+                console.log(err);
+                logger.databaseError("RssFeeds","ethnews",err);
             } else {
                 if (!newsFromDB) {
                     News.addNews(news,(err,msg)=>{
                         if (err) {
                             console.log(err);
+                            logger.databaseError("RssFeeds","ethnews",err);
                         }else {
                             num += 1;
                             if (num === length){
@@ -256,11 +267,13 @@ async function runCointelegraph() {
         News.findNews(news.title,news.source,(err,newsFromDB)=>{
             if (err){
                 console.log(err)
+                logger.databaseError("RssFeeds","cointelegrap",err);
             } else {
                 if (!newsFromDB) {
                     News.addNews(news,(err,msg)=>{
                         if (err) {
                             console.log(err);
+                            logger.databaseError("RssFeeds","cointelegrap",err);
                         }else {
                             num += 1;
                             if (num === length){
@@ -283,21 +296,27 @@ async function runCointelegraph() {
 async function runGet(){
     runBitcoinCom();
     loginConsole("run bitcoin.com");
+    logger.APIUpdateLog("RssFeeds", "bitcoin.com","bitcoin.com Updated");
     await delay(7000);
     runBitcoinist();
     loginConsole("run bitcoinist.com");
+    logger.APIUpdateLog("RssFeeds", "bitcoinist","bitcoinist Updated");
     await delay(7000);
     runBtcManager();
     loginConsole("run btcmanager.com");
+    logger.APIUpdateLog("RssFeeds", "btcmanager","btcmanager Updated");
     await delay(7000);
     runCoinDesk();
     loginConsole("run coindesk.com");
+    logger.APIUpdateLog("RssFeeds", "coindesk","coindesk Updated");
     await delay(7000);
     runCointelegraph();
     loginConsole("run cointelegraph.com");
+    logger.APIUpdateLog("RssFeeds", "cointelegraph","cointelegraph Updated");
     await delay(7000);
     runEthnews();
     loginConsole("run ethnews.com");
+    logger.APIUpdateLog("RssFeeds", "ethnews","ethnews Updated");
     await delay(7000);
 }
 
