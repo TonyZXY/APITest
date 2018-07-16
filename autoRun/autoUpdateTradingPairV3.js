@@ -78,7 +78,7 @@ function updateTradingPair(tradingpair){
         }
     });
 }
-// tradingpairUpdate();
+tradingpairUpdate();
 
 // TODO: future function for more trading pairs
 //else if (list.length>=2000 && list.length< 100000){

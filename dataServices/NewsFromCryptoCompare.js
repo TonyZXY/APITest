@@ -1,0 +1,103 @@
+const https = require('https');
+const mongoose = require('mongoose');
+const logger = require('../functions/logger');
+
+const News = require('../module/News');
+
+mongoose.connect('mongodb://localhost/APITest'/**, options**/);
+
+const options = {
+    user: 'bglappdev100',
+    pass: "appdevgkV6="
+};
+
+function getNews() {
+    https.get('https://min-api.cryptocompare.com/data/v2/news/?lang=EN', (res) => {
+        let data = '';
+        res.on('data', function (d) {
+            data += d;
+        });
+        res.on('end', () => {
+            let dataJSON = JSON.parse(data);
+            let newsList = dataJSON.Data;
+            newsList.forEach(element => {
+                let news = new News;
+                news.title = element.title;
+                news.newsDescription = element.body;
+                if (element.author === null|| element.author===undefined) {
+                    news.author = 'N/A';
+                } else {
+                    news.author = element.author;
+                }
+                news.imageURL = element.imageurl;
+                news.url = element.url;
+                news.contentTag = element.tags.split('|');
+                let d = Date(element.published_on);
+                let date = new Date(d);
+                news.publishedTime = date.toISOString();
+                if (element.source_info.name === null) {
+                    news.source = 'N/A';
+                } else {
+                    if (element.source_info.name ==="CCN"){
+                        news.source = "Crypto Coins News";
+                    } else {
+                        news.source = element.source_info.name;
+                    }
+                }
+                news.languageTag = 'EN';
+                news.localeTag = "";
+                // console.log(news);
+                News.findNews(news.title, news.source, (err, newsFromDB) => {
+                    if (err) {
+                        console.log(err);
+                        logger.databaseError('NewsFromCryptoCompare', 'server', err)
+                    } else {
+                        if (!newsFromDB) {
+                            News.addNews(news, (err, msg) => {
+                                if (err) {
+                                    console.log(err);
+                                    logger.databaseError('NewsFromCryptoCompare', 'server', err)
+                                } else {
+                                    consoleLog("Add to db: "+ news.title+ " "+ news.source);
+                                }
+                            })
+                        } else {
+                            consoleLog("Already in db: "+ news.title+ " "+ news.source);
+                        }
+                    }
+                });
+            });
+        });
+    });
+}
+
+const delay = (amount) => {
+    return new Promise((resolve) => {
+        setTimeout(resolve, amount);
+    });
+};
+
+async function getLoop() {
+    let time = 1;
+    do {
+        loginConsole(time);
+        getNews();
+        await delay(5*60*1000);
+        time++;
+    } while (true)
+}
+
+module.exports.run = ()=>{
+    getLoop();
+};
+
+
+getLoop();
+
+function loginConsole(times) {
+    console.log(new Date(Date.now()).toLocaleString() + '  Run for ' + times + ' times.');
+}
+
+function consoleLog(msg){
+    console.log(new Date(Date.now()).toLocaleString()+" "+ msg);
+}

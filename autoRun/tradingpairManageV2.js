@@ -3,11 +3,11 @@ const router = express.Router();
 const db = require('../functions/postgredb');
 const notification = require('../functions/notification');
 const coinAlgorithm = require('../functions/coinAlgorithm');
-const logger = require('../functions/logger')
+const logger = require('../functions/logger');
 
 module.exports = router;
 
-let minute =0.05;
+let minute =5;
 let the_internal = minute * 60 * 1000;
 setInterval(function(){
     db.getIOSDevicesForCompare((err, list)=>{

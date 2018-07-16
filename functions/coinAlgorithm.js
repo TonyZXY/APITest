@@ -16,7 +16,7 @@ module.exports.getPriceFromAPI = function (coinFrom, coinTo, market, callback){
             return callback(error);
           }else{
             let jsonObject = JSON.parse(body);
-              return callback(jsonObject.RAW.PRICE);
+              return callback(null,jsonObject.RAW.PRICE);
           }
     })
 };
