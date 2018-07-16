@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../functions/postgredb');
 const notification = require('../functions/notification');
-const coinAlgorithm = require('../functions/coinAlgorithm');
+const coinAlgorithm = require('../dataServices/coinAlgorithm');
 const logger = require('../functions/logger');
 
 module.exports = router;

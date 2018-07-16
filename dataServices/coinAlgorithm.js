@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const request = require('request');
-const logger = require('./logger');
+const logger = require('../functions/logger');
 
 mongoose.connect('mongodb://localhost/APITest');
 
@@ -25,7 +25,7 @@ module.exports.getPriceFromAPI = function (coinFrom, coinTo, market, callback){
 
 
 const CoinFilter = require('../module/Coinfilter');
- module.exports.compareTwoAPI = () =>{
+function compareTwoAPI() {
     request({
         method: 'GET',
         uri: 'https://min-api.cryptocompare.com/data/all/coinlist',
@@ -76,6 +76,29 @@ const CoinFilter = require('../module/Coinfilter');
                   }
             })
          } 
-    })
+    });
     logger.APIUpdateLog("CoinAlgorithm","server","Compare and filter on Cyrpto Compare and Market Cap")
- } 
+ }
+
+
+const delay = (amount) => {
+    return new Promise((resolve) => {
+        setTimeout(resolve, amount);
+    });
+};
+
+async function run() {
+    let time = 1;
+    do {
+        loginConsole(time);
+        compareTwoAPI();
+        await delay(24*3600*1000)
+    }while(true)
+}
+
+run();
+
+
+function loginConsole(times) {
+    console.log(new Date(Date.now()).toLocaleString() + '  Run for ' + times + ' times.');
+}

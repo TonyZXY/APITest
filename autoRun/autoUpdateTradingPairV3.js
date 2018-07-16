@@ -1,4 +1,4 @@
-const coinAlgorithm = require('../functions/coinAlgorithm');
+const coinAlgorithm = require('../dataServices/coinAlgorithm');
 const db = require('../functions/postgredb');
 const logger = require('../functions/logger')
 

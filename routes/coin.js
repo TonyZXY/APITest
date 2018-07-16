@@ -56,8 +56,7 @@ router.delete('/delete',(req,res)=>{
     })
 });
 const CoinFilter = require('../module/Coinfilter');
-const coinAlgrithm = require('../functions/coinAlgorithm');
-coinAlgrithm.compareTwoAPI();
+
 router.get('/getCoinList',(req,res)=>{
     CoinFilter.getCoinList((err,coinList)=>{
         if(err){
