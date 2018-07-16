@@ -109,6 +109,7 @@ async function startcall() {
         do {
             let array = [];
             loginConsole(" start Loop for " + time);
+            logger.APIUpdateLog("CoinGlobalAvg","MarketCap","MarketCap Gobal Average Start loop for " + time)
             time++;
             forCurrency(array);
             await delay(second * 68 * 1000);
@@ -120,6 +121,7 @@ async function startcall() {
                 }
             });
             loginConsole("Add to database");
+            logger.APIUpdateLog("CoinGlobalAvg","MarketCap","MarketCap Gobal Average Added to database")
             await delay(300000 - second * 68000);
         } while (true);
     } catch (e) {
