@@ -11,6 +11,7 @@
     "body-parser": "*",
     "cors": "^2.8.4",
     "express": "*",
+    "forever": "^0.15.3",
     "jsonwebtoken": "^8.3.0",
     "mongoose": "*",
     "password-hash": "^1.2.2",
