@@ -111,7 +111,7 @@ router.post('/login', (req, res) => {
                             code: 404,
                             token: null
                         })
-                        logger.userRegistrationLoginLog('userLogin',address, 'Password Error in: '+ email);
+                        logger.userRegistrationLoginLog('userLogin',address, 'Password Error in: '+ userName);
                     } else {
                         let payload = {
                             userID: user._id,
@@ -124,7 +124,7 @@ router.post('/login', (req, res) => {
                             code: 200,
                             token: tokenToSend
                         })
-                        logger.userRegistrationLoginLog(address,"Login Successfully in: " + email);
+                        logger.userRegistrationLoginLog(address,"Login Successfully in: " + userName);
                     }
                 }
             }
