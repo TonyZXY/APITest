@@ -1,9 +1,8 @@
 const https = require('https');
 const http = require('http');
 const News = require("../module/News");
-const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
-const logger = require('../functions/logger')
+const logger = require('../functions/logger');
 
 const options = {
     user: 'bglappdev100',
