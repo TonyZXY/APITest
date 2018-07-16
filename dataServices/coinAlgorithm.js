@@ -87,7 +87,7 @@ const delay = (amount) => {
     });
 };
 
-async function run() {
+async function start() {
     let time = 1;
     do {
         loginConsole(time);
@@ -96,7 +96,9 @@ async function run() {
     }while(true)
 }
 
-run();
+module.exports.run = () =>{
+    start();
+};
 
 
 function loginConsole(times) {

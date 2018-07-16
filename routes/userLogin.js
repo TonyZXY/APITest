@@ -294,82 +294,93 @@ router.post('/editInterestStatus', verifyToken, (req, res) => {
 router.post('/editInterest', verifyToken, (req, res) => {
     let userEmail = req.body.email;
     let interest = req.body.interest;
-    db.getInterest(interest.id, (err, msg) => {
+    db.getInterest(interest._id, (err, msg) => {
         if (err) {
             databaseError(err, res);
             let address = req.connection.remoteAddress;
             logger.databaseError('userLogin',address, err);
         } else {
             let interestFromDB = msg.rows[0];
-            if (interestFromDB.from === interest.from &&
-                interestFromDB.to === interest.to &&
-                interestFromDB.market === interest.market) {
-                // TODO update frequency
-                db.updateInterestPrice(interest.id, interest.price, interest.isGreater, (err, msg) => {
-                    if (err) {
-                        databaseError(err, res);
-                        let address = req.connection.remoteAddress;
-                        logger.databaseError('userLogin',address, err);
-                    } else {
-                        res.send({
-                            success: true,
-                            message: "Successfully Update interest",
-                            code: 200,
-                            data: msg.rows[0]
-                        })
-                    }
+            if (interestFromDB === null || interestFromDB===undefined){
+                console.log("no interest found");
+                //TODO: to be add param err logger, this error means that the interest_id is not found or null.
+                res.send({
+                    success: false,
+                    message: "No data found in database",
+                    code: 404,
+                    data: null
                 })
             } else {
-                // TODO update frequency
-                db.getTradingPair(interest.from, interest.to, interest.market, (err, msg) => {
-                    if (err) {
-                        databaseError(err, res);
-                        let address = req.connection.remoteAddress;
-                        logger.databaseError('userLogin',address, err);
-                    } else {
-                        if (msg.rows[0] === null || msg.rows[0] === undefined) {
-                            db.addTradingPair(interest.from, interest.to, interest.market, (err, msg) => {
-                                if (err) {
-                                    databaseError(err, res);
-                                    let address = req.connection.remoteAddress;
-                                    logger.databaseError('userLogin',address, err);
-                                } else {
-                                    let coinID = msg.rows[0]._id;
-                                    db.updateInterestCoin(interest.id, coinID, interest.price, interest.isGreater, (err, msg) => {
-                                        if (err) {
-                                            databaseError(err, res);
-                                            let address = req.connection.remoteAddress;
-                                            logger.databaseError('userLogin',address, err);
-                                        } else {
-                                            res.send({
-                                                success: true,
-                                                message: "Successfully update interest",
-                                                code: 200,
-                                                data: msg.rows[0]
-                                            })
-                                        }
-                                    })
-                                }
-                            })
+                if (interestFromDB.from === interest.from &&
+                    interestFromDB.to === interest.to &&
+                    interestFromDB.market === interest.market) {
+                    // TODO update frequency
+                    db.updateInterestPrice(interest.id, interest.price, interest.isGreater, (err, msg) => {
+                        if (err) {
+                            databaseError(err, res);
+                            let address = req.connection.remoteAddress;
+                            logger.databaseError('userLogin', address, err);
                         } else {
-                            let coinID = msg.rows[0]._id;
-                            db.updateInterestCoin(interest.id, coinID, interest.price, interest.isGreater, (err, msg) => {
-                                if (err) {
-                                    databaseError(err, res);
-                                    let address = req.connection.remoteAddress;
-                                    logger.databaseError('userLogin',address, err);
-                                } else {
-                                    res.send({
-                                        success: true,
-                                        message: "Successfully update interest",
-                                        code: 200,
-                                        data: msg.rows[0]
-                                    })
-                                }
+                            res.send({
+                                success: true,
+                                message: "Successfully Update interest",
+                                code: 200,
+                                data: msg.rows[0]
                             })
                         }
-                    }
-                })
+                    })
+                } else {
+                    // TODO update frequency
+                    db.getTradingPair(interest.from, interest.to, interest.market, (err, msg) => {
+                        if (err) {
+                            databaseError(err, res);
+                            let address = req.connection.remoteAddress;
+                            logger.databaseError('userLogin', address, err);
+                        } else {
+                            if (msg.rows[0] === null || msg.rows[0] === undefined) {
+                                db.addTradingPair(interest.from, interest.to, interest.market, (err, msg) => {
+                                    if (err) {
+                                        databaseError(err, res);
+                                        let address = req.connection.remoteAddress;
+                                        logger.databaseError('userLogin', address, err);
+                                    } else {
+                                        let coinID = msg.rows[0]._id;
+                                        db.updateInterestCoin(interest.id, coinID, interest.price, interest.isGreater, (err, msg) => {
+                                            if (err) {
+                                                databaseError(err, res);
+                                                let address = req.connection.remoteAddress;
+                                                logger.databaseError('userLogin', address, err);
+                                            } else {
+                                                res.send({
+                                                    success: true,
+                                                    message: "Successfully update interest",
+                                                    code: 200,
+                                                    data: msg.rows[0]
+                                                })
+                                            }
+                                        })
+                                    }
+                                })
+                            } else {
+                                let coinID = msg.rows[0]._id;
+                                db.updateInterestCoin(interest.id, coinID, interest.price, interest.isGreater, (err, msg) => {
+                                    if (err) {
+                                        databaseError(err, res);
+                                        let address = req.connection.remoteAddress;
+                                        logger.databaseError('userLogin', address, err);
+                                    } else {
+                                        res.send({
+                                            success: true,
+                                            message: "Successfully update interest",
+                                            code: 200,
+                                            data: msg.rows[0]
+                                        })
+                                    }
+                                })
+                            }
+                        }
+                    })
+                }
             }
         }
     })

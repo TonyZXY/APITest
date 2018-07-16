@@ -341,4 +341,6 @@ function loginConsole(msg) {
     );
 }
 
-getLoop();
+module.exports.run = ()=>{
+    getLoop();
+};
