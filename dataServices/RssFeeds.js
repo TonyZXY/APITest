@@ -26,10 +26,10 @@ async function runBitcoinist() {
         news.url = element.link;
         news.contentTag = element.categories;
         news.publishedTime = element.isoDate;
-        news.source = 'bitcoinist.com';
+        news.source = 'Bitcoinist';
         news.languageTag = 'EN';
         news.localeTag = '';
-        News.findNews(news.title,news.publishedTime,(err,newsFromDB)=>{
+        News.findNews(news.title,news.source,(err,newsFromDB)=>{
             if (err){
                 console.log(err)
             } else {
@@ -70,10 +70,10 @@ async function runBitcoinCom() {
         news.url = element.link;
         news.contentTag = element.categories;
         news.publishedTime = element.isoDate;
-        news.source = 'bitcoin.com';
+        news.source = 'Bitcoin.com';
         news.languageTag = 'EN';
         news.localeTag = '';
-        News.findNews(news.title,news.publishedTime,(err,newsFromDB)=>{
+        News.findNews(news.title,news.source,(err,newsFromDB)=>{
             if (err){
                 console.log(err)
             } else {
@@ -114,10 +114,10 @@ async function runCoinDesk() {
         news.url = element.link;
         news.contentTag = element.categories;
         news.publishedTime = element.isoDate;
-        news.source = 'coindesk.com';
+        news.source = 'Coindesk';
         news.languageTag = 'EN';
         news.localeTag = '';
-        News.findNews(news.title,news.publishedTime,(err,newsFromDB)=>{
+        News.findNews(news.title,news.source,(err,newsFromDB)=>{
             if (err){
                 console.log(err)
             } else {
@@ -159,10 +159,10 @@ async function runBtcManager() {
         news.url = element.link;
         news.contentTag = element.categories;
         news.publishedTime = element.isoDate;
-        news.source = 'btcmanager.com';
+        news.source = 'BtcManager';
         news.languageTag = 'EN';
         news.localeTag = '';
-        News.findNews(news.title,news.publishedTime,(err,newsFromDB)=>{
+        News.findNews(news.title,news.source,(err,newsFromDB)=>{
             if (err){
                 console.log(err)
             } else {
@@ -205,10 +205,10 @@ async function runEthnews() {
         news.url = element.link;
         news.contentTag = element.categories;
         news.publishedTime = element.isoDate;
-        news.source = 'ethnews.com';
+        news.source = 'ETHNews.com';
         news.languageTag = 'EN';
         news.localeTag = '';
-        News.findNews(news.title,news.publishedTime,(err,newsFromDB)=>{
+        News.findNews(news.title,news.source,(err,newsFromDB)=>{
             if (err){
                 console.log(err)
             } else {
@@ -250,10 +250,10 @@ async function runCointelegraph() {
         news.url = element.link;
         news.contentTag = element.categories;
         news.publishedTime = element.isoDate;
-        news.source = 'cointelegraph.com';
+        news.source = 'CoinTelegraph';
         news.languageTag = 'EN';
         news.localeTag = '';
-        News.findNews(news.title,news.publishedTime,(err,newsFromDB)=>{
+        News.findNews(news.title,news.source,(err,newsFromDB)=>{
             if (err){
                 console.log(err)
             } else {

@@ -6,6 +6,7 @@ const myFormat = printf(info => {
     return `${info.timestamp} [${info.label}]<${info.address}> ${info.level}: ${info.message}`;
   });
 
+
 function logIntoFile (filename, levelToSet, labelToSet, addressToLog, messageToLog) {
     const logger = createLogger({
         format: combine(
@@ -22,7 +23,7 @@ function logIntoFile (filename, levelToSet, labelToSet, addressToLog, messageToL
         message: messageToLog,
         address: addressToLog
     });
-};
+}
 
 // logIntoFile("err.log","error","logger","here","message");
 module.exports.databaseError = (labelToSet, addressToLog, messageToLog) =>{
@@ -33,7 +34,7 @@ module.exports.APIConnectionError = (labelToSet,APIToLog,messageToLog) =>{
 };
 module.exports.APIUpdateLog = (labelToSet,APIToLog,messageToLog) =>{
     logIntoFile("api_update.log","info",labelToSet,APIToLog,messageToLog);
-}
+};
 module.exports.databaseUpdateLog = (labelToSet,addressToLog,messageToLog) => {
     logIntoFile("database_update.log", "info", labelToSet,addressToLog,messageToLog)
-}
+};

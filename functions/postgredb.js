@@ -48,7 +48,7 @@ module.exports = {
 
     getInterestStatus: (email, callback) => {
         let param = [email];
-        let query = 'select interest as status from users where email=$1;';
+        let query = 'select interest, flash from users where email=$1;';
         return pool.query(query, param, callback)
     },
 
@@ -96,9 +96,9 @@ module.exports = {
     },
 
 
-    updateInterestNotificationStatus: (email, status, callback) => {
-        let param = [status, email];
-        let query = 'update users set interest=$1 where email=$2 returning interest;';
+    updateNotificationStatus: (email, flash,interest, callback) => {
+        let param = [flash,interest, email];
+        let query = 'update users set flash=$1,interest=$2 where email=$3 returning interest,flash;';
         return pool.query(query, param, callback);
     },
 
@@ -167,11 +167,11 @@ module.exports = {
     },
 
 
-    updateFlashNotificationStatus:(email,status,callback)=>{
-        let param = [email,status];
-        let query = 'update users set flash=$2 where email=$1 returning user_id,flash;';
-        return pool.query(query,param,callback);
-    },
+    // updateFlashNotificationStatus:(email,status,callback)=>{
+    //     let param = [email,status];
+    //     let query = 'update users set flash=$2 where email=$1 returning user_id,flash;';
+    //     return pool.query(query,param,callback);
+    // },
 
     //FIXME: Update One trading pair price
     updateTradingPair:(id,price,callback)=>{

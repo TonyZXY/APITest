@@ -48,7 +48,7 @@ function verifyToken(req, res, next) {
                     token: null
                 })
             } else {
-                db.getUser([email], (err, msg) => {
+                db.getUser(email, (err, msg) => {
                     if (err) {
                         console.log(err);
                         return res.send({
@@ -142,10 +142,11 @@ router.post('/receivedNotification',verifyToken,(req,res)=>{
 });
 
 
-router.post('/changeInterestNotification', verifyToken, (req, res) => {
+router.post('/changeNotification', verifyToken, (req, res) => {
     let userEmail = req.body.email;
-    let status = req.body.status;
-    db.updateInterestNotificationStatus(userEmail, status, (err, msg) => {
+    let flash = req.body.flash;
+    let interest = req.body.interest;
+    db.updateNotificationStatus(userEmail, flash, interest, (err, msg) => {
         if (err) {
             databaseError(err, res);
             let address = req.connection.remoteAddress;
@@ -161,22 +162,40 @@ router.post('/changeInterestNotification', verifyToken, (req, res) => {
     })
 });
 
-router.post('/changeFlashNotificationStatus', verifyToken,(req,res)=>{
-    let userEmail = req.body.email;
-    let status = req.body.status;
-    db.updateFlashNotificationStatus(userEmail,status,(err,msg)=>{
+router.post('/logoutIOSDevice',verifyToken,(req,res)=>{
+    let deviceToken = req.body.deviceToken;
+    db.deleteIOSDevice(deviceToken,(err,msg)=>{
         if (err) {
             databaseError(err,res);
             let address = req.connection.remoteAddress;
             logger.databaseError('deviceManage',address, err);
         } else {
             res.send({
-                success: true,
-                message: "Successfully Update Flash News Notification status",
+                success:true,
+                message: 'Successfully Update notification status',
                 code: 200,
                 data: msg.rows[0]
             })
         }
     })
 });
+
+// router.post('/changeFlashNotificationStatus', verifyToken,(req,res)=>{
+//     let userEmail = req.body.email;
+//     let status = req.body.status;
+//     db.updateFlashNotificationStatus(userEmail,status,(err,msg)=>{
+//         if (err) {
+//             databaseError(err,res);
+//             let address = req.connection.remoteAddress;
+//             logger.databaseError('deviceManage',address, err);
+//         } else {
+//             res.send({
+//                 success: true,
+//                 message: "Successfully Update Flash News Notification status",
+//                 code: 200,
+//                 data: msg.rows[0]
+//             })
+//         }
+//     })
+// });
 
