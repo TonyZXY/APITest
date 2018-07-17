@@ -18,8 +18,10 @@ const db = require('../functions/postgredb');
 function verifyToken(req, res, next) {
     let token = req.body.token;
     let email = req.body.email;
+    let address = req.connection.remoteAddress;
     if (token === null || token === undefined ||
         email === null || email === undefined) {
+            logger.deviceManageLog(address, "Invalid Params in Email: " + email);
         return res.send({
             success: false,
             message: "Token Error",
@@ -29,6 +31,7 @@ function verifyToken(req, res, next) {
     } else {
         let payload = jwt.verify(token.toString(), email.toString());
         if (!payload) {
+            logger.deviceManageLog(address, "No payload in Email: " + email);
             return res.send({
                 success: false,
                 message: "Token Error",
@@ -40,6 +43,7 @@ function verifyToken(req, res, next) {
             let password = payload.password;
             if (userID === null || password === null ||
                 userID === undefined || password === undefined) {
+                    logger.deviceManageLog(address, "UserID or password empty in Email: " + email);
                 return res.send({
                     success: false,
                     message: "Token Error",
@@ -50,7 +54,6 @@ function verifyToken(req, res, next) {
                 db.getUser(email, (err, msg) => {
                     if (err) {
                         console.log(err);
-                        let address = req.connect.remoteAddress
                         logger.databaseError("deviceManage",address, err);
                         return res.send({
                             success: false,
@@ -61,7 +64,7 @@ function verifyToken(req, res, next) {
                     } else {
                         let user = msg.rows[0];
                         if (msg.rows[0] === undefined) {
-                            let address = req.connect.remoteAddress
+                            let address = req.connect.remoteAddress;
                             logger.databaseError("deviceManage",address, "No user in database");
                             return res.send({
                                 success: false,
@@ -72,6 +75,7 @@ function verifyToken(req, res, next) {
                         } else {
                             if (user.password.toString() !== password.toString() ||
                                 (user._id).toString() !== userID.toString()) {
+                                    logger.deviceManageLog(address, "UserID or password in Email: " + email);
                                 return res.send({
                                     success: false,
                                     message: "Token Error",
@@ -109,12 +113,13 @@ function databaseError(err, res) {
 router.post('/addIOSDevice',verifyToken,(req,res)=>{
     let userEmail = req.body.email;
     let deviceToken = req.body.deviceToken;
+    let address = req.connection.remoteAddress;
     db.addIOSDevice(userEmail,deviceToken,(err,msg)=>{
         if (err){
             databaseError(err,res);
-            let address = req.connection.remoteAddress;
             logger.databaseError('deviceManage',address, err);
         } else {
+            logger.deviceManageLog(address, "Successfully add IOS device in Email: " + email);
             res.send({
                 success: true,
                 message: "Successfully add IOS device",
@@ -128,12 +133,14 @@ router.post('/addIOSDevice',verifyToken,(req,res)=>{
 
 router.post('/receivedNotification',verifyToken,(req,res)=>{
     let token = req.body.deviceToken;
+    let email = req.body.email;
+    let address = req.connection.remoteAddress;
     db.setIOSDeviceNumberToZero(token,(err,msg)=>{
         if (err) {
             databaseError(err,res);
-            let address = req.connection.remoteAddress;
             logger.databaseError('deviceManage',address, err);
         } else {
+            logger.deviceManageLog(address, "Change Notification to Zero in Email: " + email);
             res.send({
                 success: true,
                 message: "Change Notification to Zero",
@@ -149,12 +156,13 @@ router.post('/changeNotification', verifyToken, (req, res) => {
     let userEmail = req.body.email;
     let flash = req.body.flash;
     let interest = req.body.interest;
+    let address = req.connection.remoteAddress;
     db.updateNotificationStatus(userEmail, flash, interest, (err, msg) => {
         if (err) {
             databaseError(err, res);
-            let address = req.connection.remoteAddress;
             logger.databaseError('deviceManage',address, err);
         } else {
+            logger.deviceManageLog(address, "Successfully Update notification status in Email: " + userEmail);
             res.send({
                 success: true,
                 message: 'Successfully Update notification status',
@@ -167,12 +175,13 @@ router.post('/changeNotification', verifyToken, (req, res) => {
 
 router.post('/logoutIOSDevice',verifyToken,(req,res)=>{
     let deviceToken = req.body.deviceToken;
+    let address = req.connection.remoteAddress;
     db.deleteIOSDevice(deviceToken,(err,msg)=>{
         if (err) {
             databaseError(err,res);
-            let address = req.connection.remoteAddress;
             logger.databaseError('deviceManage',address, err);
         } else {
+            logger.deviceManageLog(address, "Successfully Update notification status in Email: " + userEmail);
             res.send({
                 success:true,
                 message: 'Successfully Update notification status',
