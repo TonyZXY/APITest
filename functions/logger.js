@@ -50,3 +50,6 @@ module.exports.deviceManageLog = (address, messageToLog) =>{
 module.exports.adminLoginLog = (address, messageToLog) =>{
     logIntoFile("admin_login.log","info","login",address, messageToLog);
 };
+module.exports.coinLog = (address, messageToLog) => {
+    logIntoFile("coin_log.log", "info", "coin",address,messageToLog);
+}

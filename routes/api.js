@@ -24,7 +24,9 @@ const Genuine = require('../module/Genuine.js');
 // address = req.connection.remoteAddress
 
 function verifyToken(req, res, next) {
+    let address = req.connection.remoteAddress;
     if (!req.headers.authorization) {
+        logger.newsFlashLog(address, "No authorization");
         return res.status(401).json({
             login: false
         })
@@ -33,18 +35,21 @@ function verifyToken(req, res, next) {
         let token = req.headers.authorization.split(' ')[2];
         if (userProfile === null || userProfile === undefined ||
             token === null || token === undefined) {
+                logger.newsFlashLog(address, "User Profile or token empty in User Profile: " + userProfile)
             return res.status(401).json({
                 login: false
             })
         } else {
             let payload = jwt.verify(token, userProfile);
             if (!payload) {
+                logger.newsFlashLog(address, "No payload in User Profile: " + userProfile);
                 return res.status(401).json({
                     login: false
                 })
             } else {
                 req.userID = payload.subject;
                 if (payload.subject !== userProfile) {
+                    logger.newsFlashLog(address, "Payload and user profile not match in User Profile: " + userProfile);
                     return res.status(401).json({
                         login: false
                     })
@@ -444,36 +449,39 @@ router.get('/searchVideoTime', (req, res) => {
 //get NewsFlash List
 router.get('/flash', function (req, res) {
     const leTag = req.query.languageTag;
+    let address = req.connection.remoteAddress;
     NewsFlash.getFlashList(leTag, function (err, newsFlash) {
         if (err) {
             console.log(err);
-            let address = req.connection.remoteAddress;
             logger.databaseError('apifile',address, err);
         }
         res.json(newsFlash);
+        logger.newsFlashLog(address,"Get All flash with language tag");
     })
 });
 
 //get newsFlash by ID
 router.get('/flashList/:_id', function (req, res) {
+    let address = req.connection.remoteAddress;
     NewsFlash.getFlashByID(req.params._id, function (err, newsFlash) {
         if (err) {
             console.log(err);
-            let address = req.connection.remoteAddress;
             logger.databaseError('apifile',address, err);
         }
         res.json(newsFlash);
+        logger.newsFlashLog(address,"Get certain flash");
     })
 });
 
 router.get('/flashList', function (req, res) {
+    let address = req.connection.remoteAddress;
     NewsFlash.getFlash((err, newsFlash) => {
         if (err) {
-            console.log(err);
-            let address = req.connection.remoteAddress;
+            console.log(err);          
             logger.databaseError('apifile',address, err);
         }
         res.json(newsFlash);
+        logger.newsFlashLog(address,"Get all flash");
     })
 });
 
@@ -490,7 +498,7 @@ router.post('/flash', verifyToken, function (req, res) {
         }
         res.json(flashAdded);
         let address2 = req.connection.remoteAddress;
-        logger.databaseUpdateLog("NewsFlashApi",address2,"A News Flash added ("+flashAdded._id+")")
+        logger.newsFlashLog("NewsFlashApi",address2,"A News Flash added ("+flashAdded._id+")");
         if(flashAdded.toSent){
             Notification.sendFlashNotification(flashAdded.shortMassage);
         }
@@ -502,13 +510,14 @@ router.post('/flash', verifyToken, function (req, res) {
 router.put('/flash/:_id', verifyToken, function (req, res) {
     const id = req.params._id;
     const flashAdded = req.body;
+    let address = req.connection.remoteAddress;
     NewsFlash.updateFlashNews(id, flashAdded, {}, function (err, flash) {
         if (err) {
             console.log(err);
-            let address = req.connection.remoteAddress;
             logger.databaseError('apifile',address, err);
         }
         res.json(flash);
+        logger.newsFlashLog(address,"Update one flash");
     })
 });
 
@@ -522,6 +531,7 @@ router.delete('/flash/:_id', verifyToken, function (req, res) {
             logger.databaseError('apifile',address, err);
         }
         res.json(newsFlash);
+        logger.newsFlashLog(address,"Delete one flash");
     })
 });
 
@@ -537,6 +547,7 @@ router.get("/searchFlash", (req, res) => {
             logger.databaseError('apifile',address, err);
         }
         res.json(flash);
+        logger.newsFlashLog(address,"Search flash news");
     }, parseInt(skip), parseInt(limit))
 });
 
@@ -550,6 +561,7 @@ router.get('/searchFlashTime', (req, res) => {
             logger.databaseError('apifile',address, err);
         }
         res.json(flash);
+        logger.newsFlashLog(address,"Search flash by time");
     })
 });
 

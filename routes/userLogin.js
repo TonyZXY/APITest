@@ -26,7 +26,7 @@ router.post('/register', (req, res) => {
             success: false,
             message: 'Bad Request',
             code: 400,
-            token: null
+            token: null,
         });
         logger.userRegistrationLoginLog(address,"Invalid params");
     } else {
@@ -44,10 +44,13 @@ router.post('/register', (req, res) => {
                     success: false,
                     message: 'Register fail',
                     code: 409,
-                    token: null
+                    token: null,
+                    err: err.code
                 })
                 logger.databaseError("userLogin",req.connection.remoteAddress, err);
-                logger.userRegistrationLoginLog(address,"May be already registed in: " + email);
+                if(err.code === '23505'){
+                    logger.userRegistrationLoginLog(address,"May be already registed in: " + email);
+                }
             } else {
                 let user = msg.rows[0];
                 let payload = {
@@ -139,7 +142,7 @@ function verifyToken(req, res, next) {
     let address = req.connection.remoteAddress;
     if (token === null || token === undefined ||
         email === null || email === undefined) {
-            logger.userRegistrationLoginLog(address,"Invalid param number in Token: " + token);
+            logger.userRegistrationLoginLog(address,"Invalid param number");
         return res.send({
             success: false,
             message: "Token Error",
@@ -150,7 +153,7 @@ function verifyToken(req, res, next) {
     } else {
         let payload = jwt.verify(token.toString(), email.toString());
         if (!payload) {
-            logger.userRegistrationLoginLog(address,"No payload in Token: " + token);
+            logger.userRegistrationLoginLog(address,"No payload");
             return res.send({
                 success: false,
                 message: "Token Error",
@@ -162,7 +165,7 @@ function verifyToken(req, res, next) {
             let password = payload.password;
             if (userID === null || password === null ||
                 userID === undefined || password === undefined) {
-                    logger.userRegistrationLoginLog(address,"Empty userID or Password in Token: " + token + "       \(Email is:" + email + " \)");
+                    logger.userRegistrationLoginLog(address,"Empty userID or Password in Email is:" + email);
                 return res.send({
                     success: false,
                     message: "Token Error",
@@ -184,6 +187,7 @@ function verifyToken(req, res, next) {
                     } else {
                         let user = msg.rows[0];
                         if (msg.rows[0] === undefined) {
+                            logger.userRegistrationLoginLog(address,"User Not found in Email: " + email);
                             return res.send({
                                 success: false,
                                 message: 'Token Error',
@@ -193,6 +197,7 @@ function verifyToken(req, res, next) {
                         } else {
                             if (user.password.toString() !== password.toString() ||
                                 (user._id).toString() !== userID.toString()) {
+                                    logger.userRegistrationLoginLog(address,"Compare password or userid failed in Email: " + email);
                                 return res.send({
                                     success: false,
                                     message: "Token Error",
@@ -214,24 +219,22 @@ function verifyToken(req, res, next) {
 router.post('/addInterest', verifyToken, (req, res) => {
     let userEmail = req.body.email;
     let interest = req.body.interest;
+    let address = req.connection.remoteAddress;
     db.getTradingPair(interest.from, interest.to, interest.market, (err, msg) => {
         if (err) {
             databaseError(err, res);
-            let address = req.connection.remoteAddress;
             logger.databaseError('userLogin',address, err);
         } else {
             if (msg.rows[0] === null || msg.rows[0] === undefined) {
                 db.addTradingPair(interest.from, interest.to, interest.market, (err, msg) => {
                     if (err) {
                         databaseError(err, res);
-                        let address = req.connection.remoteAddress;
                         logger.databaseError('userLogin',address, err);
                     } else {
                         let coinID = msg.rows[0]._id;
                         db.addInterestWithOutTradingPair(userEmail, coinID, interest.price, interest.isGreater, (err, msg) => {
                             if (err) {
                                 databaseError(err, res);
-                                let address = req.connection.remoteAddress;
                                 logger.databaseError('userLogin',address, err);
                             } else {
                                 let coin = msg.rows[0];
@@ -241,6 +244,7 @@ router.post('/addInterest', verifyToken, (req, res) => {
                                     code: 200,
                                     data: coin
                                 })
+                                logger.userRegistrationLoginLog(address, "Interest add to database in Email: " + userEmail);
                             }
                         })
                     }
@@ -260,6 +264,7 @@ router.post('/addInterest', verifyToken, (req, res) => {
                             code: 200,
                             data: coin
                         })
+                        logger.userRegistrationLoginLog(address, "Interest add to database in Email: " + userEmail);
                     }
                 })
             }
@@ -274,7 +279,7 @@ router.post('/editInterestStatus', verifyToken, (req, res) => {
     db.changeInterestStatus(interests, (err, msg) => {
         if (err) {
             databaseError(err, res);
-            let address = req.connection.remoteAddress;
+            
             logger.databaseError('userLogin',address, err);
         } else {
             let interests = msg.rows;
@@ -284,6 +289,7 @@ router.post('/editInterestStatus', verifyToken, (req, res) => {
                 code: 200,
                 data: interests
             })
+            logger.userRegistrationLoginLog(address, "Interest add to database in Email: " + userEmail);
         }
     });
 });
@@ -294,15 +300,16 @@ router.post('/editInterestStatus', verifyToken, (req, res) => {
 router.post('/editInterest', verifyToken, (req, res) => {
     let userEmail = req.body.email;
     let interest = req.body.interest;
+    let address = req.connection.remoteAddress;
     db.getInterest(interest._id, (err, msg) => {
         if (err) {
             databaseError(err, res);
-            let address = req.connection.remoteAddress;
             logger.databaseError('userLogin',address, err);
         } else {
             let interestFromDB = msg.rows[0];
             if (interestFromDB === null || interestFromDB===undefined){
                 console.log("no interest found");
+                logger.userRegistrationLoginLog(address, "No interest found in Email: " + userEmail);
                 //TODO: to be add param err logger, this error means that the interest_id is not found or null.
                 res.send({
                     success: false,
@@ -327,6 +334,7 @@ router.post('/editInterest', verifyToken, (req, res) => {
                                 code: 200,
                                 data: msg.rows[0]
                             })
+                            logger.userRegistrationLoginLog(address, "Successfully Update interest in Email: " + userEmail);
                         }
                     })
                 } else {
@@ -334,21 +342,18 @@ router.post('/editInterest', verifyToken, (req, res) => {
                     db.getTradingPair(interest.from, interest.to, interest.market, (err, msg) => {
                         if (err) {
                             databaseError(err, res);
-                            let address = req.connection.remoteAddress;
                             logger.databaseError('userLogin', address, err);
                         } else {
                             if (msg.rows[0] === null || msg.rows[0] === undefined) {
                                 db.addTradingPair(interest.from, interest.to, interest.market, (err, msg) => {
                                     if (err) {
                                         databaseError(err, res);
-                                        let address = req.connection.remoteAddress;
                                         logger.databaseError('userLogin', address, err);
                                     } else {
                                         let coinID = msg.rows[0]._id;
                                         db.updateInterestCoin(interest.id, coinID, interest.price, interest.isGreater, (err, msg) => {
                                             if (err) {
                                                 databaseError(err, res);
-                                                let address = req.connection.remoteAddress;
                                                 logger.databaseError('userLogin', address, err);
                                             } else {
                                                 res.send({
@@ -357,6 +362,7 @@ router.post('/editInterest', verifyToken, (req, res) => {
                                                     code: 200,
                                                     data: msg.rows[0]
                                                 })
+                                                logger.userRegistrationLoginLog(address, "Successfully update interest in Email: " + userEmail);
                                             }
                                         })
                                     }
@@ -375,6 +381,7 @@ router.post('/editInterest', verifyToken, (req, res) => {
                                             code: 200,
                                             data: msg.rows[0]
                                         })
+                                        logger.userRegistrationLoginLog(address, "Successfully update interest in Email: " + userEmail);
                                     }
                                 })
                             }
@@ -399,10 +406,12 @@ function databaseError(err, res) {
 
 router.post('/deleteInterest', verifyToken, (req, res) => {
     let interests = req.body.interest;
+    let userEmail = req.body.email;
+    let address = req.connection.remoteAddress;
     db.deleteInterest(interests, (err, msg) => {
         if (err) {
             databaseError(err, res);
-            let address = req.connection.remoteAddress;
+            
             logger.databaseError('userLogin',address, err);
         } else {
             res.send({
@@ -411,6 +420,7 @@ router.post('/deleteInterest', verifyToken, (req, res) => {
                 code: 200,
                 data: msg.rows
             })
+            logger.userRegistrationLoginLog(address, "Successfully delete interest in Email: " + userEmail);
         }
     });
 });
@@ -418,10 +428,10 @@ router.post('/deleteInterest', verifyToken, (req, res) => {
 
 router.post('/getInterest', verifyToken, (req, res) => {
     let userEmail = req.body.email;
+    let address = req.connection.remoteAddress;
     db.getInterests(userEmail, (err, msg) => {
         if (err) {
             databaseError(err, res);
-            let address = req.connection.remoteAddress;
             logger.databaseError('userLogin',address, err);
         } else {
             if (msg.rows[0] === undefined) {
@@ -431,6 +441,7 @@ router.post('/getInterest', verifyToken, (req, res) => {
                     code: 404,
                     data: null
                 })
+                logger.userRegistrationLoginLog(address, "Interest not found in Email: " + userEmail);
             } else {
                 res.send({
                     success: true,
@@ -438,6 +449,7 @@ router.post('/getInterest', verifyToken, (req, res) => {
                     code: 200,
                     data: msg.rows
                 });
+                logger.userRegistrationLoginLog(address, "Found Interest in db in Email: " + userEmail);
             }
         }
     })
@@ -446,10 +458,10 @@ router.post('/getInterest', verifyToken, (req, res) => {
 
 router.post('/getNotificationStatus', verifyToken, (req, res) => {
     let userEmail = req.body.email;
+    let address = req.connection.remoteAddress;
     db.getInterestStatus(userEmail, (err, msg) => {
         if (err) {
             databaseError(err);
-            let address = req.connection.remoteAddress;
             logger.databaseError('userLogin',address, err);
         } else {
             res.send({
@@ -458,6 +470,7 @@ router.post('/getNotificationStatus', verifyToken, (req, res) => {
                 code: 200,
                 data: msg.rows[0]
             })
+            logger.userRegistrationLoginLog(address, "Interest status found in Email: " + userEmail);
         }
     })
 });
