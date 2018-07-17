@@ -44,8 +44,9 @@ router.post('/register', (req, res) => {
                     success: false,
                     message: 'Register fail',
                     code: 409,
-                    token: null
-                })
+                    token: null,
+                    err: err.code
+                });
                 logger.databaseError("userLogin",req.connection.remoteAddress, err);
                 logger.userRegistrationLoginLog(address,"May be already registed in: " + email);
             } else {
@@ -60,7 +61,7 @@ router.post('/register', (req, res) => {
                     message: 'Register success',
                     code: 200,
                     token: tokenToSend
-                })
+                });
                 logger.userRegistrationLoginLog(address,"Registed Successfully in: " + email);
             }
         });
@@ -78,7 +79,7 @@ router.post('/login', (req, res) => {
             message: "Login Fail",
             code: 406,
             token: null
-        })
+        });
         logger.userRegistrationLoginLog(address,"Invalid params");
     } else {
         db.getUser(userName, (err, msg) => {
@@ -110,7 +111,7 @@ router.post('/login', (req, res) => {
                             message: 'Email or Password Error',
                             code: 404,
                             token: null
-                        })
+                        });
                         logger.userRegistrationLoginLog('userLogin',address, 'Password Error in: '+ userName);
                     } else {
                         let payload = {
@@ -123,7 +124,7 @@ router.post('/login', (req, res) => {
                             message: 'Login Success',
                             code: 200,
                             token: tokenToSend
-                        })
+                        });
                         logger.userRegistrationLoginLog(address,"Login Successfully in: " + userName);
                     }
                 }
