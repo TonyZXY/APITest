@@ -21,7 +21,7 @@ function verifyToken(req, res, next) {
     let address = req.connection.remoteAddress;
     if (token === null || token === undefined ||
         email === null || email === undefined) {
-            logger.deviceManageLog(address, "Invalid Params in Email: " + email)
+            logger.deviceManageLog(address, "Invalid Params in Email: " + email);
         return res.send({
             success: false,
             message: "Token Error",
@@ -31,7 +31,7 @@ function verifyToken(req, res, next) {
     } else {
         let payload = jwt.verify(token.toString(), email.toString());
         if (!payload) {
-            logger.deviceManageLog(address, "No payload in Email: " + email)
+            logger.deviceManageLog(address, "No payload in Email: " + email);
             return res.send({
                 success: false,
                 message: "Token Error",
@@ -43,7 +43,7 @@ function verifyToken(req, res, next) {
             let password = payload.password;
             if (userID === null || password === null ||
                 userID === undefined || password === undefined) {
-                    logger.deviceManageLog(address, "UserID or password empty in Email: " + email)
+                    logger.deviceManageLog(address, "UserID or password empty in Email: " + email);
                 return res.send({
                     success: false,
                     message: "Token Error",
@@ -64,7 +64,7 @@ function verifyToken(req, res, next) {
                     } else {
                         let user = msg.rows[0];
                         if (msg.rows[0] === undefined) {
-                            let address = req.connect.remoteAddress
+                            let address = req.connect.remoteAddress;
                             logger.databaseError("deviceManage",address, "No user in database");
                             return res.send({
                                 success: false,
@@ -75,7 +75,7 @@ function verifyToken(req, res, next) {
                         } else {
                             if (user.password.toString() !== password.toString() ||
                                 (user._id).toString() !== userID.toString()) {
-                                    logger.deviceManageLog(address, "UserID or password in Email: " + email)
+                                    logger.deviceManageLog(address, "UserID or password in Email: " + email);
                                 return res.send({
                                     success: false,
                                     message: "Token Error",

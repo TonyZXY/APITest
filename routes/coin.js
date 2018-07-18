@@ -67,7 +67,7 @@ router.get('/getCoinList',(req,res)=>{
             console.log(err);
             logger.databaseError('coin',address, err);
         } else{
-            res.json(coinList)
+            res.json(coinList);
             logger.coinLog(address,"Get filtered Coin List");
 
         }

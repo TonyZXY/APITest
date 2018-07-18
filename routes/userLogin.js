@@ -63,7 +63,7 @@ router.post('/register', (req, res) => {
                     message: 'Register success',
                     code: 200,
                     token: tokenToSend
-                })
+                });
                 logger.userRegistrationLoginLog(address,"Registed Successfully in: " + email);
             }
         });
@@ -81,7 +81,7 @@ router.post('/login', (req, res) => {
             message: "Login Fail",
             code: 406,
             token: null
-        })
+        });
         logger.userRegistrationLoginLog(address,"Invalid params");
     } else {
         db.getUser(userName, (err, msg) => {
@@ -113,7 +113,7 @@ router.post('/login', (req, res) => {
                             message: 'Email or Password Error',
                             code: 404,
                             token: null
-                        })
+                        });
                         logger.userRegistrationLoginLog('userLogin',address, 'Password Error in: '+ userName);
                     } else {
                         let payload = {
@@ -126,7 +126,7 @@ router.post('/login', (req, res) => {
                             message: 'Login Success',
                             code: 200,
                             token: tokenToSend
-                        })
+                        });
                         logger.userRegistrationLoginLog(address,"Login Successfully in: " + userName);
                     }
                 }
@@ -243,7 +243,7 @@ router.post('/addInterest', verifyToken, (req, res) => {
                                     message: "Interest Add to database",
                                     code: 200,
                                     data: coin
-                                })
+                                });
                                 logger.userRegistrationLoginLog(address, "Interest add to database in Email: " + userEmail);
                             }
                         })
@@ -262,7 +262,7 @@ router.post('/addInterest', verifyToken, (req, res) => {
                             message: "Interest Add to database",
                             code: 200,
                             data: coin
-                        })
+                        });
                         logger.userRegistrationLoginLog(address, "Interest add to database in Email: " + userEmail);
                     }
                 })
@@ -288,7 +288,7 @@ router.post('/editInterestStatus', verifyToken, (req, res) => {
                 message: 'Success update Interest ststus',
                 code: 200,
                 data: interests
-            })
+            });
             logger.userRegistrationLoginLog(address, "Interest add to database in Email: " + userEmail);
         }
     });
@@ -333,7 +333,7 @@ router.post('/editInterest', verifyToken, (req, res) => {
                                 message: "Successfully Update interest",
                                 code: 200,
                                 data: msg.rows[0]
-                            })
+                            });
                             logger.userRegistrationLoginLog(address, "Successfully Update interest in Email: " + userEmail);
                         }
                     })
@@ -361,7 +361,7 @@ router.post('/editInterest', verifyToken, (req, res) => {
                                                     message: "Successfully update interest",
                                                     code: 200,
                                                     data: msg.rows[0]
-                                                })
+                                                });
                                                 logger.userRegistrationLoginLog(address, "Successfully update interest in Email: " + userEmail);
                                             }
                                         })
@@ -380,7 +380,7 @@ router.post('/editInterest', verifyToken, (req, res) => {
                                             message: "Successfully update interest",
                                             code: 200,
                                             data: msg.rows[0]
-                                        })
+                                        });
                                         logger.userRegistrationLoginLog(address, "Successfully update interest in Email: " + userEmail);
                                     }
                                 })
@@ -419,7 +419,7 @@ router.post('/deleteInterest', verifyToken, (req, res) => {
                 message: "Successfully delete Interest",
                 code: 200,
                 data: msg.rows
-            })
+            });
             logger.userRegistrationLoginLog(address, "Successfully delete interest in Email: " + userEmail);
         }
     });
@@ -440,7 +440,7 @@ router.post('/getInterest', verifyToken, (req, res) => {
                     message: "interest not found",
                     code: 404,
                     data: null
-                })
+                });
                 logger.userRegistrationLoginLog(address, "Interest not found in Email: " + userEmail);
             } else {
                 res.send({
@@ -469,7 +469,7 @@ router.post('/getNotificationStatus', verifyToken, (req, res) => {
                 message: "Interest Status found",
                 code: 200,
                 data: msg.rows[0]
-            })
+            });
             logger.userRegistrationLoginLog(address, "Interest status found in Email: " + userEmail);
         }
     })

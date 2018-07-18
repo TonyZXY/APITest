@@ -52,4 +52,4 @@ module.exports.adminLoginLog = (address, messageToLog) =>{
 };
 module.exports.coinLog = (address, messageToLog) => {
     logIntoFile("coin_log.log", "info", "coin",address,messageToLog);
-}
+};

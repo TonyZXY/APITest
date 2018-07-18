@@ -35,7 +35,7 @@ function verifyToken(req, res, next) {
         let token = req.headers.authorization.split(' ')[2];
         if (userProfile === null || userProfile === undefined ||
             token === null || token === undefined) {
-                logger.newsFlashLog(address, "User Profile or token empty in User Profile: " + userProfile)
+                logger.newsFlashLog(address, "User Profile or token empty in User Profile: " + userProfile);
             return res.status(401).json({
                 login: false
             })

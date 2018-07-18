@@ -65,7 +65,7 @@ router.post("/", (req, res) => {
                 } else {
                     let payload = {subject: user._id};
                     let tokenToSend = jwt.sign(payload, user._id.toString());
-                    res.send({login: true, token: tokenToSend, username: user._id}).status(200)
+                    res.send({login: true, token: tokenToSend, username: user._id}).status(200);
                     logger.adminLoginLog(address,"Successfully Login in User Name: " + username);
                 }
             }
