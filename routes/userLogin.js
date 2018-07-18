@@ -47,7 +47,7 @@ router.post('/register', (req, res) => {
                     token: null,
                     err: err.code
                 })
-                logger.databaseError("userLogin",req.connection.remoteAddress, err);
+                logger.databaseError("userLogin",address, err);
                 if(err.code === '23505'){
                     logger.userRegistrationLoginLog(address,"May be already registed in: " + email);
                 }
@@ -254,7 +254,6 @@ router.post('/addInterest', verifyToken, (req, res) => {
                 db.addInterestWithTradingPair(userEmail, coinID, interest.price, interest.isGreater, (err, msg) => {
                     if (err) {
                         databaseError(err, res);
-                        let address = req.connection.remoteAddress;
                         logger.databaseError('userLogin',address, err);
                     } else {
                         let coin = msg.rows[0];
@@ -276,6 +275,7 @@ router.post('/addInterest', verifyToken, (req, res) => {
 router.post('/editInterestStatus', verifyToken, (req, res) => {
     let userEmail = req.body.email;
     let interests = req.body.interest;
+    let address = req.connection.remoteAddress;
     db.changeInterestStatus(interests, (err, msg) => {
         if (err) {
             databaseError(err, res);
