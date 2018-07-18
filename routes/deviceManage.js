@@ -1,15 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const logger = require('../functions/logger')
 
-const options = {
-    user: 'bglappdev100',
-    pass: "appdevgkV6="
-};
-
-mongoose.connect('mongodb://localhost/APITest');
 
 module.exports = router;
 

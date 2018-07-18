@@ -10,7 +10,7 @@ const options = {
     pass: "appdevgkV6="
 };
 
-mongoose.connect('mongodb://localhost/APITest');
+mongoose.connect('mongodb://localhost/APITest',options);
 
 
 module.exports = router;

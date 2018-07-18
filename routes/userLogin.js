@@ -46,7 +46,7 @@ router.post('/register', (req, res) => {
                     code: 409,
                     token: null,
                     err: err.code
-                })
+                });
                 logger.databaseError("userLogin",address, err);
                 if(err.code === '23505'){
                     logger.userRegistrationLoginLog(address,"May be already registed in: " + email);
