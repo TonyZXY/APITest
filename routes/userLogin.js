@@ -276,10 +276,10 @@ router.post('/addInterest', verifyToken, (req, res) => {
 router.post('/editInterestStatus', verifyToken, (req, res) => {
     let userEmail = req.body.email;
     let interests = req.body.interest;
+    let address = req.connection.remoteAddress;
     db.changeInterestStatus(interests, (err, msg) => {
         if (err) {
             databaseError(err, res);
-            
             logger.databaseError('userLogin',address, err);
         } else {
             let interests = msg.rows;
@@ -322,7 +322,7 @@ router.post('/editInterest', verifyToken, (req, res) => {
                     interestFromDB.to === interest.to &&
                     interestFromDB.market === interest.market) {
                     // TODO update frequency
-                    db.updateInterestPrice(interest.id, interest.price, interest.isGreater, (err, msg) => {
+                    db.updateInterestPrice(interest._id, interest.price, interest.isGreater, (err, msg) => {
                         if (err) {
                             databaseError(err, res);
                             let address = req.connection.remoteAddress;
@@ -351,7 +351,7 @@ router.post('/editInterest', verifyToken, (req, res) => {
                                         logger.databaseError('userLogin', address, err);
                                     } else {
                                         let coinID = msg.rows[0]._id;
-                                        db.updateInterestCoin(interest.id, coinID, interest.price, interest.isGreater, (err, msg) => {
+                                        db.updateInterestCoin(interest._id, coinID, interest.price, interest.isGreater, (err, msg) => {
                                             if (err) {
                                                 databaseError(err, res);
                                                 logger.databaseError('userLogin', address, err);
@@ -369,7 +369,7 @@ router.post('/editInterest', verifyToken, (req, res) => {
                                 })
                             } else {
                                 let coinID = msg.rows[0]._id;
-                                db.updateInterestCoin(interest.id, coinID, interest.price, interest.isGreater, (err, msg) => {
+                                db.updateInterestCoin(interest._id, coinID, interest.price, interest.isGreater, (err, msg) => {
                                     if (err) {
                                         databaseError(err, res);
                                         let address = req.connection.remoteAddress;

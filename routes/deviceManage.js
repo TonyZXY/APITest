@@ -119,7 +119,7 @@ router.post('/addIOSDevice',verifyToken,(req,res)=>{
             databaseError(err,res);
             logger.databaseError('deviceManage',address, err);
         } else {
-            logger.deviceManageLog(address, "Successfully add IOS device in Email: " + email);
+            logger.deviceManageLog(address, "Successfully add IOS device in Email: " + userEmail);
             res.send({
                 success: true,
                 message: "Successfully add IOS device",
@@ -176,12 +176,13 @@ router.post('/changeNotification', verifyToken, (req, res) => {
 router.post('/logoutIOSDevice',verifyToken,(req,res)=>{
     let deviceToken = req.body.deviceToken;
     let address = req.connection.remoteAddress;
+    let email = req.body.email;
     db.deleteIOSDevice(deviceToken,(err,msg)=>{
         if (err) {
             databaseError(err,res);
             logger.databaseError('deviceManage',address, err);
         } else {
-            logger.deviceManageLog(address, "Successfully Update notification status in Email: " + userEmail);
+            logger.deviceManageLog(address, "Successfully Update notification status in Email: " + email);
             res.send({
                 success:true,
                 message: 'Successfully Update notification status',

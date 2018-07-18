@@ -524,6 +524,7 @@ router.put('/flash/:_id', verifyToken, function (req, res) {
 //delete News Flash
 router.delete('/flash/:_id', verifyToken, function (req, res) {
     const id = req.params._id;
+    let address = req.connection.remoteAddress;
     NewsFlash.deleteFlash(id, function (err, newsFlash) {
         if (err) {
             console.log(err);
@@ -540,6 +541,7 @@ router.get("/searchFlash", (req, res) => {
     const languateTag = req.query.languageTag;
     const limit = req.query.limit;
     const skip = req.query.skip;
+    let address = req.connection.remoteAddress;
     NewsFlash.searchFlashNews(languateTag, patten, (err, flash) => {
         if (err) {
             console.log(err);
@@ -554,6 +556,7 @@ router.get("/searchFlash", (req, res) => {
 router.get('/searchFlashTime', (req, res) => {
     const from = req.query.from;
     const to = req.query.to;
+    let address = req.connection.remoteAddress;
     NewsFlash.searchFlashTime(from, to, (err, flash) => {
         if (err) {
             console.log(err);
