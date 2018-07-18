@@ -10,12 +10,11 @@ let parser = new Parser({
 const News = require('../module/News');
 
 const mongoose = require('mongoose');
-const options = {
-    user: 'newsappprod10',
-    pass: "dmc#news8m9bgl"
-};
+const config = require('../config');
+const mongo = config.mongo;
 
-mongoose.connect('mongodb://localhost:29020/APITest',options);
+
+mongoose.connect(mongo.database,mongo.options);
 
 
 async function runBitcoinist() {

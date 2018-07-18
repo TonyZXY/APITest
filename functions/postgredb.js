@@ -1,12 +1,8 @@
 const {Pool} = require('pg');
+const config = require('../config');
+const postgre = config.postgre;
 
-const pool = new Pool({
-    user: 'postgreprod10',
-    host: 'localhost',
-    database: 'newsapiproduction00',
-    password: 'nK2ZmUuTgq',
-    port: 5432
-});
+const pool = new Pool(postgre);
 
 module.exports = {
     getIOSDevicesForCompare: (callback) => {

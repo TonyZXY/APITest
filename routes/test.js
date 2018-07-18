@@ -6,9 +6,10 @@ const jwt = require('jsonwebtoken');
 const db = require('../functions/postgredb');
 
 const config = require('../config');
+const mongo = config.mongo;
 
 
-mongoose.connect(config.database,config.options);
+mongoose.connect(mongo.database,mongo.options);
 
 
 module.exports = router;

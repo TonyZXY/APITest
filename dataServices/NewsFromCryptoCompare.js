@@ -6,9 +6,10 @@ const News = require('../module/News');
 
 
 const config = require('../config');
+const mongo = config.mongo;
 
 
-mongoose.connect(config.database,config.options);
+mongoose.connect(mongo.database,mongo.options);
 
 
 
