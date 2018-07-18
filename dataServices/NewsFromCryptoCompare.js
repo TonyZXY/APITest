@@ -4,12 +4,12 @@ const logger = require('../functions/logger');
 
 const News = require('../module/News');
 
-mongoose.connect('mongodb://localhost:29020/APITest',options);
 
-const options = {
-    user: 'newsappprod10',
-    pass: "dmc#news8m9bgl"
-};
+const config = require('../config');
+
+
+mongoose.connect(config.database,config.options);
+
 
 
 function getNews() {

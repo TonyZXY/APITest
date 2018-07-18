@@ -3,12 +3,10 @@ const Coin = require('../module/Coin');
 const mongoose = require('mongoose');
 const logger = require('../functions/logger');
 
-const options = {
-    user: 'newsappprod10',
-    pass: "dmc#news8m9bgl"
-};
+const config = require('../config');
 
-mongoose.connect('mongodb://localhost:29020/APITest',options);
+
+mongoose.connect(config.database,config.options);
 
 
 // const url = 'https://api.coinmarketcap.com/v2/ticker/?convert=AUD&start=1&limit=100&sort=rank&structure=array';

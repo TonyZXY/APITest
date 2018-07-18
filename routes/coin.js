@@ -5,12 +5,10 @@ const jwt = require('jsonwebtoken');
 const Coin = require('../module/Coin');
 const logger = require('../functions/logger');
 
-const options = {
-    user: 'newsappprod10',
-    pass: "dmc#news8m9bgl"
-};
+const config = require('../config');
 
-mongoose.connect('mongodb://localhost:29020/APITest',options);
+
+mongoose.connect(config.database,config.options);
 
 
 module.exports = router;

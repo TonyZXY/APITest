@@ -1,7 +1,7 @@
 {
-  "database":"mongodb://10.10.6.111:27017/BGLNewsAppbkend",
+  "database":"mongodb://127.0.0.1:29020/APITest",
   "options":{
-    "user": "bglappdev100",
-    "pass": "appdevgkV6="
+    "user": "newsappprod10",
+    "pass": "dmc#news8m9bgl"
   }
 }

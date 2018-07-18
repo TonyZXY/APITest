@@ -5,12 +5,10 @@ const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
 const logger = require('../functions/logger')
 
-const options = {
-    user: 'newsappprod10',
-    pass: "dmc#news8m9bgl"
-};
+const config = require('../config');
 
-mongoose.connect('mongodb://localhost:29020/APITest',options);
+
+mongoose.connect(config.database,config.options);
 
 
 const postNews_options = {
