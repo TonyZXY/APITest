@@ -8,7 +8,7 @@ const options = {
     pass: "dmc#news8m9bgl"
 };
 
-mongoose.connect('mongodb://newsappprod10:dmc#news8m9bgl@localhost:29020/APITest');
+mongoose.connect('mongodb://@localhost:29020/APITest',options);
 
 
 const optionsToFile = {
