@@ -27,7 +27,7 @@ const newsSchema = mongoose.Schema({
         require: true
     },
     contentTag: {
-        type: String,
+        type: [String],
         require: true
     },
     publishedTime: {
@@ -163,9 +163,19 @@ module.exports.searchNewsTime = (from, to, callback) => {
  *  This is the Area that for testing code
  */
 
-module.exports.findNews = (title, publishedTime, callback) => {
+module.exports.findNews = (title, source, callback) => {
     News.findOne({
         title: title,
-        publishedTime: publishedTime
+        source: source
     }, callback);
 };
+
+// module.exports.findNews = (tag,callback)=>{
+//     News.find({
+//         contentTag:{
+//             $elemMatch:{
+//                 $eq:tag
+//             }
+//         }
+//     },callback).limit(10).sort({publishedTime:-1});
+// };

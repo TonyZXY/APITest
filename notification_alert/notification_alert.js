@@ -8,7 +8,7 @@ mongoose.connect('mongodb://localhost/APITest');
 
 const optionsToFile = {
     token: {
-        key: "cert.p8",
+        key: "../cert.p8",
         keyId: "PFYGPR25U8",
         teamId: "4SMWL7L89M"
     },
@@ -67,6 +67,7 @@ module.exports.sendFlashNotification = (message) => {
 
     })
 };
+
 
 module.exports.sendAlert = (deviceId, message,badgeNumber) => {
     sendIos(deviceId, message,badgeNumber)

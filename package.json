@@ -11,11 +11,15 @@
     "body-parser": "*",
     "cors": "^2.8.4",
     "express": "*",
+    "forever": "^0.15.3",
     "jsonwebtoken": "^8.3.0",
     "mongoose": "*",
+    "nodemon": "^1.18.2",
     "password-hash": "^1.2.2",
     "pg": "^7.4.3",
-    "request": "^2.87.0"
+    "request": "^2.87.0",
+    "rss-parser": "^3.4.2",
+    "winston": "^3.0.0"
   },
   "author": "Tony Zheng",
   "license": "ISC"
