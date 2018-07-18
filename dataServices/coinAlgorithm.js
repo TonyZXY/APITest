@@ -2,7 +2,12 @@ const mongoose = require('mongoose');
 const request = require('request');
 const logger = require('../functions/logger');
 
-mongoose.connect('mongodb://localhost/APITest');
+const options = {
+    user: 'newsappprod10',
+    pass: "dmc#news8m9bgl"
+};
+
+mongoose.connect('mongodb://localhost:29020/APITest',options);
 
 module.exports.getPriceFromAPI = function (coinFrom, coinTo, market, callback){
     request({

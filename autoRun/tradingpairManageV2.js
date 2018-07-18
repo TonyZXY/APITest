@@ -5,7 +5,6 @@ const notification = require('../notification_alert/notification_alert');
 const coinAlgorithm = require('../dataServices/coinAlgorithm');
 const logger = require('../functions/logger');
 
-module.exports = router;
 
 let minute = 5;
 let the_internal = minute * 60 * 1000;

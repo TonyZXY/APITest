@@ -3,7 +3,12 @@ const apn = require('apn');
 const db = require('../functions/postgredb');
 const logger = require('../functions/logger');
 
-mongoose.connect('mongodb://localhost/APITest');
+const options = {
+    user: 'newsappprod10',
+    pass: "dmc#news8m9bgl"
+};
+
+mongoose.connect('mongodb://localhost:29020/APITest',options);
 
 
 const optionsToFile = {
