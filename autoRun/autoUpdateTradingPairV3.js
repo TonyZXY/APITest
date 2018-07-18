@@ -1,6 +1,6 @@
 const coinAlgorithm = require('../dataServices/coinAlgorithm');
 const db = require('../functions/postgredb');
-const logger = require('../functions/logger')
+const logger = require('../functions/logger');
 
 let secondTime = 0; // limit 50
 let minuteTime = 0; // limit 2000

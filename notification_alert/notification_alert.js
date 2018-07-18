@@ -5,7 +5,6 @@ const logger = require('../functions/logger');
 
 const config = require('../config');
 
-
 mongoose.connect(config.database,config.options);
 
 

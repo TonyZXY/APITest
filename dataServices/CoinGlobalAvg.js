@@ -4,10 +4,8 @@ const mongoose = require('mongoose');
 const logger = require('../functions/logger');
 
 const config = require('../config');
-const mongo = config.mongo;
 
-
-mongoose.connect(mongo.database,mongo.options);
+mongoose.connect(config.database,config.options);
 
 
 // const url = 'https://api.coinmarketcap.com/v2/ticker/?convert=AUD&start=1&limit=100&sort=rank&structure=array';

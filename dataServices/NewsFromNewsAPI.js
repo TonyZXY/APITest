@@ -6,10 +6,8 @@ const mongoose = require('mongoose');
 const logger = require('../functions/logger')
 
 const config = require('../config');
-const mongo = config.mongo;
 
-
-mongoose.connect(mongo.database,mongo.options);
+mongoose.connect(config.database,config.options);
 
 
 const postNews_options = {

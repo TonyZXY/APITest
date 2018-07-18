@@ -2,10 +2,8 @@ const mongoose = require('mongoose');
 const request = require('request');
 const logger = require('../functions/logger');
 const config = require('../config');
-const mongo = config.mongo;
 
-
-mongoose.connect(mongo.database,mongo.options);
+mongoose.connect(config.database,config.options);
 
 module.exports.getPriceFromAPI = function (coinFrom, coinTo, market, callback){
     request({

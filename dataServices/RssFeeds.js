@@ -11,10 +11,8 @@ const News = require('../module/News');
 
 const mongoose = require('mongoose');
 const config = require('../config');
-const mongo = config.mongo;
 
-
-mongoose.connect(mongo.database,mongo.options);
+mongoose.connect(config.database,config.options);
 
 
 async function runBitcoinist() {

@@ -6,10 +6,8 @@ const Coin = require('../module/Coin');
 const logger = require('../functions/logger');
 
 const config = require('../config');
-const mongo = config.mongo;
 
-
-mongoose.connect(mongo.database,mongo.options);
+mongoose.connect(config.database,config.options);
 
 
 module.exports = router;
