@@ -3,14 +3,14 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const Coin = require('../module/Coin');
-const logger = require('../functions/logger')
+const logger = require('../functions/logger');
 
 const options = {
     user: 'newsappprod10',
     pass: "dmc#news8m9bgl"
 };
 
-mongoose.connect('mongodb://localhost:29020/APITest',options);
+mongoose.connect('mongodb://newsappprod10:dmc#news8m9bgl@localhost:29020/APITest');
 
 
 module.exports = router;
