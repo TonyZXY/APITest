@@ -4,12 +4,13 @@ const logger = require('../functions/logger');
 
 const News = require('../module/News');
 
-mongoose.connect('mongodb://localhost/APITest'/**, options**/);
+mongoose.connect('mongodb://localhost:29020/APITest',options);
 
 const options = {
-    user: 'bglappdev100',
-    pass: "appdevgkV6="
+    user: 'newsappprod10',
+    pass: "dmc#news8m9bgl"
 };
+
 
 function getNews() {
     https.get('https://min-api.cryptocompare.com/data/v2/news/?lang=EN', (res) => {

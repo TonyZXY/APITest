@@ -6,11 +6,12 @@ const mongoose = require('mongoose');
 const logger = require('../functions/logger')
 
 const options = {
-    user: 'bglappdev100',
-    pass: "appdevgkV6="
+    user: 'newsappprod10',
+    pass: "dmc#news8m9bgl"
 };
 
-mongoose.connect('mongodb://localhost/APITest'/**, options**/);
+mongoose.connect('mongodb://localhost:29020/APITest',options);
+
 
 const postNews_options = {
     host: 'localhost',
