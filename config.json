@@ -1,5 +1,5 @@
 {
-  "database": "mongodb://127.0.0.1:29020/newsappbkendproduction01",
+  "database": "mongodb://127.0.0.1:29020/newsappbkendprod01",
   "options": {
     "user": "newsappprod10",
     "pass": "dmc#news8m9bgl"
