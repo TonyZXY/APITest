@@ -4,6 +4,8 @@
     "user": "newsappprod10",
     "pass": "dmc#news8m9bgl"
   },
+
+
   "postgre": {
     "user": "postgreprod10",
     "host": "localhost",
