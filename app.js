@@ -14,14 +14,14 @@ const login = require('./routes/login');
 const userLogin = require('./routes/userLogin');
 const deviceManage = require('./routes/deviceManage');
 const coin = require('./routes/coin');
-const admin = require('./routes/admin');
+// const admin = require('./routes/admin');
 
 app.use('/api', api);
 app.use('/userLogin', userLogin);
 app.use('/login',login);
 app.use('/deviceManage',deviceManage);
 app.use('/coin',coin);
-app.use('/admin',admin);
+// app.use('/admin',admin);
 
 //nothing
 app.get('/', function (req, res) {
