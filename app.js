@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const path = require('path');
+
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -14,16 +14,14 @@ const login = require('./routes/login');
 const userLogin = require('./routes/userLogin');
 const deviceManage = require('./routes/deviceManage');
 const coin = require('./routes/coin');
+const admin = require('./routes/admin');
 
 app.use('/api', api);
 app.use('/userLogin', userLogin);
 app.use('/login',login);
 app.use('/deviceManage',deviceManage);
 app.use('/coin',coin);
-
-app.get('/admin',(req,res)=>{
-    res.sendFile(path.join(__dirname+'/dist/AdminWebpageV2/index.html'))
-});
+app.use('/admin',admin);
 
 //nothing
 app.get('/', function (req, res) {
