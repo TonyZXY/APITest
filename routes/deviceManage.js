@@ -109,8 +109,29 @@ router.post('/addIOSDevice',verifyToken,(req,res)=>{
     let address = req.connection.remoteAddress;
     db.addIOSDevice(userEmail,deviceToken,(err,msg)=>{
         if (err){
-            databaseError(err,res);
-            logger.databaseError('deviceManage',address, err);
+            // databaseError(err,res);
+            // logger.databaseError('deviceManage',address, err);
+            db.deleteIOSDevice(deviceToken,(err,msg)=>{
+                if (err) {
+                    databaseError(err,res);
+                    logger.databaseError('deviceManage',address,err);
+                } else {
+                    db.addIOSDevice(userEmail,deviceToken,(err,msg)=>{
+                        if (err){
+                            databaseError(err,res);
+                            logger.databaseError('deviceManage',address,err);
+                        } else {
+                            logger.deviceManageLog(address, "Successfully add IOS device in Email: " + userEmail);
+                            res.send({
+                                success: true,
+                                message: "Successfully add IOS device",
+                                code:200,
+                                data: msg.rows[0]
+                            })
+                        }
+                    })
+                }
+            })
         } else {
             logger.deviceManageLog(address, "Successfully add IOS device in Email: " + userEmail);
             res.send({
