@@ -65,10 +65,25 @@ router.post('/register', (req, res) => {
                 db.addIntoVerifyTable(msg.rows[0].user_id, generate, (err, msg) => {
                     let url = "https://bglnewsbkend.tk/userLogin/verify/" + verifyToken + '/' + key;
                     let mailOptions = {
-                        from: 'do-not-replay@blockchainglobal.com',
+                        from: 'do-not-replay@cryptogeekapp.com',
                         to: email,
-                        subject: 'Sending from node project to verify',
-                        text: url
+                        subject: '[CryptoGeek] Please Verify Your Email',
+                        html: "<body>\n" +
+                            "\t<div style=\" width: 600px; margin-left: auto; margin-right: auto; text-align: center;\">\n" +
+                            "\t\t<div style=\"background-color: #2d6095; padding: 25px; border-radius: 25px 25px 0px 0px;\">\n" +
+                            "\t\t\t<img src=\"https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/logo.png?alt=media&token=96644680-d278-4dad-ba4f-db8745eb8e27\" style=\"height: 100px;\" />\n" +
+                            "\t\t\t<h1 style=\"color: white;\">Email Address Verification</h1>\n" +
+                            "\t\t</div>\n" +
+                            "\t\t<div style=\"background-color: #ffffff; border-radius: 0px 0px 25px 25px; border: 1px solid #dddddd; padding: 25px\">\n" +
+                            "\t\t\t<p>Thank you for creating a new account in <b style=\"color: #2d6095\">CRYPTOGEEK</b>.</p>\n" +
+                            "\t\t\t<p>To complete your registration, we need you to verify your email address.</p>\n" +
+                            "\t\t\t<a href=\""+url+"\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Verify Email Address</button></a>\n" +
+                            "\t\t\t<p>If you unable to click on the button, please use the URL below instead.</p>\n" +
+                            "\t\t\t<a href=\""+url+"\">"+url+"</a>\n" +
+                            "\t\t\t<p style=\"padding-top: 30px; color: #bbbbbb\">Copyright©CRYPTOGEEK</p>\n" +
+                            "\t\t</div>\n" +
+                            "\t</div>\n" +
+                            "</body>"
                     };
                     mail.send(mailOptions);
                     res.send({
@@ -801,10 +816,25 @@ router.get('/resendVerifyLink/:email', (req, res) => {
                 let verifyToken = jwt.sign(payload, key);
                 let url = "https://bglnewsbkend.tk/userLogin/verify/" + verifyToken + '/' + key;
                 let mailOptions = {
-                    from: 'do-not-replay@blockchainglobal.com',
+                    from: 'do-not-replay@cryptogeekapp.com',
                     to: email,
-                    subject: 'Sending from node project to verify',
-                    text: url
+                    subject: '[CryptoGeek] Please Verify Your Email',
+                    html: "<body>\n" +
+                        "\t<div style=\" width: 600px; margin-left: auto; margin-right: auto; text-align: center;\">\n" +
+                        "\t\t<div style=\"background-color: #2d6095; padding: 25px; border-radius: 25px 25px 0px 0px;\">\n" +
+                        "\t\t\t<img src=\"https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/logo.png?alt=media&token=96644680-d278-4dad-ba4f-db8745eb8e27\" style=\"height: 100px;\" />\n" +
+                        "\t\t\t<h1 style=\"color: white;\">Email Address Verification</h1>\n" +
+                        "\t\t</div>\n" +
+                        "\t\t<div style=\"background-color: #ffffff; border-radius: 0px 0px 25px 25px; border: 1px solid #dddddd; padding: 25px\">\n" +
+                        "\t\t\t<p>Thank you for creating a new account in <b style=\"color: #2d6095\">CRYPTOGEEK</b>.</p>\n" +
+                        "\t\t\t<p>To complete your registration, we need you to verify your email address.</p>\n" +
+                        "\t\t\t<a href=\""+url+"\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Verify Email Address</button></a>\n" +
+                        "\t\t\t<p>If you unable to click on the button, please use the URL below instead.</p>\n" +
+                        "\t\t\t<a href=\""+url+"\">"+url+"</a>\n" +
+                        "\t\t\t<p style=\"padding-top: 30px; color: #bbbbbb\">Copyright©CRYPTOGEEK</p>\n" +
+                        "\t\t</div>\n" +
+                        "\t</div>\n" +
+                        "</body>"
                 };
                 mail.send(mailOptions);
                 res.send({
