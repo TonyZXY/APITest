@@ -578,6 +578,21 @@ router.get('/searchFlashTime', (req, res) => {
     })
 });
 
+router.get('/getFlashWithLan',(req,res)=>{
+    const languageTag = req.query.languageTag;
+    const skip = req.query.skip;
+    const limit = req.query.limit;
+    let address = req.connection.remoteAddress;
+    NewsFlash.getFlashListWithLimit(languageTag,skip,limit,(err,flash)=>{
+        if (err) {
+            console.log(err);
+            logger.databaseError('apifile',address,err);
+        }
+        res.json(flash);
+        logger.newsFlashLog(address,"Get Flash with SKIP and LIMIT");
+    })
+});
+
 /* NEWSFLASH PART END */
 /*----------------------------------------------------------------------------*/
 

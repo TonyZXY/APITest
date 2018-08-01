@@ -80,3 +80,9 @@ module.exports.searchFlashTime = (from, to, callback) =>{
         }
     },callback).sort({_id:-1})
 };
+
+module.exports.getFlashListWithLimit = (leTag,skip,limit,callback)=>{
+    NewsFlash.find({
+        languageTag:leTag
+    },callback).sort({_id:-1}).skip(skip).limit(limit);
+};
