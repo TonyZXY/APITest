@@ -124,7 +124,7 @@ router.post('/login', (req, res) => {
                     if (user.verify === false) {
                         res.send({
                             success: false,
-                            code: 202,
+                            code: 888,
                             message: 'Please verify your email',
                             token: null
                         })
