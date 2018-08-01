@@ -583,7 +583,7 @@ router.get('/getFlashWithLan',(req,res)=>{
     const skip = req.query.skip;
     const limit = req.query.limit;
     let address = req.connection.remoteAddress;
-    NewsFlash.getFlashListWithLimit(languageTag,skip,limit,(err,flash)=>{
+    NewsFlash.getFlashListWithLimit(languageTag,parseInt(skip),parseInt(limit),(err,flash)=>{
         if (err) {
             console.log(err);
             logger.databaseError('apifile',address,err);
