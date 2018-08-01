@@ -14,7 +14,7 @@ const optionsToFile = {
         keyId: "PFYGPR25U8",
         teamId: "4SMWL7L89M"
     },
-    production: false
+    production: true
 };
 
 function sendIos(deviceId, message, badgeNumber) {
@@ -27,7 +27,8 @@ function sendIos(deviceId, message, badgeNumber) {
     apnprovider.send(notification, deviceToken).then(result => {
             console.log(result);
             result.failed.forEach(failure => {
-                if (failure.status === '410' || failure.status ==='400') {
+                console.log(failure.response);
+                if (failure.status === '410' ) {
                     db.deleteIOSDevice(deviceId,(err,res)=>{
                         if(err){
                             console.log(err);

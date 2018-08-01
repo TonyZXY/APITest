@@ -124,7 +124,7 @@ module.exports.findNewsByContent = function (leTag, callback, skip, limit) {
     News.find({
         languageTag: leTag
     }, callback).sort({
-        publishedTime:-1
+        publishedTime: -1
     }).skip(skip).limit(limit);
 };
 
@@ -159,6 +159,28 @@ module.exports.searchNewsTime = (from, to, callback) => {
         _id: -1
     })
 };
+
+
+module.exports.getNewsByTag = (contentTag, languageTag, skip, limit, callback) => {
+    //TODO: Add contentTag dic here to generate different kind of tags
+    let tags = ["bitcoin","btc"];
+    let opt = [];
+    tags.forEach(tag=>{
+        opt.push(new RegExp(tag,"i"))
+    });
+    let critica = {
+        contentTag:{
+            $in: opt,
+        },
+        languageTag:languageTag
+    };
+    console.log(critica);
+    News.find(critica,
+        callback
+    ).skip(skip).limit(limit);
+};
+
+
 /**
  *  This is the Area that for testing code
  */

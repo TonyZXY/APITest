@@ -205,6 +205,21 @@ router.get("/getNewsContentOnly", function (req, res) {
     }
 });
 
+router.get('/getNewsByTag',(req,res)=>{
+    let leTag = req.query.languageTag;
+    let limit = req.query.limit;
+    let skip = req.query.skip;
+    let conentTag = req.query.contentTag;
+    News.getNewsByTag(conentTag,leTag,limit,skip,(err,msg)=>{
+        if (err) {
+            console.log(err);
+            res.send(err);
+        }else {
+            res.json(msg);
+        }
+    })
+});
+
 router.get("/getTags", (req, res) => {
     const tags = [{
         tag: 'tech',

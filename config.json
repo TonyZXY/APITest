@@ -1,16 +1,13 @@
 {
-  "database": "mongodb://127.0.0.1:29020/newsappbkendprod01",
-  "options": {
-    "user": "newsappprod10",
-    "pass": "dmc#news8m9bgl"
-  },
+  "database": "mongodb://localhost/APITest",
+
 
 
   "postgre": {
-    "user": "postgreprod10",
+    "user": "tonyzheng",
     "host": "localhost",
-    "database": "newsapiproduction00",
-    "password": "nK2ZmUuTgq",
+    "database": "postgres",
+    "password": "bgltest",
     "port": 5432
   }
 }

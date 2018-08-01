@@ -126,7 +126,7 @@ async function runCoinDesk() {
         news.localeTag = '';
         News.findNews(news.title,news.source,(err,newsFromDB)=>{
             if (err){
-                console.log(err)
+                console.log(err);
                 logger.databaseError("RssFeeds","coindesk",err);
             } else {
                 if (!newsFromDB) {
@@ -173,7 +173,7 @@ async function runBtcManager() {
         news.localeTag = '';
         News.findNews(news.title,news.source,(err,newsFromDB)=>{
             if (err){
-                console.log(err)
+                console.log(err);
                 logger.databaseError("RssFeeds","btcmanager",err);
             } else {
                 if (!newsFromDB) {
