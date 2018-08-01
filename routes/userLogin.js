@@ -778,6 +778,48 @@ router.post('/reset/:verify/:key',(req,res)=>{
 
 
 
+router.get('/resendVerifyLink/:email', (req, res) => {
+    let email = req.params.email;
+    db.resendVerifyEmail(email, (err, msg) => {
+        if (err) {
+            databaseError(err, res);
+        } else {
+            let verify = msg.rows[0];
+            if (verify === undefined) {
+                res.send({
+                    message: 'No verify code found',
+                    success: false,
+                    code: 404,
+                    token: null
+                })
+            } else {
+                let generate = verify.token;
+                let key = rs.generate(40);
+                let payload = {
+                    token: generate
+                };
+                let verifyToken = jwt.sign(payload, key);
+                let url = "https://bglnewsbkend.tk/userLogin/verify/" + verifyToken + '/' + key;
+                let mailOptions = {
+                    from: 'do-not-replay@blockchainglobal.com',
+                    to: email,
+                    subject: 'Sending from node project to verify',
+                    text: url
+                };
+                mail.send(mailOptions);
+                res.send({
+                    message: 'Please verify your email.',
+                    code: 202,
+                    success: true,
+                    token: null
+                })
+            }
+        }
+    })
+});
+
+
+
 
 
 

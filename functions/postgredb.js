@@ -230,6 +230,13 @@ module.exports = {
         let param = [id,password,salt];
         let query = 'UPDATE users set password=$2,salt=$3 where user_id=$1 returning *;';
         return pool.query(query,param,callback);
+    },
+
+
+    resendVerifyEmail:(email,callback)=>{
+        let param = [email];
+        let query = 'Select * from verify_user where verify_user_id=(select user_id from users where email=$1);';
+        return pool.query(query,param,callback);
     }
 };
 
