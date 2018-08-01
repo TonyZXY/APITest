@@ -189,6 +189,47 @@ module.exports = {
             'from (users join iosdevices on users.user_id=iosdevices.device_user_id) \n' +
             'where users.flash = true;';
         return pool.query(query,param,callback);
+    },
+
+    addIntoVerifyTable:(user_id,verifyToken,callback)=>{
+        let param = [verifyToken,user_id];
+        let query = 'insert into verify_user (token, verify_user_id) VALUES ($1, $2) returning *;';
+        return pool.query(query,param,callback);
+    },
+
+
+    removeFromVerifyTable:(token,callback)=>{
+        let param = [token];
+        let query = 'delete from verify_user where token=$1 returning verify_user_id as user;';
+        return pool.query(query,param,callback);
+    },
+
+
+    selectFromVerifyTable:(token,callback)=>{
+        let param = [token];
+        let query = 'select * from verify_user where token=$1;';
+        return pool.query(query,param,callback);
+    },
+
+
+    verifyUser:(userID,callback)=>{
+        let param = [userID];
+        let query = 'update users set verify=true where user_id=$1 returning *';
+        return pool.query(query,param,callback);
+    },
+
+
+    removeVerifyByReset:(id,callback)=>{
+        let param = [id];
+        let query = 'DELETE FROM verify_user WHERE verify_user_id=$1 returning *;';
+        return pool.query(query,param,callback);
+    },
+
+
+    updatePassword:(id,password,salt,callback)=>{
+        let param = [id,password,salt];
+        let query = 'UPDATE users set password=$2,salt=$3 where user_id=$1 returning *;';
+        return pool.query(query,param,callback);
     }
 };
 
