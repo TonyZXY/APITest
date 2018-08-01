@@ -63,7 +63,7 @@ router.post('/register', (req, res) => {
                 };
                 let verifyToken = jwt.sign(payload, key);
                 db.addIntoVerifyTable(msg.rows[0].user_id, generate, (err, msg) => {
-                    let url = "http://localhost:3020/userLogin/verify/" + verifyToken + '/' + key;
+                    let url = "https://bglnewsbkend.tk//userLogin/verify/" + verifyToken + '/' + key;
                     let mailOptions = {
                         from: 'do-not-replay@blockchainglobal.com',
                         to: email,
@@ -596,7 +596,7 @@ router.get('/resetPassword/:email', (req, res) => {
                                         databaseError(err, res);
                                     } else {
 
-                                        let url = "http://localhost:3020/userLogin/reset/" + verifyToken + '/' + key;
+                                        let url = "https://bglnewsbkend.tk//userLogin/reset/" + verifyToken + '/' + key;
                                         let mailOptions = {
                                             from: 'do-not-replay@blockchainglobal.com',
                                             to: email,
@@ -617,7 +617,7 @@ router.get('/resetPassword/:email', (req, res) => {
                             }
                         });
                     } else {
-                        let url = "http://localhost:3020/userLogin/reset/" + verifyToken + '/' + key;
+                        let url = "https://bglnewsbkend.tk//userLogin/reset/" + verifyToken + '/' + key;
                         let mailOptions = {
                             from: 'do-not-replay@blockchainglobal.com',
                             to: email,
