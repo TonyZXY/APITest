@@ -32,7 +32,7 @@ router.post('/register', (req, res) => {
             code: 400,
             token: null,
         });
-        logger.userRegistrationLoginLog(address,"Invalid params");
+        logger.userRegistrationLoginLog(address, "Invalid params");
     } else {
         let passwordHash = hashPassword.generate(password, {
             algorithm: agl,
@@ -51,9 +51,9 @@ router.post('/register', (req, res) => {
                     token: null,
                     err: err.code
                 });
-                logger.databaseError("userLogin",address, err);
-                if(err.code === '23505'){
-                    logger.userRegistrationLoginLog(address,"May be already registed in: " + email);
+                logger.databaseError("userLogin", address, err);
+                if (err.code === '23505') {
+                    logger.userRegistrationLoginLog(address, "May be already registed in: " + email);
                 }
             } else {
                 let generate = rs.generate(90);
@@ -77,23 +77,29 @@ router.post('/register', (req, res) => {
                             "\t\t<div style=\"background-color: #ffffff; border-radius: 0px 0px 25px 25px; border: 1px solid #dddddd; padding: 25px\">\n" +
                             "\t\t\t<p>Thank you for creating a new account in <b style=\"color: #2d6095\">CRYPTOGEEK</b>.</p>\n" +
                             "\t\t\t<p>To complete your registration, we need you to verify your email address.</p>\n" +
-                            "\t\t\t<a href=\""+url+"\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Verify Email Address</button></a>\n" +
+                            "\t\t\t<a href=\"" + url + "\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Verify Email Address</button></a>\n" +
                             "\t\t\t<p>If you unable to click the button, please use the URL below instead.</p>\n" +
-                            "\t\t\t<a href=\""+url+"\">"+url+"</a>\n" +
+                            "\t\t\t<a href=\"" + url + "\">" + url + "</a>\n" +
                             "\t\t\t<p style=\"padding-top: 30px; color: #bbbbbb\">Copyright©CRYPTOGEEK</p>\n" +
                             "\t\t</div>\n" +
                             "\t</div>\n" +
                             "</body>"
                     };
-                    mail.send(mailOptions);
-                    res.send({
-                        message: 'Please verify your email.',
-                        code: 202,
-                        success: true,
-                        token: null
+                    mail.send(mailOptions, (err, result) => {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log("sent from register: " + email);
+                            res.send({
+                                message: 'Please verify your email.',
+                                code: 202,
+                                success: true,
+                                token: null
+                            })
+                        }
                     })
                 });
-                logger.userRegistrationLoginLog(address,"Registed Successfully in: " + email);
+                logger.userRegistrationLoginLog(address, "Registed Successfully in: " + email);
             }
         });
     }
@@ -265,19 +271,19 @@ router.post('/addInterest', verifyToken, (req, res) => {
     db.getTradingPair(interest.from, interest.to, interest.market, (err, msg) => {
         if (err) {
             databaseError(err, res);
-            logger.databaseError('userLogin',address, err);
+            logger.databaseError('userLogin', address, err);
         } else {
             if (msg.rows[0] === null || msg.rows[0] === undefined) {
                 db.addTradingPair(interest.from, interest.to, interest.market, (err, msg) => {
                     if (err) {
                         databaseError(err, res);
-                        logger.databaseError('userLogin',address, err);
+                        logger.databaseError('userLogin', address, err);
                     } else {
                         let coinID = msg.rows[0]._id;
                         db.addInterestWithOutTradingPair(userEmail, coinID, interest.price, interest.isGreater, (err, msg) => {
                             if (err) {
                                 databaseError(err, res);
-                                logger.databaseError('userLogin',address, err);
+                                logger.databaseError('userLogin', address, err);
                             } else {
                                 let coin = msg.rows[0];
                                 res.send({
@@ -296,7 +302,7 @@ router.post('/addInterest', verifyToken, (req, res) => {
                 db.addInterestWithTradingPair(userEmail, coinID, interest.price, interest.isGreater, (err, msg) => {
                     if (err) {
                         databaseError(err, res);
-                        logger.databaseError('userLogin',address, err);
+                        logger.databaseError('userLogin', address, err);
                     } else {
                         let coin = msg.rows[0];
                         res.send({
@@ -321,7 +327,7 @@ router.post('/editInterestStatus', verifyToken, (req, res) => {
     db.changeInterestStatus(interests, (err, msg) => {
         if (err) {
             databaseError(err, res);
-            logger.databaseError('userLogin',address, err);
+            logger.databaseError('userLogin', address, err);
         } else {
             let interests = msg.rows;
             res.send({
@@ -336,8 +342,6 @@ router.post('/editInterestStatus', verifyToken, (req, res) => {
 });
 
 
-
-
 router.post('/editInterest', verifyToken, (req, res) => {
     let userEmail = req.body.email;
     let interest = req.body.interest;
@@ -345,10 +349,10 @@ router.post('/editInterest', verifyToken, (req, res) => {
     db.getInterest(interest._id, (err, msg) => {
         if (err) {
             databaseError(err, res);
-            logger.databaseError('userLogin',address, err);
+            logger.databaseError('userLogin', address, err);
         } else {
             let interestFromDB = msg.rows[0];
-            if (interestFromDB === null || interestFromDB===undefined){
+            if (interestFromDB === null || interestFromDB === undefined) {
                 logger.userRegistrationLoginLog(address, "No interest found in Email: " + userEmail);
                 //TODO: to be add param err logger, this error means that the interest_id is not found or null.
                 res.send({
@@ -434,7 +438,6 @@ router.post('/editInterest', verifyToken, (req, res) => {
 });
 
 
-
 function databaseError(err, res) {
     console.log(err);
     res.send({
@@ -453,7 +456,7 @@ router.post('/deleteInterest', verifyToken, (req, res) => {
         if (err) {
             databaseError(err, res);
 
-            logger.databaseError('userLogin',address, err);
+            logger.databaseError('userLogin', address, err);
         } else {
             res.send({
                 success: true,
@@ -473,7 +476,7 @@ router.post('/getInterest', verifyToken, (req, res) => {
     db.getInterests(userEmail, (err, msg) => {
         if (err) {
             databaseError(err, res);
-            logger.databaseError('userLogin',address, err);
+            logger.databaseError('userLogin', address, err);
         } else {
             if (msg.rows[0] === undefined) {
                 res.send({
@@ -503,7 +506,7 @@ router.post('/getNotificationStatus', verifyToken, (req, res) => {
     db.getInterestStatus(userEmail, (err, msg) => {
         if (err) {
             databaseError(err);
-            logger.databaseError('userLogin',address, err);
+            logger.databaseError('userLogin', address, err);
         } else {
             res.send({
                 success: true,
@@ -515,7 +518,6 @@ router.post('/getNotificationStatus', verifyToken, (req, res) => {
         }
     })
 });
-
 
 
 router.get('/verify/:msg/:str', (req, res) => {
@@ -543,7 +545,7 @@ router.get('/verify/:msg/:str', (req, res) => {
                             } else {
                                 let userID = msg.rows[0].user;
                                 db.verifyUser(userID, (err, msgs) => {
-                                    if (err){
+                                    if (err) {
                                         res.sendFile(path.join(__dirname + '/error.html'));
                                     } else {
                                         res.sendFile(path.join(__dirname + '/successVerify.html'));
@@ -610,9 +612,9 @@ router.get('/resetPassword/:email', (req, res) => {
                                                 "\t\t\t<p>You have requested to reset your password in <b style=\"color: #2d6095\">CRYPTOGEEK</b>.</p>\n" +
                                                 "\t\t\t<p>Please click the button to reset your password.</p>\n" +
                                                 "\t\t\t<p>If you did not request to reset your password, please ignore this email.</p>\n" +
-                                                "\t\t\t<a href=\""+url+"\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Reset Password</button></a>\n" +
+                                                "\t\t\t<a href=\"" + url + "\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Reset Password</button></a>\n" +
                                                 "\t\t\t<p>If you unable to click the button, please use the URL below instead.</p>\n" +
-                                                "\t\t\t<a href=\""+url+"\">"+url+"</a>\n" +
+                                                "\t\t\t<a href=\"" + url + "\">" + url + "</a>\n" +
                                                 "\t\t\t<p style=\"padding-top: 30px; color: #bbbbbb\">Copyright©CRYPTOGEEK</p>\n" +
                                                 "\t\t</div>\n" +
                                                 "\t</div>\n" +
@@ -620,12 +622,17 @@ router.get('/resetPassword/:email', (req, res) => {
                                         };
                                         mail.send(mailOptions, (err, result) => {
                                             // res.send({result: result});
-                                            res.send({
-                                                message:'successfully send email to reset password, email invalid in 15 mins',
-                                                code: 202,
-                                                success: true,
-                                                token: null
-                                            })
+                                            if (err) {
+                                                console.log(err);
+                                            } else {
+                                                console.log("sent email from reset password: " + email);
+                                                res.send({
+                                                    message: 'successfully send email to reset password, email invalid in 15 mins',
+                                                    code: 202,
+                                                    success: true,
+                                                    token: null
+                                                })
+                                            }
                                         })
                                     }
                                 })
@@ -647,9 +654,9 @@ router.get('/resetPassword/:email', (req, res) => {
                                 "\t\t\t<p>You have requested to reset your password in <b style=\"color: #2d6095\">CRYPTOGEEK</b>.</p>\n" +
                                 "\t\t\t<p>Please click the button to reset your password.</p>\n" +
                                 "\t\t\t<p>If you did not request to reset your password, please ignore this email.</p>\n" +
-                                "\t\t\t<a href=\""+url+"\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Reset Password</button></a>\n" +
+                                "\t\t\t<a href=\"" + url + "\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Reset Password</button></a>\n" +
                                 "\t\t\t<p>If you unable to click the button, please use the URL below instead.</p>\n" +
-                                "\t\t\t<a href=\""+url+"\">"+url+"</a>\n" +
+                                "\t\t\t<a href=\"" + url + "\">" + url + "</a>\n" +
                                 "\t\t\t<p style=\"padding-top: 30px; color: #bbbbbb\">Copyright©CRYPTOGEEK</p>\n" +
                                 "\t\t</div>\n" +
                                 "\t</div>\n" +
@@ -657,12 +664,17 @@ router.get('/resetPassword/:email', (req, res) => {
                         };
                         mail.send(mailOptions, (err, result) => {
                             // res.send({result: result});
-                            res.send({
-                                message:'successfully send email to reset password, email invalid in 15 mins',
-                                code: 202,
-                                success: true,
-                                token: null
-                            })
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log("sent email from reset password: " + email);
+                                res.send({
+                                    message: 'successfully send email to reset password, email invalid in 15 mins',
+                                    code: 202,
+                                    success: true,
+                                    token: null
+                                })
+                            }
                         })
                     }
                 })
@@ -770,7 +782,6 @@ router.post('/reset/:verify/:key', (req, res) => {
 });
 
 
-
 router.get('/resendVerifyLink/:email', (req, res) => {
     let email = req.params.email;
     db.resendVerifyEmail(email, (err, msg) => {
@@ -806,32 +817,31 @@ router.get('/resendVerifyLink/:email', (req, res) => {
                         "\t\t<div style=\"background-color: #ffffff; border-radius: 0px 0px 25px 25px; border: 1px solid #dddddd; padding: 25px\">\n" +
                         "\t\t\t<p>Thank you for creating a new account in <b style=\"color: #2d6095\">CRYPTOGEEK</b>.</p>\n" +
                         "\t\t\t<p>To complete your registration, we need you to verify your email address.</p>\n" +
-                        "\t\t\t<a href=\""+url+"\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Verify Email Address</button></a>\n" +
+                        "\t\t\t<a href=\"" + url + "\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Verify Email Address</button></a>\n" +
                         "\t\t\t<p>If you unable to click the button, please use the URL below instead.</p>\n" +
-                        "\t\t\t<a href=\""+url+"\">"+url+"</a>\n" +
+                        "\t\t\t<a href=\"" + url + "\">" + url + "</a>\n" +
                         "\t\t\t<p style=\"padding-top: 30px; color: #bbbbbb\">Copyright©CRYPTOGEEK</p>\n" +
                         "\t\t</div>\n" +
                         "\t</div>\n" +
                         "</body>"
                 };
-                mail.send(mailOptions);
-                res.send({
-                    message: 'Please verify your email.',
-                    code: 202,
-                    success: true,
-                    token: null
-                })
+                mail.send(mailOptions, (err, result) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log("sent email from reset: " + email);
+                        res.send({
+                            message: 'Please verify your email.',
+                            code: 202,
+                            success: true,
+                            token: null
+                        })
+                    }
+                });
             }
         }
     })
 });
-
-
-
-
-
-
-
 
 
 module.exports = router;
