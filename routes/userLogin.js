@@ -3,12 +3,17 @@ const router = express.Router();
 const hashPassword = require('password-hash');
 const jwt = require('jsonwebtoken');
 const db = require('../functions/postgredb');
-const logger = require('../functions/logger')
+const logger = require('../functions/logger');
 const rs = require('randomstring');
 const mail = require('@sendgrid/mail');
 const path = require('path');
+const config = require('../config');
 
 mail.setApiKey('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');
+
+const nodeMail = require('nodemailer');
+const mailAccound = config.mail;
+let mailSent = nodeMail.createTransport(mailAccound);
 
 const agl = 'sha256';
 const inter = 20;
@@ -63,7 +68,7 @@ router.post('/register', (req, res) => {
                 };
                 let verifyToken = jwt.sign(payload, key);
                 db.addIntoVerifyTable(msg.rows[0].user_id, generate, (err, msg) => {
-                    let url = "https://bglnewsbkend.tk/userLogin/verify/" + verifyToken + '/' + key;
+                    let url = "https://cryptogeekapp.com/userLogin/verify/" + verifyToken + '/' + key;
                     let mailOptions = {
                         from: 'do-not-replay@cryptogeekapp.com',
                         to: email,
@@ -85,11 +90,25 @@ router.post('/register', (req, res) => {
                             "\t</div>\n" +
                             "</body>"
                     };
-                    mail.send(mailOptions, (err, result) => {
-                        if (err) {
+                    // mail.send(mailOptions, (err, result) => {
+                    //     if (err) {
+                    //         console.log(err);
+                    //     } else {
+                    //         console.log("sent from register: " + email);
+                    //         res.send({
+                    //             message: 'Please verify your email.',
+                    //             code: 888,
+                    //             success: true,
+                    //             token: null
+                    //         })
+                    //     }
+                    // });
+                    mailSent.sendMail(mailOptions,(err,info)=>{
+                        if (err){
                             console.log(err);
                         } else {
-                            console.log("sent from register: " + email);
+                            console.log("sent email to:" + email);
+                            // console.log(info);
                             res.send({
                                 message: 'Please verify your email.',
                                 code: 888,
@@ -97,7 +116,7 @@ router.post('/register', (req, res) => {
                                 token: null
                             })
                         }
-                    })
+                    });
                 });
                 logger.userRegistrationLoginLog(address, "Registed Successfully in: " + email);
             }
@@ -135,7 +154,7 @@ router.post('/login', (req, res) => {
                     res.send({
                         success: false,
                         message: 'Email or Password Error',
-                        code: 404,
+                        code: 666,
                         token: null
                     })
                 } else {
@@ -235,7 +254,7 @@ function verifyToken(req, res, next) {
                                 return res.send({
                                     success: false,
                                     message: 'Token Error',
-                                    code: 403,
+                                    code: 666,
                                     token: null
                                 })
                             } else {
@@ -574,7 +593,7 @@ router.get('/resetPassword/:email', (req, res) => {
             if (msg.rows[0] === undefined) {
                 res.send({
                     message: 'no user found',
-                    code: 404,
+                    code: 666,
                     success: false,
                     token: null
                 })
@@ -597,7 +616,7 @@ router.get('/resetPassword/:email', (req, res) => {
                                         databaseError(err, res);
                                     } else {
 
-                                        let url = "https://bglnewsbkend.tk/userLogin/reset/" + verifyToken + '/' + key;
+                                        let url = "https://cryptogeekapp.com/userLogin/reset/" + verifyToken + '/' + key;
                                         let mailOptions = {
                                             from: 'do-not-replay@cryptogeekapp.com',
                                             to: email,
@@ -620,12 +639,26 @@ router.get('/resetPassword/:email', (req, res) => {
                                                 "\t</div>\n" +
                                                 "</body>"
                                         };
-                                        mail.send(mailOptions, (err, result) => {
-                                            // res.send({result: result});
-                                            if (err) {
+                                        // mail.send(mailOptions, (err, result) => {
+                                        //     // res.send({result: result});
+                                        //     if (err) {
+                                        //         console.log(err);
+                                        //     } else {
+                                        //         console.log("sent email from reset password: " + email);
+                                        //         res.send({
+                                        //             message: 'successfully send email to reset password, email invalid in 15 mins',
+                                        //             code: 202,
+                                        //             success: true,
+                                        //             token: null
+                                        //         })
+                                        //     }
+                                        // });
+                                        mailSent.sendMail(mailOptions,(err,info)=>{
+                                            if (err){
                                                 console.log(err);
                                             } else {
-                                                console.log("sent email from reset password: " + email);
+                                                console.log("sent email to:" + email);
+                                                // console.log(info);
                                                 res.send({
                                                     message: 'successfully send email to reset password, email invalid in 15 mins',
                                                     code: 202,
@@ -633,13 +666,13 @@ router.get('/resetPassword/:email', (req, res) => {
                                                     token: null
                                                 })
                                             }
-                                        })
+                                        });
                                     }
                                 })
                             }
                         });
                     } else {
-                        let url = "https://bglnewsbkend.tk/userLogin/reset/" + verifyToken + '/' + key;
+                        let url = "https://cryptogeekapp.com/userLogin/reset/" + verifyToken + '/' + key;
                         let mailOptions = {
                             from: 'do-not-replay@cryptogeekapp.com',
                             to: email,
@@ -662,12 +695,26 @@ router.get('/resetPassword/:email', (req, res) => {
                                 "\t</div>\n" +
                                 "</body>"
                         };
-                        mail.send(mailOptions, (err, result) => {
-                            // res.send({result: result});
-                            if (err) {
+                        // mail.send(mailOptions, (err, result) => {
+                        //     // res.send({result: result});
+                        //     if (err) {
+                        //         console.log(err);
+                        //     } else {
+                        //         console.log("sent email from reset password: " + email);
+                        //         res.send({
+                        //             message: 'successfully send email to reset password, email invalid in 15 mins',
+                        //             code: 202,
+                        //             success: true,
+                        //             token: null
+                        //         })
+                        //     }
+                        // });
+                        mailSent.sendMail(mailOptions,(err,info)=>{
+                            if (err){
                                 console.log(err);
                             } else {
-                                console.log("sent email from reset password: " + email);
+                                console.log("sent email to:" + email);
+                                // console.log(info);
                                 res.send({
                                     message: 'successfully send email to reset password, email invalid in 15 mins',
                                     code: 202,
@@ -675,7 +722,7 @@ router.get('/resetPassword/:email', (req, res) => {
                                     token: null
                                 })
                             }
-                        })
+                        });
                     }
                 })
             }
@@ -803,7 +850,7 @@ router.get('/resendVerifyLink/:email', (req, res) => {
                     token: generate
                 };
                 let verifyToken = jwt.sign(payload, key);
-                let url = "https://bglnewsbkend.tk/userLogin/verify/" + verifyToken + '/' + key;
+                let url = "https://cryptogeekapp.com/userLogin/verify/" + verifyToken + '/' + key;
                 let mailOptions = {
                     from: 'do-not-replay@cryptogeekapp.com',
                     to: email,
@@ -825,11 +872,25 @@ router.get('/resendVerifyLink/:email', (req, res) => {
                         "\t</div>\n" +
                         "</body>"
                 };
-                mail.send(mailOptions, (err, result) => {
-                    if (err) {
+                // mail.send(mailOptions, (err, result) => {
+                //     if (err) {
+                //         console.log(err);
+                //     } else {
+                //         console.log("sent email from reset: " + email);
+                //         res.send({
+                //             message: 'Please verify your email.',
+                //             code: 202,
+                //             success: true,
+                //             token: null
+                //         })
+                //     }
+                // });
+                mailSent.sendMail(mailOptions,(err,info)=>{
+                    if (err){
                         console.log(err);
                     } else {
-                        console.log("sent email from reset: " + email);
+                        console.log("sent email to:" + email);
+                        // console.log(info);
                         res.send({
                             message: 'Please verify your email.',
                             code: 202,

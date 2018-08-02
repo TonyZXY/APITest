@@ -12,5 +12,14 @@
     "database": "newsapiproduction00",
     "password": "nK2ZmUuTgq",
     "port": 5432
+  },
+
+
+  "mail":{
+    "service": "gmail",
+    "auth":{
+      "user": "cryptogeekapp@gmail.com",
+      "pass": "Bgltest12345"
+    }
   }
 }
