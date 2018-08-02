@@ -14,7 +14,6 @@ const nodeMail = require('nodemailer');
 let mailSent = nodeMail.createTransport(mailAccound);
 
 
-// FIXME: start here
 const rs = require('randomstring');
 // const nodemailer = require('nodemailer');
 const mail = require('@sendgrid/mail');
@@ -30,7 +29,7 @@ const path = require('path');
 // });
 
 mail.setApiKey('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');
-//FIXME: end here
+
 
 
 const agl = 'sha256';
@@ -79,7 +78,6 @@ router.post('/register', (req, res) => {
                     logger.userRegistrationLoginLog(address, "May be already registed in: " + email);
                 }
             } else {
-                // FIXME: Start here
                 let generate = rs.generate(90);
                 let key = rs.generate(40);
                 let payload = {
@@ -131,7 +129,6 @@ router.post('/register', (req, res) => {
                     //     token: null
                     // })
                 });
-                // FIXME: end here
                 // res.send({
                 //     message:'Please verify your email.',
                 //     user: msg.rows[0],
@@ -193,7 +190,6 @@ router.post('/login', (req, res) => {
                         code: 404,
                         token: null
                     })
-                    //FIXME: start from here
                 } else {
                     let user = msg.rows[0];
                     if (user.verify === false) {
@@ -203,7 +199,6 @@ router.post('/login', (req, res) => {
                             message: 'Please verify your email',
                             token: null
                         })
-                        //FIXME: end here
                     } else {
                         let passwordToVerify = agl + '$' + user.salt + '$' + inter + '$' + user.password;
                         if (!hashPassword.verify(password, passwordToVerify)) {
@@ -560,6 +555,7 @@ router.post('/getInterest', verifyToken, (req, res) => {
 });
 
 
+
 router.post('/getNotificationStatus', verifyToken, (req, res) => {
     let userEmail = req.body.email;
     let address = req.connection.remoteAddress;
@@ -578,6 +574,9 @@ router.post('/getNotificationStatus', verifyToken, (req, res) => {
         }
     })
 });
+
+
+
 
 router.get('/verify/:msg/:str', (req, res) => {
     try {
@@ -622,6 +621,9 @@ router.get('/verify/:msg/:str', (req, res) => {
         res.sendFile(path.join(__dirname + '/invalid_token.html'));
     }
 });
+
+
+
 
 
 router.get('/resetPassword/:email', (req, res) => {
@@ -761,7 +763,9 @@ router.get('/resetPassword/:email', (req, res) => {
     });
 });
 
-//FIXME: start here
+
+
+
 router.get('/reset/:verify/:key', (req, res) => {
     let verifyToken = req.params.verify;
     let key = req.params.key;
@@ -803,7 +807,9 @@ router.get('/reset/:verify/:key', (req, res) => {
     }
 });
 
-// TODO: to finish the function here
+
+
+
 router.post('/reset/:verify/:key', (req, res) => {
     let verify = req.params.verify;
     let key = req.params.key;
@@ -832,7 +838,6 @@ router.post('/reset/:verify/:key', (req, res) => {
                                 res.sendFile(path.join(__dirname + '/notfound.html'));
                             } else {
                                 let id = msg.rows[0].user;
-                                // TODO: add successful page
                                 let passwordHash = hashPassword.generate(password, {
                                     algorithm: agl,
                                     saltLength: 15,
@@ -865,7 +870,9 @@ router.post('/reset/:verify/:key', (req, res) => {
         }
     }
 });
-//FIXME: end here
+
+
+
 
 router.get('/resendVerifyLink/:email', (req, res) => {
     let email = req.params.email;

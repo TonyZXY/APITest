@@ -171,6 +171,8 @@ module.exports = {
     //     let query = 'update users set flash=$2 where email=$1 returning user_id,flash;';
     //     return pool.query(query,param,callback);
     // },
+
+
     updateTradingPair:(id,price,callback)=>{
         let param = [price,id];
         let query = 'update coins set price=$1 where coin_id=$2 returning *;';
