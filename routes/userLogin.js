@@ -71,14 +71,14 @@ router.post('/register', (req, res) => {
                         html: "<body>\n" +
                             "\t<div style=\" width: 600px; margin-left: auto; margin-right: auto; text-align: center;\">\n" +
                             "\t\t<div style=\"background-color: #2d6095; padding: 25px; border-radius: 25px 25px 0px 0px;\">\n" +
-                            "\t\t\t<img src=\"https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/logo.png?alt=media&token=96644680-d278-4dad-ba4f-db8745eb8e27\" style=\"height: 100px;\" />\n" +
+                            "\t\t\t<img src=\"https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/logo.png?alt=media&token=96644680-d278-4dad-ba4f-db8745eb8e27\" alt=\"\" style=\"height: 100px;\">\n" +
                             "\t\t\t<h1 style=\"color: white;\">Email Address Verification</h1>\n" +
                             "\t\t</div>\n" +
                             "\t\t<div style=\"background-color: #ffffff; border-radius: 0px 0px 25px 25px; border: 1px solid #dddddd; padding: 25px\">\n" +
                             "\t\t\t<p>Thank you for creating a new account in <b style=\"color: #2d6095\">CRYPTOGEEK</b>.</p>\n" +
                             "\t\t\t<p>To complete your registration, we need you to verify your email address.</p>\n" +
                             "\t\t\t<a href=\""+url+"\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Verify Email Address</button></a>\n" +
-                            "\t\t\t<p>If you unable to click on the button, please use the URL below instead.</p>\n" +
+                            "\t\t\t<p>If you unable to click the button, please use the URL below instead.</p>\n" +
                             "\t\t\t<a href=\""+url+"\">"+url+"</a>\n" +
                             "\t\t\t<p style=\"padding-top: 30px; color: #bbbbbb\">Copyright©CRYPTOGEEK</p>\n" +
                             "\t\t</div>\n" +
@@ -125,7 +125,6 @@ router.post('/login', (req, res) => {
                 })
             } else {
                 if (msg.rows[0] === undefined) {
-                    console.log('no user found');
                     logger.userRegistrationLoginLog('userLogin', address, 'No user is found');
                     res.send({
                         success: false,
@@ -133,7 +132,6 @@ router.post('/login', (req, res) => {
                         code: 404,
                         token: null
                     })
-                    //FIXME: start from here
                 } else {
                     let user = msg.rows[0];
                     if (user.verify === false) {
@@ -143,7 +141,6 @@ router.post('/login', (req, res) => {
                             message: 'Please verify your email',
                             token: null
                         })
-                        //FIXME: end here
                     } else {
                         let passwordToVerify = agl + '$' + user.salt + '$' + inter + '$' + user.password;
                         if (!hashPassword.verify(password, passwordToVerify)) {
@@ -256,7 +253,6 @@ function verifyToken(req, res, next) {
         }
     } catch (err) {
         console.log(err);
-        //TODO Add err log and page here
         res.send(err);
     }
 }
@@ -353,7 +349,6 @@ router.post('/editInterest', verifyToken, (req, res) => {
         } else {
             let interestFromDB = msg.rows[0];
             if (interestFromDB === null || interestFromDB===undefined){
-                console.log("no interest found");
                 logger.userRegistrationLoginLog(address, "No interest found in Email: " + userEmail);
                 //TODO: to be add param err logger, this error means that the interest_id is not found or null.
                 res.send({
@@ -457,7 +452,7 @@ router.post('/deleteInterest', verifyToken, (req, res) => {
     db.deleteInterest(interests, (err, msg) => {
         if (err) {
             databaseError(err, res);
-            
+
             logger.databaseError('userLogin',address, err);
         } else {
             res.send({
@@ -529,38 +524,30 @@ router.get('/verify/:msg/:str', (req, res) => {
         let str = req.params.str;
         if (stringToken === null || stringToken === undefined ||
             str === null || str === undefined) {
-            //TODO: add error page
-            res.send({
-                message: 'error in passing params'
-            })
+            res.sendFile(path.join(__dirname + '/error.html'));
         } else {
             let payload = jwt.verify(stringToken, str);
             if (!payload) {
-                //TODO: add error page
-                res.send({
-                    message: 'error in verify payload'
-                })
+                res.sendFile(path.join(__dirname + '/error.html'));
             } else {
                 let token = payload.token;
                 if (token === null || token === undefined) {
-                    // TODO: add error page
-                    res.send({
-                        message: 'error in getting payload'
-                    })
+                    res.sendFile(path.join(__dirname + '/error.html'));
                 } else {
                     db.removeFromVerifyTable(token, (err, msg) => {
                         if (err) {
                             databaseError(err, res);
                         } else {
                             if (msg.rows[0] === undefined) {
-                                console.log("no user found");
-                                //TODO: add error page
-                                res.send({msg: 'no user found'});
+                                res.sendFile(path.join(__dirname + '/notfound.html'));
                             } else {
-                                // TODO: add successful page
                                 let userID = msg.rows[0].user;
                                 db.verifyUser(userID, (err, msgs) => {
-                                    res.send('successfully verified')
+                                    if (err){
+                                        res.sendFile(path.join(__dirname + '/error.html'));
+                                    } else {
+                                        res.sendFile(path.join(__dirname + '/successVerify.html'));
+                                    }
                                 });
                             }
                         }
@@ -570,10 +557,7 @@ router.get('/verify/:msg/:str', (req, res) => {
         }
     } catch (err) {
         console.log(err);
-        //TODO: add error page
-        res.send({
-            message: 'invalid token'
-        });
+        res.sendFile(path.join(__dirname + '/invalid_token.html'));
     }
 });
 
@@ -613,10 +597,26 @@ router.get('/resetPassword/:email', (req, res) => {
 
                                         let url = "https://bglnewsbkend.tk/userLogin/reset/" + verifyToken + '/' + key;
                                         let mailOptions = {
-                                            from: 'do-not-replay@blockchainglobal.com',
+                                            from: 'do-not-replay@cryptogeekapp.com',
                                             to: email,
-                                            subject: 'Sending from node project to reset',
-                                            text: url
+                                            subject: '[CryptoGeek] Reset Password',
+                                            html: "<body>\n" +
+                                                "\t<div style=\" width: 600px; margin-left: auto; margin-right: auto; text-align: center;\">\n" +
+                                                "\t\t<div style=\"background-color: #2d6095; padding: 25px; border-radius: 25px 25px 0px 0px;\">\n" +
+                                                "\t\t\t<img src=\"https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/logo.png?alt=media&token=96644680-d278-4dad-ba4f-db8745eb8e27\" alt=\"\" style=\"height: 100px;\">\n" +
+                                                "\t\t\t<h1 style=\"color: white;\">Password Reset Confirmation</h1>\n" +
+                                                "\t\t</div>\n" +
+                                                "\t\t<div style=\"background-color: #ffffff; border-radius: 0px 0px 25px 25px; border: 1px solid #dddddd; padding: 25px\">\n" +
+                                                "\t\t\t<p>You have requested to reset your password in <b style=\"color: #2d6095\">CRYPTOGEEK</b>.</p>\n" +
+                                                "\t\t\t<p>Please click the button to reset your password.</p>\n" +
+                                                "\t\t\t<p>If you did not request to reset your password, please ignore this email.</p>\n" +
+                                                "\t\t\t<a href=\""+url+"\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Reset Password</button></a>\n" +
+                                                "\t\t\t<p>If you unable to click the button, please use the URL below instead.</p>\n" +
+                                                "\t\t\t<a href=\""+url+"\">"+url+"</a>\n" +
+                                                "\t\t\t<p style=\"padding-top: 30px; color: #bbbbbb\">Copyright©CRYPTOGEEK</p>\n" +
+                                                "\t\t</div>\n" +
+                                                "\t</div>\n" +
+                                                "</body>"
                                         };
                                         mail.send(mailOptions, (err, result) => {
                                             // res.send({result: result});
@@ -634,10 +634,26 @@ router.get('/resetPassword/:email', (req, res) => {
                     } else {
                         let url = "https://bglnewsbkend.tk/userLogin/reset/" + verifyToken + '/' + key;
                         let mailOptions = {
-                            from: 'do-not-replay@blockchainglobal.com',
+                            from: 'do-not-replay@cryptogeekapp.com',
                             to: email,
-                            subject: 'Sending from node project to reset',
-                            text: url
+                            subject: '[CryptoGeek] Reset Password',
+                            html: "<body>\n" +
+                                "\t<div style=\" width: 600px; margin-left: auto; margin-right: auto; text-align: center;\">\n" +
+                                "\t\t<div style=\"background-color: #2d6095; padding: 25px; border-radius: 25px 25px 0px 0px;\">\n" +
+                                "\t\t\t<img src=\"https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/logo.png?alt=media&token=96644680-d278-4dad-ba4f-db8745eb8e27\" alt=\"\" style=\"height: 100px;\">\n" +
+                                "\t\t\t<h1 style=\"color: white;\">Password Reset Confirmation</h1>\n" +
+                                "\t\t</div>\n" +
+                                "\t\t<div style=\"background-color: #ffffff; border-radius: 0px 0px 25px 25px; border: 1px solid #dddddd; padding: 25px\">\n" +
+                                "\t\t\t<p>You have requested to reset your password in <b style=\"color: #2d6095\">CRYPTOGEEK</b>.</p>\n" +
+                                "\t\t\t<p>Please click the button to reset your password.</p>\n" +
+                                "\t\t\t<p>If you did not request to reset your password, please ignore this email.</p>\n" +
+                                "\t\t\t<a href=\""+url+"\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Reset Password</button></a>\n" +
+                                "\t\t\t<p>If you unable to click the button, please use the URL below instead.</p>\n" +
+                                "\t\t\t<a href=\""+url+"\">"+url+"</a>\n" +
+                                "\t\t\t<p style=\"padding-top: 30px; color: #bbbbbb\">Copyright©CRYPTOGEEK</p>\n" +
+                                "\t\t</div>\n" +
+                                "\t</div>\n" +
+                                "</body>"
                         };
                         mail.send(mailOptions, (err, result) => {
                             // res.send({result: result});
@@ -662,40 +678,24 @@ router.get('/reset/:verify/:key', (req, res) => {
     try {
         if (verifyToken === null || verifyToken === undefined ||
             key === null || key === undefined) {
-            //TODO: add error page
-            res.send({
-                message: 'error in passing params'
-            })
+            res.sendFile(path.join(__dirname + '/error.html'));
         } else {
             let payload = jwt.verify(verifyToken, key);
             if (!payload) {
-                //TODO: add error page
-                res.send({
-                    message: 'error in verify payload'
-                })
+                res.sendFile(path.join(__dirname + '/error.html'));
             } else {
                 let token = payload.token;
                 if (token === null || token === undefined) {
-                    // TODO: add error page
-                    res.send({
-                        message: 'error in getting payload'
-                    })
+                    res.sendFile(path.join(__dirname + '/error.html'));
                 } else {
                     db.selectFromVerifyTable(token, (err, msg) => {
                         if (err) {
                             databaseError(err, res);
                         } else {
                             if (msg.rows[0] === undefined) {
-                                console.log("no user found");
-                                //TODO: add error page
-                                res.send({msg: 'no user found'});
+                                res.sendFile(path.join(__dirname + '/notfound.html'));
                             } else {
-                                // TODO: add successful page
-                                res.sendFile(path.join(__dirname+'/resetPassword.html'));
-                                // res.send({
-                                //     message:'successfully verified and begin to reset',
-                                //     data:msg.rows[0]
-                                // });
+                                res.sendFile(path.join(__dirname + '/resetPassword.html'));
                             }
                         }
                     });
@@ -705,54 +705,39 @@ router.get('/reset/:verify/:key', (req, res) => {
     } catch (err) {
         console.log(err);
         if (err.name === 'TokenExpiredError') {
-            res.send('expired');
+            res.sendFile(path.join(__dirname + '/invalid_token.html'));
         } else {
-            res.send('Token error');
+            res.sendFile(path.join(__dirname + '/error.html'));
         }
     }
 });
 
 
-router.post('/reset/:verify/:key',(req,res)=>{
+router.post('/reset/:verify/:key', (req, res) => {
     let verify = req.params.verify;
     let key = req.params.key;
     let password = req.body.password;
-    console.log(verify);
-    console.log(key);
-    console.log(password);
     try {
         if (verify === null || verify === undefined ||
             key === null || key === undefined) {
-            //TODO: add error page
-            res.send({
-                message: 'error in passing params'
-            })
+            res.sendFile(path.join(__dirname + '/error.html'));
         } else {
             let payload = jwt.verify(verify, key);
             if (!payload) {
-                //TODO: add error page
-                res.send({
-                    message: 'error in verify payload'
-                })
+                res.sendFile(path.join(__dirname + '/error.html'));
             } else {
                 let token = payload.token;
                 if (token === null || token === undefined) {
-                    // TODO: add error page
-                    res.send({
-                        message: 'error in getting payload'
-                    })
+                    res.sendFile(path.join(__dirname + '/error.html'));
                 } else {
                     db.removeFromVerifyTable(token, (err, msg) => {
                         if (err) {
                             databaseError(err, res);
                         } else {
                             if (msg.rows[0] === undefined) {
-                                console.log("no user found");
-                                //TODO: add error page
-                                res.send({msg: 'no user found'});
+                                res.sendFile(path.join(__dirname + '/notfound.html'));
                             } else {
                                 let id = msg.rows[0].user;
-                                // TODO: add successful page
                                 let passwordHash = hashPassword.generate(password, {
                                     algorithm: agl,
                                     saltLength: 15,
@@ -761,18 +746,11 @@ router.post('/reset/:verify/:key',(req,res)=>{
                                 let st = passwordHash.split('$');
                                 let passwordToDB = st[3];
                                 let salt = st[1];
-                                console.log(id);
-                                db.updatePassword(id,passwordToDB,salt,(err,message)=>{
-                                    if(err){
-                                        databaseError(err,res);
-                                    }else {
-                                        console.log(message);
-                                        res.send({
-                                            success: true,
-                                            code:200,
-                                            message: "successfully reset password",
-                                            token: null,
-                                        })
+                                db.updatePassword(id, passwordToDB, salt, (err, message) => {
+                                    if (err) {
+                                        databaseError(err, res);
+                                    } else {
+                                        res.sendFile(path.join(__dirname + '/successReset.html'));
                                     }
                                 });
                             }
@@ -784,9 +762,9 @@ router.post('/reset/:verify/:key',(req,res)=>{
     } catch (err) {
         console.log(err);
         if (err.name === 'TokenExpiredError') {
-            res.send('expired');
+            res.sendFile(path.join(__dirname + '/invalid_token.html'));
         } else {
-            res.send('Token error');
+            res.sendFile(path.join(__dirname + '/error.html'));
         }
     }
 });
@@ -822,14 +800,14 @@ router.get('/resendVerifyLink/:email', (req, res) => {
                     html: "<body>\n" +
                         "\t<div style=\" width: 600px; margin-left: auto; margin-right: auto; text-align: center;\">\n" +
                         "\t\t<div style=\"background-color: #2d6095; padding: 25px; border-radius: 25px 25px 0px 0px;\">\n" +
-                        "\t\t\t<img src=\"https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/logo.png?alt=media&token=96644680-d278-4dad-ba4f-db8745eb8e27\" style=\"height: 100px;\" />\n" +
+                        "\t\t\t<img src=\"https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/logo.png?alt=media&token=96644680-d278-4dad-ba4f-db8745eb8e27\" alt=\"\" style=\"height: 100px;\">\n" +
                         "\t\t\t<h1 style=\"color: white;\">Email Address Verification</h1>\n" +
                         "\t\t</div>\n" +
                         "\t\t<div style=\"background-color: #ffffff; border-radius: 0px 0px 25px 25px; border: 1px solid #dddddd; padding: 25px\">\n" +
                         "\t\t\t<p>Thank you for creating a new account in <b style=\"color: #2d6095\">CRYPTOGEEK</b>.</p>\n" +
                         "\t\t\t<p>To complete your registration, we need you to verify your email address.</p>\n" +
                         "\t\t\t<a href=\""+url+"\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Verify Email Address</button></a>\n" +
-                        "\t\t\t<p>If you unable to click on the button, please use the URL below instead.</p>\n" +
+                        "\t\t\t<p>If you unable to click the button, please use the URL below instead.</p>\n" +
                         "\t\t\t<a href=\""+url+"\">"+url+"</a>\n" +
                         "\t\t\t<p style=\"padding-top: 30px; color: #bbbbbb\">Copyright©CRYPTOGEEK</p>\n" +
                         "\t\t</div>\n" +

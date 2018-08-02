@@ -164,8 +164,9 @@ module.exports.searchNewsTime = (from, to, callback) => {
  */
 
 module.exports.findNews = (title, source, callback) => {
+    let regex = new RegExp(["^", title, "$"].join(""), "i");
     News.findOne({
-        title: title,
+        title: regex,
         source: source
     }, callback);
 };
