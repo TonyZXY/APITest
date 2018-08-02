@@ -723,3 +723,14 @@ router.get('/searchGenuineTime', (req, res) => {
 
 /* GENUINE PART ENDS */
 /*----------------------------------------------------------------------------*/
+
+
+router.get('/testForNews',(req,res)=>{
+    let title = "SBI Invests $9 Million in Institutional-Grade Cryptocurrency Derivatives Platform";
+    let source = "Crypto Coins News";
+    let regex = new RegExp(["^", title, "$"].join(""), "i");
+    News.findNews(title,source,(err,msg)=>{
+        console.log(msg);
+        res.send(msg);
+    })
+});

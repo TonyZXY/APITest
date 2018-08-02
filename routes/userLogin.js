@@ -5,6 +5,14 @@ const jwt = require('jsonwebtoken');
 const db = require('../functions/postgredb');
 const logger = require('../functions/logger');
 
+const config = require('../config');
+
+const mailAccound = config.mail;
+
+
+const nodeMail = require('nodemailer');
+let mailSent = nodeMail.createTransport(mailAccound);
+
 
 // FIXME: start here
 const rs = require('randomstring');
@@ -101,13 +109,27 @@ router.post('/register', (req, res) => {
                             "\t</div>\n" +
                             "</body>"
                     };
-                    mail.send(mailOptions);
-                    res.send({
-                        message: 'Please verify your email.',
-                        code: 202,
-                        success: true,
-                        token: null
-                    })
+                    // mail.send(mailOptions);
+                    mailSent.sendMail(mailOptions,(err,info)=>{
+                        if (err){
+                            console.log(err);
+                        } else {
+                            console.log("sent email to:" + email);
+                            console.log(info);
+                            res.send({
+                                message: 'successfully send email to reset password, email invalid in 15 mins',
+                                code: 202,
+                                success: true,
+                                token: null
+                            })
+                        }
+                    });
+                    // res.send({
+                    //     message: 'Please verify your email.',
+                    //     code: 202,
+                    //     success: true,
+                    //     token: null
+                    // })
                 });
                 // FIXME: end here
                 // res.send({
@@ -658,15 +680,29 @@ router.get('/resetPassword/:email', (req, res) => {
                                                 "\t</div>\n" +
                                                 "</body>"
                                         };
-                                        mail.send(mailOptions, (err, result) => {
-                                            // res.send({result: result});
-                                            res.send({
-                                                message: 'successfully send email to reset password, email invalid in 15 mins',
-                                                code: 202,
-                                                success: true,
-                                                token: null
-                                            })
-                                        })
+                                        mailSent.sendMail(mailOptions,(err,info)=>{
+                                            if (err){
+                                                console.log(err);
+                                            } else {
+                                                console.log("sent email to:" + email);
+                                                console.log(info);
+                                                res.send({
+                                                    message: 'successfully send email to reset password, email invalid in 15 mins',
+                                                    code: 202,
+                                                    success: true,
+                                                    token: null
+                                                })
+                                            }
+                                        });
+                                        // mail.send(mailOptions, (err, result) => {
+                                        //     // res.send({result: result});
+                                        //     res.send({
+                                        //         message: 'successfully send email to reset password, email invalid in 15 mins',
+                                        //         code: 202,
+                                        //         success: true,
+                                        //         token: null
+                                        //     })
+                                        // })
                                     }
                                 })
                             }
@@ -695,15 +731,29 @@ router.get('/resetPassword/:email', (req, res) => {
                                 "\t</div>\n" +
                                 "</body>"
                         };
-                        mail.send(mailOptions, (err, result) => {
-                            // res.send({result: result});
-                            res.send({
-                                message: 'successfully send email to reset password, email invalid in 15 mins',
-                                code: 202,
-                                success: true,
-                                token: null
-                            })
-                        })
+                        mailSent.sendMail(mailOptions,(err,info)=>{
+                            if (err){
+                                console.log(err);
+                            } else {
+                                console.log("sent email to:" + email);
+                                console.log(info);
+                                res.send({
+                                    message: 'successfully send email to reset password, email invalid in 15 mins',
+                                    code: 202,
+                                    success: true,
+                                    token: null
+                                })
+                            }
+                        });
+                        // mail.send(mailOptions, (err, result) => {
+                        //     // res.send({result: result});
+                        //     res.send({
+                        //         message: 'successfully send email to reset password, email invalid in 15 mins',
+                        //         code: 202,
+                        //         success: true,
+                        //         token: null
+                        //     })
+                        // })
                     }
                 })
             }
@@ -860,13 +910,27 @@ router.get('/resendVerifyLink/:email', (req, res) => {
                         "\t</div>\n" +
                         "</body>"
                 };
-                mail.send(mailOptions);
-                res.send({
-                    message: 'Please verify your email.',
-                    code: 202,
-                    success: true,
-                    token: null
-                })
+                mailSent.sendMail(mailOptions,(err,info)=>{
+                    if (err){
+                        console.log(err);
+                    } else {
+                        console.log("sent email to:" + email);
+                        console.log(info);
+                        res.send({
+                            message: 'successfully send email to reset password, email invalid in 15 mins',
+                            code: 202,
+                            success: true,
+                            token: null
+                        })
+                    }
+                });
+                // mail.send(mailOptions);
+                // res.send({
+                //     message: 'Please verify your email.',
+                //     code: 202,
+                //     success: true,
+                //     token: null
+                // })
             }
         }
     })

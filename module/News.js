@@ -163,16 +163,16 @@ module.exports.searchNewsTime = (from, to, callback) => {
 
 module.exports.getNewsByTag = (contentTag, languageTag, skip, limit, callback) => {
     //TODO: Add contentTag dic here to generate different kind of tags
-    let tags = ["bitcoin","btc"];
+    let tags = ["bitcoin", "btc"];
     let opt = [];
-    tags.forEach(tag=>{
-        opt.push(new RegExp(tag,"i"))
+    tags.forEach(tag => {
+        opt.push(new RegExp(tag, "i"))
     });
     let critica = {
-        contentTag:{
+        contentTag: {
             $in: opt,
         },
-        languageTag:languageTag
+        languageTag: languageTag
     };
     console.log(critica);
     News.find(critica,
@@ -186,10 +186,10 @@ module.exports.getNewsByTag = (contentTag, languageTag, skip, limit, callback) =
  */
 
 module.exports.findNews = (title, source, callback) => {
-    let regex = new RegExp(["^", title, "$"].join(""), "i");
-    News.findOne({
-        title: regex,
-        source: source
+    News.find({
+        title: {
+            $regex: new RegExp(title,'i')
+        }
     }, callback);
 };
 
