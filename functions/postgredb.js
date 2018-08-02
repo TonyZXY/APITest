@@ -19,7 +19,7 @@ module.exports = {
 
     getUser: (email, callback) => {
         let param = [email];
-        let text = 'select user_id as _id,password,salt,email from users where email=$1';
+        let text = 'select user_id as _id,password,salt,email,verify from users where email=$1';
         return pool.query(text, param, callback)
     },
 

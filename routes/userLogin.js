@@ -92,7 +92,7 @@ router.post('/register', (req, res) => {
                             console.log("sent from register: " + email);
                             res.send({
                                 message: 'Please verify your email.',
-                                code: 202,
+                                code: 888,
                                 success: true,
                                 token: null
                             })
