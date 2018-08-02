@@ -108,15 +108,15 @@ router.post('/register', (req, res) => {
                             console.log(err);
                         } else {
                             console.log("sent email to:" + email);
-                            // console.log(info);
-                            res.send({
-                                message: 'Please verify your email.',
-                                code: 888,
-                                success: true,
-                                token: null
-                            })
+                            console.log(info);
                         }
                     });
+                    res.send({
+                        message: 'Please verify your email.',
+                        code: 888,
+                        success: true,
+                        token: null
+                    })
                 });
                 logger.userRegistrationLoginLog(address, "Registed Successfully in: " + email);
             }
@@ -658,15 +658,15 @@ router.get('/resetPassword/:email', (req, res) => {
                                                 console.log(err);
                                             } else {
                                                 console.log("sent email to:" + email);
-                                                // console.log(info);
-                                                res.send({
-                                                    message: 'successfully send email to reset password, email invalid in 15 mins',
-                                                    code: 202,
-                                                    success: true,
-                                                    token: null
-                                                })
+                                                console.log(info);
                                             }
                                         });
+                                        res.send({
+                                            message: 'successfully send email to reset password, email invalid in 15 mins',
+                                            code: 202,
+                                            success: true,
+                                            token: null
+                                        })
                                     }
                                 })
                             }
@@ -714,15 +714,15 @@ router.get('/resetPassword/:email', (req, res) => {
                                 console.log(err);
                             } else {
                                 console.log("sent email to:" + email);
-                                // console.log(info);
-                                res.send({
-                                    message: 'successfully send email to reset password, email invalid in 15 mins',
-                                    code: 202,
-                                    success: true,
-                                    token: null
-                                })
+                                console.log(info);
                             }
                         });
+                        res.send({
+                            message: 'successfully send email to reset password, email invalid in 15 mins',
+                            code: 202,
+                            success: true,
+                            token: null
+                        })
                     }
                 })
             }
@@ -890,15 +890,15 @@ router.get('/resendVerifyLink/:email', (req, res) => {
                         console.log(err);
                     } else {
                         console.log("sent email to:" + email);
-                        // console.log(info);
-                        res.send({
-                            message: 'Please verify your email.',
-                            code: 202,
-                            success: true,
-                            token: null
-                        })
+                        console.log(info);
                     }
                 });
+                res.send({
+                    message: 'Please verify your email.',
+                    code: 202,
+                    success: true,
+                    token: null
+                })
             }
         }
     })
