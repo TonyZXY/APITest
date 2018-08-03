@@ -9,14 +9,12 @@ const mail = require('@sendgrid/mail');
 const path = require('path');
 const config = require('../config');
 
-mail.setApiKey('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');
+mail.setApiKey(config.mailAPIKey);
 
 const nodeMail = require('nodemailer');
 const mailAccound = config.mail;
 let mailSent = nodeMail.createTransport(mailAccound);
 
-const agl = 'sha256';
-const inter = 20;
 
 
 router.post('/register', (req, res) => {
@@ -39,11 +37,7 @@ router.post('/register', (req, res) => {
         });
         logger.userRegistrationLoginLog(address, "Invalid params");
     } else {
-        let passwordHash = hashPassword.generate(password, {
-            algorithm: agl,
-            saltLength: 15,
-            iterations: inter
-        });
+        let passwordHash = hashPassword.generate(password, config.passwordOpt);
         let st = passwordHash.split('$');
         let passwordToDB = st[3];
         let salt = st[1];
@@ -166,7 +160,7 @@ router.post('/login', (req, res) => {
                             token: null
                         })
                     } else {
-                        let passwordToVerify = agl + '$' + user.salt + '$' + inter + '$' + user.password;
+                        let passwordToVerify = config.passwordOpt.algorithm + '$' + user.salt + '$' + config.passwordOpt.iterations + '$' + user.password;
                         if (!hashPassword.verify(password, passwordToVerify)) {
                             res.send({
                                 success: false,
@@ -805,11 +799,7 @@ router.post('/reset/:verify/:key', (req, res) => {
                                 res.sendFile(path.join(__dirname + '/notfound.html'));
                             } else {
                                 let id = msg.rows[0].user;
-                                let passwordHash = hashPassword.generate(password, {
-                                    algorithm: agl,
-                                    saltLength: 15,
-                                    iterations: inter
-                                });
+                                let passwordHash = hashPassword.generate(password, config.passwordOpt);
                                 let st = passwordHash.split('$');
                                 let passwordToDB = st[3];
                                 let salt = st[1];

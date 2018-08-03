@@ -21,5 +21,14 @@
       "user": "cryptogeekapp@gmail.com",
       "pass": "Bgltest12345"
     }
+  },
+
+  "mailAPIKey":"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",
+
+
+  "passwordOpt":{
+    "algorithm": "sha256",
+    "saltLength": 15,
+    "iterations": 20
   }
 }
