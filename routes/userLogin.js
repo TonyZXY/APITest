@@ -598,130 +598,141 @@ router.get('/resetPassword/:email', (req, res) => {
                 })
             } else {
                 let user = msg.rows[0];
-                let token = rs.generate(90);
-                let key = rs.generate(40);
-                let payload = {
-                    token: token
-                };
-                let verifyToken = jwt.sign(payload, key, {expiresIn: 15 * 60});
-                db.addIntoVerifyTable(user._id, token, (err, msg) => {
-                    if (err) {
-                        db.removeVerifyByReset(user._id, (err, msg) => {
-                            if (err) {
-                                databaseError(err, res);
-                            } else {
-                                db.addIntoVerifyTable(user._id, token, (err, msg) => {
-                                    if (err) {
-                                        databaseError(err, res);
-                                    } else {
+                if (user.verify === false){
+                    res.send({
+                        message: "please verify your email",
+                        success: false,
+                        code:888,
+                        token: null
+                    })
+                }else {
+                    let token = rs.generate(90);
+                    let key = rs.generate(40);
+                    let payload = {
+                        token: token
+                    };
+                    let verifyToken = jwt.sign(payload, key, {expiresIn: 15 * 60});
+                    db.addIntoVerifyTable(user._id, token, (err, msg) => {
+                        if (err) {
+                            db.removeVerifyByReset(user._id, (err, msg) => {
+                                if (err) {
+                                    databaseError(err, res);
+                                } else {
+                                    db.addIntoVerifyTable(user._id, token, (err, msg) => {
+                                        if (err) {
+                                            databaseError(err, res);
+                                        } else {
 
-                                        let url = "https://cryptogeekapp.com/userLogin/reset/" + verifyToken + '/' + key;
-                                        let mailOptions = {
-                                            from: 'do-not-replay@cryptogeekapp.com',
-                                            to: email,
-                                            subject: '[CryptoGeek] Reset Password',
-                                            html: "<body>\n" +
-                                                "\t<div style=\" width: 600px; margin-left: auto; margin-right: auto; text-align: center;\">\n" +
-                                                "\t\t<div style=\"background-color: #2d6095; padding: 25px; border-radius: 25px 25px 0px 0px;\">\n" +
-                                                "\t\t\t<img src=\"https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/logo.png?alt=media&token=96644680-d278-4dad-ba4f-db8745eb8e27\" alt=\"\" style=\"width: 150px;\">\n" +
-                                                "\t\t\t<h1 style=\"color: white;\">Password Reset Confirmation</h1>\n" +
-                                                "\t\t</div>\n" +
-                                                "\t\t<div style=\"background-color: #ffffff; border-radius: 0px 0px 25px 25px; border: 1px solid #dddddd; padding: 25px\">\n" +
-                                                "\t\t\t<p>You have requested to reset your password in <b style=\"color: #2d6095\">CRYPTOGEEK</b>.</p>\n" +
-                                                "\t\t\t<p>Please click the button to reset your password.</p>\n" +
-                                                "\t\t\t<p>If you did not request to reset your password, please ignore this email.</p>\n" +
-                                                "\t\t\t<a href=\"" + url + "\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Reset Password</button></a>\n" +
-                                                "\t\t\t<p>If you unable to click the button, please use the URL below instead.</p>\n" +
-                                                "\t\t\t<a href=\"" + url + "\">" + url + "</a>\n" +
-                                                "\t\t\t<p style=\"padding-top: 30px; color: #bbbbbb\">Copyright©CRYPTOGEEK</p>\n" +
-                                                "\t\t</div>\n" +
-                                                "\t</div>\n" +
-                                                "</body>"
-                                        };
-                                        // mail.send(mailOptions, (err, result) => {
-                                        //     // res.send({result: result});
-                                        //     if (err) {
-                                        //         console.log(err);
-                                        //     } else {
-                                        //         console.log("sent email from reset password: " + email);
-                                        //         res.send({
-                                        //             message: 'successfully send email to reset password, email invalid in 15 mins',
-                                        //             code: 202,
-                                        //             success: true,
-                                        //             token: null
-                                        //         })
-                                        //     }
-                                        // });
-                                        mailSent.sendMail(mailOptions,(err,info)=>{
-                                            if (err){
-                                                console.log(err);
-                                            } else {
-                                                console.log("sent email to:" + email);
-                                            }
-                                        });
-                                        res.send({
-                                            message: 'successfully send email to reset password, email invalid in 15 mins',
-                                            code: 202,
-                                            success: true,
-                                            token: null
-                                        })
-                                    }
-                                })
-                            }
-                        });
-                    } else {
-                        let url = "https://cryptogeekapp.com/userLogin/reset/" + verifyToken + '/' + key;
-                        let mailOptions = {
-                            from: 'do-not-replay@cryptogeekapp.com',
-                            to: email,
-                            subject: '[CryptoGeek] Reset Password',
-                            html: "<body>\n" +
-                                "\t<div style=\" width: 600px; margin-left: auto; margin-right: auto; text-align: center;\">\n" +
-                                "\t\t<div style=\"background-color: #2d6095; padding: 25px; border-radius: 25px 25px 0px 0px;\">\n" +
-                                "\t\t\t<img src=\"https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/logo.png?alt=media&token=96644680-d278-4dad-ba4f-db8745eb8e27\" alt=\"\" style=\"width: 150px;\">\n" +
-                                "\t\t\t<h1 style=\"color: white;\">Password Reset Confirmation</h1>\n" +
-                                "\t\t</div>\n" +
-                                "\t\t<div style=\"background-color: #ffffff; border-radius: 0px 0px 25px 25px; border: 1px solid #dddddd; padding: 25px\">\n" +
-                                "\t\t\t<p>You have requested to reset your password in <b style=\"color: #2d6095\">CRYPTOGEEK</b>.</p>\n" +
-                                "\t\t\t<p>Please click the button to reset your password.</p>\n" +
-                                "\t\t\t<p>If you did not request to reset your password, please ignore this email.</p>\n" +
-                                "\t\t\t<a href=\"" + url + "\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Reset Password</button></a>\n" +
-                                "\t\t\t<p>If you unable to click the button, please use the URL below instead.</p>\n" +
-                                "\t\t\t<a href=\"" + url + "\">" + url + "</a>\n" +
-                                "\t\t\t<p style=\"padding-top: 30px; color: #bbbbbb\">Copyright©CRYPTOGEEK</p>\n" +
-                                "\t\t</div>\n" +
-                                "\t</div>\n" +
-                                "</body>"
-                        };
-                        // mail.send(mailOptions, (err, result) => {
-                        //     // res.send({result: result});
-                        //     if (err) {
-                        //         console.log(err);
-                        //     } else {
-                        //         console.log("sent email from reset password: " + email);
-                        //         res.send({
-                        //             message: 'successfully send email to reset password, email invalid in 15 mins',
-                        //             code: 202,
-                        //             success: true,
-                        //             token: null
-                        //         })
-                        //     }
-                        // });
-                        mailSent.sendMail(mailOptions,(err,info)=>{
-                            if (err){
-                                console.log(err);
-                            } else {
-                                console.log("sent email to:" + email);
-                            }
-                        });
-                        res.send({
-                            message: 'successfully send email to reset password, email invalid in 15 mins',
-                            code: 202,
-                            success: true,
-                            token: null
-                        })
-                    }
-                })
+                                            let url = "https://cryptogeekapp.com/userLogin/reset/" + verifyToken + '/' + key;
+                                            let mailOptions = {
+                                                from: 'do-not-replay@cryptogeekapp.com',
+                                                to: email,
+                                                subject: '[CryptoGeek] Reset Password',
+                                                html: "<body>\n" +
+                                                    "\t<div style=\" width: 600px; margin-left: auto; margin-right: auto; text-align: center;\">\n" +
+                                                    "\t\t<div style=\"background-color: #2d6095; padding: 25px; border-radius: 25px 25px 0px 0px;\">\n" +
+                                                    "\t\t\t<img src=\"https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/logo.png?alt=media&token=96644680-d278-4dad-ba4f-db8745eb8e27\" alt=\"\" style=\"width: 150px;\">\n" +
+                                                    "\t\t\t<h1 style=\"color: white;\">Password Reset Confirmation</h1>\n" +
+                                                    "\t\t</div>\n" +
+                                                    "\t\t<div style=\"background-color: #ffffff; border-radius: 0px 0px 25px 25px; border: 1px solid #dddddd; padding: 25px\">\n" +
+                                                    "\t\t\t<p>You have requested to reset your password in <b style=\"color: #2d6095\">CRYPTOGEEK</b>.</p>\n" +
+                                                    "\t\t\t<p>Please click the button to reset your password.</p>\n" +
+                                                    "\t\t\t<p>This link will be expired in 15 mins</p>\n"+
+                                                    "\t\t\t<p>If you did not request to reset your password, please ignore this email.</p>\n" +
+                                                    "\t\t\t<a href=\"" + url + "\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Reset Password</button></a>\n" +
+                                                    "\t\t\t<p>If you unable to click the button, please use the URL below instead.</p>\n" +
+                                                    "\t\t\t<a href=\"" + url + "\">" + url + "</a>\n" +
+                                                    "\t\t\t<p style=\"padding-top: 30px; color: #bbbbbb\">Copyright©CRYPTOGEEK</p>\n" +
+                                                    "\t\t</div>\n" +
+                                                    "\t</div>\n" +
+                                                    "</body>"
+                                            };
+                                            // mail.send(mailOptions, (err, result) => {
+                                            //     // res.send({result: result});
+                                            //     if (err) {
+                                            //         console.log(err);
+                                            //     } else {
+                                            //         console.log("sent email from reset password: " + email);
+                                            //         res.send({
+                                            //             message: 'successfully send email to reset password, email invalid in 15 mins',
+                                            //             code: 202,
+                                            //             success: true,
+                                            //             token: null
+                                            //         })
+                                            //     }
+                                            // });
+                                            mailSent.sendMail(mailOptions,(err,info)=>{
+                                                if (err){
+                                                    console.log(err);
+                                                } else {
+                                                    console.log("sent email to:" + email);
+                                                }
+                                            });
+                                            res.send({
+                                                message: 'successfully send email to reset password, email invalid in 15 mins',
+                                                code: 202,
+                                                success: true,
+                                                token: null
+                                            })
+                                        }
+                                    })
+                                }
+                            });
+                        } else {
+                            let url = "https://cryptogeekapp.com/userLogin/reset/" + verifyToken + '/' + key;
+                            let mailOptions = {
+                                from: 'do-not-replay@cryptogeekapp.com',
+                                to: email,
+                                subject: '[CryptoGeek] Reset Password',
+                                html: "<body>\n" +
+                                    "\t<div style=\" width: 600px; margin-left: auto; margin-right: auto; text-align: center;\">\n" +
+                                    "\t\t<div style=\"background-color: #2d6095; padding: 25px; border-radius: 25px 25px 0px 0px;\">\n" +
+                                    "\t\t\t<img src=\"https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/logo.png?alt=media&token=96644680-d278-4dad-ba4f-db8745eb8e27\" alt=\"\" style=\"width: 150px;\">\n" +
+                                    "\t\t\t<h1 style=\"color: white;\">Password Reset Confirmation</h1>\n" +
+                                    "\t\t</div>\n" +
+                                    "\t\t<div style=\"background-color: #ffffff; border-radius: 0px 0px 25px 25px; border: 1px solid #dddddd; padding: 25px\">\n" +
+                                    "\t\t\t<p>You have requested to reset your password in <b style=\"color: #2d6095\">CRYPTOGEEK</b>.</p>\n" +
+                                    "\t\t\t<p>Please click the button to reset your password.</p>\n" +
+                                    "\t\t\t<p>This link will be expired in 15 mins</p>\n"+
+                                    "\t\t\t<p>If you did not request to reset your password, please ignore this email.</p>\n" +
+                                    "\t\t\t<a href=\"" + url + "\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Reset Password</button></a>\n" +
+                                    "\t\t\t<p>If you unable to click the button, please use the URL below instead.</p>\n" +
+                                    "\t\t\t<a href=\"" + url + "\">" + url + "</a>\n" +
+                                    "\t\t\t<p style=\"padding-top: 30px; color: #bbbbbb\">Copyright©CRYPTOGEEK</p>\n" +
+                                    "\t\t</div>\n" +
+                                    "\t</div>\n" +
+                                    "</body>"
+                            };
+                            // mail.send(mailOptions, (err, result) => {
+                            //     // res.send({result: result});
+                            //     if (err) {
+                            //         console.log(err);
+                            //     } else {
+                            //         console.log("sent email from reset password: " + email);
+                            //         res.send({
+                            //             message: 'successfully send email to reset password, email invalid in 15 mins',
+                            //             code: 202,
+                            //             success: true,
+                            //             token: null
+                            //         })
+                            //     }
+                            // });
+                            mailSent.sendMail(mailOptions,(err,info)=>{
+                                if (err){
+                                    console.log(err);
+                                } else {
+                                    console.log("sent email to:" + email);
+                                }
+                            });
+                            res.send({
+                                message: 'successfully send email to reset password, email invalid in 15 mins',
+                                code: 202,
+                                success: true,
+                                token: null
+                            })
+                        }
+                    })
+                }
             }
         }
     });
