@@ -88,7 +88,7 @@ async function getLoop() {
 }
 
 module.exports.run = ()=>{
-    getLoop();
+    getNews();
 };
 
 
