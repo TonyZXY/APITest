@@ -8,7 +8,6 @@ const avg = require('../dataServices/CoinGlobalAvg');
 
 function run() {
     NewsAPI.run();
-    CryptoCoinNews.run();
     RSSFeed.run();
     alg.run();
     avg.run();
