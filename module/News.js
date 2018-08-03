@@ -185,10 +185,15 @@ module.exports.getNewsByTag = (contentTag, languageTag, skip, limit, callback) =
  *  This is the Area that for testing code
  */
 
-module.exports.findNews = (title, source, callback) => {
-    News.find({
-        title: {
-            $regex: new RegExp(title,'i')
+module.exports.findNews = (title, source ,callback) => {
+    let reg = new RegExp(title.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'),'i');
+    let date = new Date();
+    date.setDate(date.getDate()-14);
+    News.findOne({
+        title: reg,
+        source:source,
+        publishedTime:{
+            $gte:date
         }
     }, callback);
 };

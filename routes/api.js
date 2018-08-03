@@ -726,11 +726,10 @@ router.get('/searchGenuineTime', (req, res) => {
 
 
 router.get('/testForNews',(req,res)=>{
-    let title = "SBI Invests $9 Million in Institutional-Grade Cryptocurrency Derivatives Platform";
+    let title = "Forrester Research: 90% of Blockchain Initiatives by US Firms Will Never Become Operational";
     let source = "Crypto Coins News";
-    let regex = new RegExp(["^", title, "$"].join(""), "i");
-    News.findNews(title,source,(err,msg)=>{
-        console.log(msg);
+    News.findNews(title, source,(err,msg)=>{
+        // console.log(msg);
         res.send(msg);
     })
 });

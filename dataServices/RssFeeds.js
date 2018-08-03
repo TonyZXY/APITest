@@ -1,4 +1,5 @@
-const logger = require('../functions/logger')
+const logger = require('../functions/logger');
+const CryptoCompare = require('./NewsFromCryptoCompare');
 let Parser = require('rss-parser');
 let parser = new Parser({
     customFields: {
@@ -268,7 +269,7 @@ async function runCointelegraph() {
         news.localeTag = '';
         News.findNews(news.title,news.source,(err,newsFromDB)=>{
             if (err){
-                console.log(err)
+                console.log(err);
                 logger.databaseError("RssFeeds","cointelegrap",err);
             } else {
                 if (!newsFromDB) {
@@ -319,6 +320,10 @@ async function runGet(){
     runEthnews();
     loginConsole("run ethnews.com");
     logger.APIUpdateLog("RssFeeds", "ethnews","ethnews Updated");
+    await delay(7000);
+    CryptoCompare.run();
+    loginConsole("run cryptocompare.com");
+    logger.APIUpdateLog("RssFeed","crypto","cryptocompare Updated");
     await delay(7000);
 }
 
