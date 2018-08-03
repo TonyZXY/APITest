@@ -108,7 +108,6 @@ router.post('/register', (req, res) => {
                             console.log(err);
                         } else {
                             console.log("sent email to:" + email);
-                            console.log(info);
                         }
                     });
                     res.send({
@@ -559,7 +558,7 @@ router.get('/verify/:msg/:str', (req, res) => {
                         if (err) {
                             databaseError(err, res);
                         } else {
-                            if (msg.rows[0] === undefined) {
+                            if (msg.rows[0] === undefined || msg.rows[0]===null) {
                                 res.sendFile(path.join(__dirname + '/notfound.html'));
                             } else {
                                 let userID = msg.rows[0].user;
@@ -590,7 +589,7 @@ router.get('/resetPassword/:email', (req, res) => {
             databaseError(err, res);
             //TODO: add log here
         } else {
-            if (msg.rows[0] === undefined) {
+            if (msg.rows[0] === undefined|| msg.rows[0]===null) {
                 res.send({
                     message: 'no user found',
                     code: 666,
@@ -658,7 +657,6 @@ router.get('/resetPassword/:email', (req, res) => {
                                                 console.log(err);
                                             } else {
                                                 console.log("sent email to:" + email);
-                                                console.log(info);
                                             }
                                         });
                                         res.send({
@@ -714,7 +712,6 @@ router.get('/resetPassword/:email', (req, res) => {
                                 console.log(err);
                             } else {
                                 console.log("sent email to:" + email);
-                                console.log(info);
                             }
                         });
                         res.send({
@@ -751,7 +748,7 @@ router.get('/reset/:verify/:key', (req, res) => {
                         if (err) {
                             databaseError(err, res);
                         } else {
-                            if (msg.rows[0] === undefined) {
+                            if (msg.rows[0] === undefined || msg.rows[0]===null) {
                                 res.sendFile(path.join(__dirname + '/notfound.html'));
                             } else {
                                 res.sendFile(path.join(__dirname + '/resetPassword.html'));
@@ -793,7 +790,7 @@ router.post('/reset/:verify/:key', (req, res) => {
                         if (err) {
                             databaseError(err, res);
                         } else {
-                            if (msg.rows[0] === undefined) {
+                            if (msg.rows[0] === undefined || msg.rows[0]===null) {
                                 res.sendFile(path.join(__dirname + '/notfound.html'));
                             } else {
                                 let id = msg.rows[0].user;
@@ -890,7 +887,6 @@ router.get('/resendVerifyLink/:email', (req, res) => {
                         console.log(err);
                     } else {
                         console.log("sent email to:" + email);
-                        console.log(info);
                     }
                 });
                 res.send({
