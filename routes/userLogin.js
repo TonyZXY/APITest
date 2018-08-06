@@ -799,8 +799,6 @@ router.post('/reset/:verify/:key', (req, res) => {
                                 res.sendFile(path.join(__dirname + '/notfound.html'));
                             } else {
                                 let id = msg.rows[0].user;
-                                console.log(req.body);
-                                console.log(password);
                                 let passwordHash = hashPassword.generate(password, config.passwordOpt);
                                 let st = passwordHash.split('$');
                                 let passwordToDB = st[3];
