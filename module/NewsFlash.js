@@ -7,6 +7,10 @@ const newsFlashSchrma = mongoose.Schema({
         type:String,
         require: true
     },
+    title:{
+        type:String,
+        require:true
+    },
     publishedTime:{
         type: Date,
         default: Date.now
@@ -49,6 +53,7 @@ module.exports.updateFlashNews = function (id,flash,option,callback) {
     let query = {_id:id};
     let update = {
         shortMassage:flash.shortMassage,
+        title:flash.title,
         languageTag:flash.languageTag,
         toSent: flash.toSent
     };
@@ -56,7 +61,21 @@ module.exports.updateFlashNews = function (id,flash,option,callback) {
 };
 
 module.exports.searchFlashNews = (languageTag,patten,callback,skip,limit)=>{
-    NewsFlash.find({shortMassage:{$regex:'.*'+patten+'.*',$options:'i'},languageTag:languageTag},callback).sort({_id:-1}).skip(skip).limit(limit);
+    NewsFlash.find({
+        $or:[{
+            shortMassage:
+                {
+                    $regex:'.*'+patten+'.*',
+                    $options:'i'
+                },
+            title:
+                {
+                    $regex: '.*'+ patten + '.*',
+                    $options: 'i'
+                }
+        }],
+        languageTag:languageTag
+    },callback).sort({_id:-1}).skip(skip).limit(limit);
 };
 
 //delete news
