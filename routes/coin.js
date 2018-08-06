@@ -69,6 +69,8 @@ router.get('/getCoinList',(req,res)=>{
         }
     })
 });
+
+
 router.delete('/deleteCoin/:_id',(req,res)=>{
     const id = req.params._id;
     let address = req.connection.remoteAddress;
@@ -80,6 +82,21 @@ router.delete('/deleteCoin/:_id',(req,res)=>{
         } else{
             res.json(coin);
             logger.coinLog(address,"Delete filtered Coin By id.");
+        }
+    })
+});
+
+
+router.get('/getCoin',(req,res)=>{
+    let symbol = req.params.coin;
+    let address = req.connection.remoteAddress;
+    Coin.getOneCoin(symbol,(err,coin)=>{
+        if (err){
+            console.log(err);
+            logger.databaseError('coin',address,err);
+        } else {
+            res.json(coin);
+            logger.coinLog(address,"Get Coin Data "+ symbol);
         }
     })
 });
