@@ -56,11 +56,7 @@ router.post('/register', (req, res) => {
         });
         logger.userRegistrationLoginLog(address, "Invalid params");
     } else {
-        let passwordHash = hashPassword.generate(password, {
-            algorithm: agl,
-            saltLength: 15,
-            iterations: inter
-        });
+        let passwordHash = hashPassword.generate(password, config.passwordOpt);
         let st = passwordHash.split('$');
         let passwordToDB = st[3];
         let salt = st[1];
@@ -814,9 +810,6 @@ router.post('/reset/:verify/:key', (req, res) => {
     let verify = req.params.verify;
     let key = req.params.key;
     let password = req.body.password;
-    console.log(verify);
-    console.log(key);
-    console.log(password);
     try {
         if (verify === null || verify === undefined ||
             key === null || key === undefined) {
@@ -838,11 +831,8 @@ router.post('/reset/:verify/:key', (req, res) => {
                                 res.sendFile(path.join(__dirname + '/notfound.html'));
                             } else {
                                 let id = msg.rows[0].user;
-                                let passwordHash = hashPassword.generate(password, {
-                                    algorithm: agl,
-                                    saltLength: 15,
-                                    iterations: inter
-                                });
+                                console.log(password);
+                                let passwordHash = hashPassword.generate(password, config.passwordOpt);
                                 let st = passwordHash.split('$');
                                 let passwordToDB = st[3];
                                 let salt = st[1];

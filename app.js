@@ -3,8 +3,10 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
+const cpmpression = require('compression');
 
 app.use(cors());
+app.use(cpmpression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname+'/dist/AdminWebpageV2'));
