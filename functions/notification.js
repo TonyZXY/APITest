@@ -27,7 +27,7 @@ function sendIos(deviceId, message, badgeNumber) {
     apnprovider.send(notification, deviceToken).then(result => {
             console.log(result);
             result.failed.forEach(failure => {
-                if (failure.status === '410' || failure.status ==='400') {
+                if (failure.status === '410') {
                     db.deleteIOSDevice(deviceId,(err,res)=>{
                         if(err){
                             console.log(err);
