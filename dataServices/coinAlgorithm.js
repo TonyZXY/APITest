@@ -2,24 +2,36 @@ const mongoose = require('mongoose');
 const request = require('request');
 const logger = require('../functions/logger');
 const config = require('../config');
+const Coin = require('../module/Coin');
 
 mongoose.connect(config.database,config.options);
 
 module.exports.getPriceFromAPI = function (coinFrom, coinTo, market, callback){
-    request({
-        method: 'GET',
-        uri: 'https://min-api.cryptocompare.com/data/generateAvg?fsym='+coinFrom+'&tsym='+coinTo+'&e='+market,
-        headers: {'Content-type':'application/json'}
-    }, function (error, response, body){
-          if(error){
-            console.log(error);
-            logger.APIConnectionError('coinAlgorithm','CryptoCompareAPI', error);
-            return callback(error);
-          }else{
-            let jsonObject = JSON.parse(body);
-              return callback(null,jsonObject.RAW.PRICE);
-          }
-    })
+    if (market === 'GLOBAL'){
+        Coin.getOneCoin(coinFrom,(err,coin)=>{
+            let data = coin.quotes;
+            data.forEach(element =>{
+                if (element.currency === coinTo){
+                    return callback(null,element.data.price)
+                }
+            })
+        })
+    }else {
+        request({
+            method: 'GET',
+            uri: 'https://min-api.cryptocompare.com/data/generateAvg?fsym='+coinFrom+'&tsym='+coinTo+'&e='+market,
+            headers: {'Content-type':'application/json'}
+        }, function (error, response, body){
+            if(error){
+                console.log(error);
+                logger.APIConnectionError('coinAlgorithm','CryptoCompareAPI', error);
+                return callback(error);
+            }else{
+                let jsonObject = JSON.parse(body);
+                return callback(null,jsonObject.RAW.PRICE);
+            }
+        })
+    }
 };
 
 

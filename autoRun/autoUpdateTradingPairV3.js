@@ -64,7 +64,7 @@ function updateTradingPair(tradingpair){
             console.log(err);
             logger.APIConnectionError("AutoUpdateTradingPair", "CyptoCompare", err);
         }else{
-            price = response;
+            let price = response;
             if(tradingpair.price === null || tradingpair.price === undefined || price !== tradingpair.price){
                 db.updateTradingPair(tradingpair.coin_id, price, (err,msg) =>{
                     if(err){

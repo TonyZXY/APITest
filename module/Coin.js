@@ -74,3 +74,10 @@ module.exports.deleteCoinByName = (name,callback)=>{
         name:name
     },callback)
 };
+
+
+module.exports.getOneCoin = (symbol,callback)=>{
+    Coin.findOne({
+        symbol: symbol
+    },callback)
+};
