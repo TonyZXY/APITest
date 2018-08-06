@@ -88,7 +88,7 @@ router.delete('/deleteCoin/:_id',(req,res)=>{
 
 
 router.get('/getCoin',(req,res)=>{
-    let symbol = req.params.coin;
+    let symbol = req.query.coin;
     let address = req.connection.remoteAddress;
     Coin.getOneCoin(symbol,(err,coin)=>{
         if (err){
