@@ -257,7 +257,7 @@ function verifyToken(req, res, next) {
                                     return res.send({
                                         success: false,
                                         message: "Token Error",
-                                        code: 403,
+                                        code: 800,
                                         token: false
                                     });
                                 } else {
