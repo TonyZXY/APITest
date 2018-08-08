@@ -28,7 +28,6 @@ router.get('/getAll',(req,res)=>{
 router.get('/getAllWithCurrency',(req,res)=>{
     let currency = req.query.currency;
     let address = req.connection.remoteAddress;
-    console.log(currency);
     Coin.getCoinListCurrency(currency,(err,msg)=>{
         if (err) {
             console.log(err);
