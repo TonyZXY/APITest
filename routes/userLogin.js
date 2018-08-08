@@ -12,8 +12,8 @@ const config = require('../config');
 mail.setApiKey(config.mailAPIKey);
 
 const nodeMail = require('nodemailer');
-const mailAccound = config.mail;
-let mailSent = nodeMail.createTransport(mailAccound);
+const mailAccount = config.mail;
+let mailSent = nodeMail.createTransport(mailAccount);
 
 
 
@@ -101,7 +101,6 @@ router.post('/register', (req, res) => {
                         if (err){
                             console.log(err);
                         } else {
-                            console.log("sent email to:" + email);
                             logger.userRegistrationLoginLog(address,"send verify email to: "+email+ " "+ info.response);
                         }
                     });
@@ -367,7 +366,6 @@ router.post('/editInterest', verifyToken, (req, res) => {
             let interestFromDB = msg.rows[0];
             if (interestFromDB === null || interestFromDB === undefined) {
                 logger.userRegistrationLoginLog(address, "No interest found in Email: " + userEmail);
-                //TODO: to be add param err logger, this error means that the interest_id is not found or null.
                 res.send({
                     success: false,
                     message: "No data found in database",
@@ -584,7 +582,6 @@ router.get('/resetPassword/:email', (req, res) => {
         if (err) {
             databaseError(err, res);
             logger.databaseError('userLogin', address, err);
-            //TODO: add log here
         } else {
             if (msg.rows[0] === undefined|| msg.rows[0]===null) {
                 logger.userRegistrationLoginLog(address, 'user not found in reset: ' + email);
@@ -666,7 +663,6 @@ router.get('/resetPassword/:email', (req, res) => {
                                                 if (err){
                                                     console.log(err);
                                                 } else {
-                                                    console.log("sent email to:" + email);
                                                     logger.userRegistrationLoginLog(address,"send reset email to: "+email+ " "+ info.response);
                                                 }
                                             });
@@ -723,7 +719,6 @@ router.get('/resetPassword/:email', (req, res) => {
                                 if (err){
                                     console.log(err);
                                 } else {
-                                    console.log("sent email to:" + email);
                                     logger.userRegistrationLoginLog(address,"send reset email to: "+email+ " "+ info.response);
                                 }
                             });
@@ -903,7 +898,6 @@ router.get('/resendVerifyLink/:email', (req, res) => {
                     if (err){
                         console.log(err);
                     } else {
-                        console.log("sent email to:" + email);
                         logger.userRegistrationLoginLog(address,"resend verify email to: "+email+ " "+ info.response);
                     }
                 });

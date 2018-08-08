@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const logger = require('../functions/logger')
+const logger = require('../functions/logger');
 
 
 module.exports = router;
@@ -196,7 +196,7 @@ router.post('/logoutIOSDevice',verifyToken,(req,res)=>{
             databaseError(err,res);
             logger.databaseError('deviceManage',address, err);
         } else {
-            logger.deviceManageLog(address, "Successfully Update notification status in Email: " + email);
+            logger.deviceManageLog(address, "Successfully Logout IOS device in Email: " + email);
             res.send({
                 success:true,
                 message: 'Successfully Update notification status',

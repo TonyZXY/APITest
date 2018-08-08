@@ -53,11 +53,11 @@ router.post("/", (req, res) => {
             logger.databaseError('login',address, err);
         } else {
             if (!user) {
-                res.send({login: false}).status(401)
+                res.send({login: false}).status(401);
                 logger.adminLoginLog(address,"No user found in User Name: " + username);
             } else {
                 if (!hashPassword.verify(password, user.password)) {
-                    res.send({login: false}).status(401)
+                    res.send({login: false}).status(401);
                     logger.adminLoginLog(address,"Password Not match in User Name: " + username);
                 } else {
                     let payload = {subject: user._id};

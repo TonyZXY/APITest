@@ -136,7 +136,6 @@ function getNews(content) {
             let dataJSON = JSON.parse(data);
             console.log('Total find results: ' + dataJSON.totalResults);
             logger.APIUpdateLog("NewsFromNewsAPI",httpUrl, "Total find results: "+ dataJSON.totalResults);
-            logger.APIUpdateLog()
             if (dataJSON.totalResults !== 0) {
                 let articles = dataJSON.articles;
                 console.log('Numbers of Data Got: '+articles.length);

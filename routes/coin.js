@@ -75,7 +75,6 @@ router.delete('/deleteCoin/:_id',(req,res)=>{
     const id = req.params._id;
     let address = req.connection.remoteAddress;
     CoinFilter.deleteCoinById(id, (err,coin)=>{
-        console.log(id);
         if(err){
             console.log(err);
             logger.databaseError('coin',address, err);
