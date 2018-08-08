@@ -73,7 +73,6 @@ module.exports = {
     addInterestWithTradingPair: (email, coinID, price, isGreater, callback) => {
         let param = [email, coinID, price, isGreater];
         let query = 'insert into interests (interest_user_id, interest_coin_id, price, isGreater) values ((SELECT user_id from users where email=$1),$2,$3,$4) returning *;';
-        console.log(query);
         return pool.query(query, param, callback)
     },
 
@@ -110,7 +109,6 @@ module.exports = {
         });
         query += str.substring(0, str.length - 1);
         query += ') returning interest_id as _id;';
-        console.log(query);
         return pool.query(query, [], callback);
     },
 
