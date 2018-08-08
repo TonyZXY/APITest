@@ -102,6 +102,7 @@ router.post('/register', (req, res) => {
                             console.log(err);
                         } else {
                             console.log("sent email to:" + email);
+                            logger.userRegistrationLoginLog(address,"send verify email to: "+email+ " "+ info.response);
                         }
                     });
                     res.send({
@@ -143,7 +144,7 @@ router.post('/login', (req, res) => {
                 })
             } else {
                 if (msg.rows[0] === undefined) {
-                    logger.userRegistrationLoginLog('userLogin', address, 'No user is found');
+                    logger.userRegistrationLoginLog('userLogin', address, 'No user is found: '+ userName);
                     res.send({
                         success: false,
                         message: 'Email or Password Error',
@@ -158,7 +159,8 @@ router.post('/login', (req, res) => {
                             code: 888,
                             message: 'Please verify your email',
                             token: null
-                        })
+                        });
+                        logger.userRegistrationLoginLog(address, 'not verify in user: ' + userName)
                     } else {
                         let passwordToVerify = config.passwordOpt.algorithm + '$' + user.salt + '$' + config.passwordOpt.iterations + '$' + user.password;
                         if (!hashPassword.verify(password, passwordToVerify)) {
@@ -205,11 +207,10 @@ function verifyToken(req, res, next) {
                 code: 403,
                 token: null
             })
-
         } else {
             let payload = jwt.verify(token.toString(), email.toString());
             if (!payload) {
-                logger.userRegistrationLoginLog(address, "No payload");
+                logger.userRegistrationLoginLog(address, "No payload: " + email);
                 return res.send({
                     success: false,
                     message: "Token Error",
@@ -578,12 +579,15 @@ router.get('/verify/:msg/:str', (req, res) => {
 
 router.get('/resetPassword/:email', (req, res) => {
     let email = req.params.email;
+    let address = req.connection.remoteAddress;
     db.getUser(email, (err, msg) => {
         if (err) {
             databaseError(err, res);
+            logger.databaseError('userLogin', address, err);
             //TODO: add log here
         } else {
             if (msg.rows[0] === undefined|| msg.rows[0]===null) {
+                logger.userRegistrationLoginLog(address, 'user not found in reset: ' + email);
                 res.send({
                     message: 'no user found',
                     code: 666,
@@ -593,6 +597,7 @@ router.get('/resetPassword/:email', (req, res) => {
             } else {
                 let user = msg.rows[0];
                 if (user.verify === false){
+                    logger.userRegistrationLoginLog(address, 'user not verify: '+ email);
                     res.send({
                         message: "please verify your email",
                         success: false,
@@ -611,10 +616,12 @@ router.get('/resetPassword/:email', (req, res) => {
                             db.removeVerifyByReset(user._id, (err, msg) => {
                                 if (err) {
                                     databaseError(err, res);
+                                    logger.databaseError('userLogin', address, err);
                                 } else {
                                     db.addIntoVerifyTable(user._id, token, (err, msg) => {
                                         if (err) {
                                             databaseError(err, res);
+                                            logger.databaseError('userLogin', address, err);
                                         } else {
 
                                             let url = "https://cryptogeekapp.com/userLogin/reset/" + verifyToken + '/' + key;
@@ -660,6 +667,7 @@ router.get('/resetPassword/:email', (req, res) => {
                                                     console.log(err);
                                                 } else {
                                                     console.log("sent email to:" + email);
+                                                    logger.userRegistrationLoginLog(address,"send reset email to: "+email+ " "+ info.response);
                                                 }
                                             });
                                             res.send({
@@ -716,6 +724,7 @@ router.get('/resetPassword/:email', (req, res) => {
                                     console.log(err);
                                 } else {
                                     console.log("sent email to:" + email);
+                                    logger.userRegistrationLoginLog(address,"send reset email to: "+email+ " "+ info.response);
                                 }
                             });
                             res.send({
@@ -775,6 +784,7 @@ router.get('/reset/:verify/:key', (req, res) => {
 
 
 router.post('/reset/:verify/:key', (req, res) => {
+    let address = req.connection.remoteAddress;
     let verify = req.params.verify;
     let key = req.params.key;
     let password = req.body.password;
@@ -794,6 +804,7 @@ router.post('/reset/:verify/:key', (req, res) => {
                     db.removeFromVerifyTable(token, (err, msg) => {
                         if (err) {
                             databaseError(err, res);
+                            logger.databaseError('userLogin', address, err);
                         } else {
                             if (msg.rows[0] === undefined || msg.rows[0]===null) {
                                 res.sendFile(path.join(__dirname + '/notfound.html'));
@@ -806,8 +817,10 @@ router.post('/reset/:verify/:key', (req, res) => {
                                 db.updatePassword(id, passwordToDB, salt, (err, message) => {
                                     if (err) {
                                         databaseError(err, res);
+                                        logger.databaseError('userLogin', address, err);
                                     } else {
                                         res.sendFile(path.join(__dirname + '/successReset.html'));
+                                        logger.userRegistrationLoginLog(address, 'successfully reset password: '+ message.rows[0].email)
                                     }
                                 });
                             }
@@ -829,9 +842,11 @@ router.post('/reset/:verify/:key', (req, res) => {
 
 router.get('/resendVerifyLink/:email', (req, res) => {
     let email = req.params.email;
+    let address = req.connection.remoteAddress;
     db.resendVerifyEmail(email, (err, msg) => {
         if (err) {
             databaseError(err, res);
+            logger.databaseError('userLogin', address, err);
         } else {
             let verify = msg.rows[0];
             if (verify === undefined) {
@@ -840,7 +855,8 @@ router.get('/resendVerifyLink/:email', (req, res) => {
                     success: false,
                     code: 404,
                     token: null
-                })
+                });
+                logger.userRegistrationLoginLog(address,'no verify code found: '+email);
             } else {
                 let generate = verify.token;
                 let key = rs.generate(40);
@@ -888,6 +904,7 @@ router.get('/resendVerifyLink/:email', (req, res) => {
                         console.log(err);
                     } else {
                         console.log("sent email to:" + email);
+                        logger.userRegistrationLoginLog(address,"resend verify email to: "+email+ " "+ info.response);
                     }
                 });
                 res.send({
