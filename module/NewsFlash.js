@@ -15,6 +15,9 @@ const newsFlashSchrma = mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    link:{
+        type:String
+    },
     languageTag:{
         type:String,
         require:true
@@ -55,6 +58,7 @@ module.exports.updateFlashNews = function (id,flash,option,callback) {
         shortMassage:flash.shortMassage,
         title:flash.title,
         languageTag:flash.languageTag,
+        link:flash.link,
         toSent: flash.toSent
     };
     NewsFlash.findOneAndUpdate(query,update,option,callback);

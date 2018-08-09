@@ -19,6 +19,8 @@ const userLogin = require('./routes/userLogin');
 const deviceManage = require('./routes/deviceManage');
 const coin = require('./routes/coin');
 const admin = require('./routes/admin');
+const policy = require('./routes/policy');
+
 
 app.use('/api', api);
 app.use('/userLogin', userLogin);
@@ -26,6 +28,8 @@ app.use('/login',login);
 app.use('/deviceManage',deviceManage);
 app.use('/coin',coin);
 app.use('/admin',admin);
+app.use('/policy',policy);
+
 
 //nothing
 app.get('/', function (req, res) {
