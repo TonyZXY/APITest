@@ -27,7 +27,7 @@ app.use('/userLogin', userLogin);
 app.use('/login',login);
 app.use('/deviceManage',deviceManage);
 app.use('/coin',coin);
-app.use('/admin',admin);
+app.use('/adminpage',admin);
 app.use('/policy',policy);
 
 
