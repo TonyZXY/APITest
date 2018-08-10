@@ -4,8 +4,14 @@ const path = require('path');
 
 
 
-router.get('/admin',(req,res)=>{
-    res.sendFile(path.join(__dirname+'/dist/AdminWebpageV2/index.html'))
+
+router.get('/admin/:id',(req,res)=>{
+    res.sendFile(path.join('/home/bglnewsdev00/NewsAPI/APITest/admin/admin/'+req.params.id))
+});
+
+
+router.get('/',(req,res)=>{
+    res.sendFile(path.join('/home/bglnewsdev00/NewsAPI/APITest/admin/admin/index.html'))
 });
 
 
