@@ -10,7 +10,6 @@ app.use(cors());
 app.use(cpmpression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(__dirname+'/admin/admin'));
 
 
 const api = require('./routes/api');
@@ -33,7 +32,7 @@ app.use('/policy',policy);
 
 //nothing
 app.get('/', function (req, res) {
-    res.send('helloworld');
+    res.sendFile(path.join(__dirname + '/routes/homepage.html'));
 });
 
 //start application
