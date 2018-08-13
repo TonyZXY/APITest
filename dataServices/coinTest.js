@@ -21,22 +21,68 @@
 //     })
 // });
 
-const mongoose = require('mongoose');
-const config = require('../config');
-const Coin = require('../module/Coin');
+// const mongoose = require('mongoose');
+// const config = require('../config');
+// const Coin = require('../module/Coin');
+//
+// mongoose.connect(config.database);
+//
+// let symbol = 'BTC';
+// let currency = 'AUD';
+//
+//
+// let coin = Coin.getOneCoin(symbol,(err,coin)=>{
+//     // console.log(coin.quotes);
+//     let data = coin.quotes;
+//     data.forEach(element=>{
+//         if (element.currency === currency){
+//             console.log(element.data.price);
+//         }
+//     })
+// });
 
-mongoose.connect(config.database);
+const https = require('https');
 
-let symbol = 'BTC';
-let currency = 'AUD';
-
-
-let coin = Coin.getOneCoin(symbol,(err,coin)=>{
-    // console.log(coin.quotes);
-    let data = coin.quotes;
-    data.forEach(element=>{
-        if (element.currency === currency){
-            console.log(element.data.price);
-        }
+function getCoinRequest() {
+    https.get('https://cryptogeekapp.com/coin/getCoin?coin=BTC',(res)=>{
+        let data = '';
+        res.on('error',(err)=>{
+            console.log(err);
+            getCoinRequest();
+        });
+        res.on('data',(d)=>{
+            data += d;
+        });
+        res.on('end',()=>{
+            let coin = JSON.parse(data);
+            console.log(coin);
+            getNewsRequest()
+        })
     })
-});
+}
+
+
+function getNewsRequest() {
+    https.get('https://cryptogeekapp.com/api/getNewsContentOnly?languageTag=EN&limit=1&skip=0',(res)=>{
+        let data = '';
+        res.on('error',(err)=>{
+            console.log(err);
+            getNewsRequest();
+        });
+        res.on('data',(d)=>{
+            data += d;
+        });
+        res.on('end',()=>{
+            let coin = JSON.parse(data);
+            console.log(coin);
+            getCoinRequest()
+        })
+    })
+}
+
+
+function run() {
+    getCoinRequest();
+}
+
+run();

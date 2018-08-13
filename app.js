@@ -9,7 +9,6 @@ app.use(cors());
 app.use(cpmpression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(__dirname+'/dist/AdminWebpageV2'));
 
 const api = require('./routes/api');
 const login = require('./routes/login');
@@ -17,6 +16,7 @@ const userLogin = require('./routes/userLogin');
 const deviceManage = require('./routes/deviceManage');
 const coin = require('./routes/coin');
 const admin = require('./routes/admin');
+const policy = require('./routes/policy');
 
 app.use('/api', api);
 app.use('/userLogin', userLogin);
@@ -24,11 +24,12 @@ app.use('/login',login);
 app.use('/deviceManage',deviceManage);
 app.use('/coin',coin);
 app.use('/admin',admin);
+app.use('/policy',policy);
 
 
 //nothing
 app.get('/', function (req, res) {
-    res.send('helloworld');
+    res.sendFile(path.join(__dirname + '/homepage.html'));
 });
 
 //start application
