@@ -164,7 +164,7 @@ module.exports.searchNewsTime = (from, to, callback) => {
  */
 
 module.exports.findNews = (url ,callback) => {
-    let reg = new RegExp(title.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'),'i');
+    // let reg = new RegExp(title.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'),'i');
     let date = new Date();
     date.setDate(date.getDate()-14);
     News.findOne({
