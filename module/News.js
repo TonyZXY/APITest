@@ -163,13 +163,12 @@ module.exports.searchNewsTime = (from, to, callback) => {
  *  This is the Area that for testing code
  */
 
-module.exports.findNews = (title, source ,callback) => {
+module.exports.findNews = (url ,callback) => {
     let reg = new RegExp(title.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'),'i');
     let date = new Date();
     date.setDate(date.getDate()-14);
     News.findOne({
-        title: reg,
-        source:source,
+        url:url,
         publishedTime:{
             $gte:date
         }

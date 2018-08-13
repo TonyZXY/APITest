@@ -33,7 +33,7 @@ async function runBitcoinist() {
         news.source = 'Bitcoinist';
         news.languageTag = 'EN';
         news.localeTag = '';
-        News.findNews(news.title,news.source,(err,newsFromDB)=>{
+        News.findNews(news.url,(err,newsFromDB)=>{
             if (err){
                 console.log(err);
                 logger.databaseError("RssFeeds","bitcoinist",err);
@@ -79,7 +79,7 @@ async function runBitcoinCom() {
         news.source = 'Bitcoin.com';
         news.languageTag = 'EN';
         news.localeTag = '';
-        News.findNews(news.title,news.source,(err,newsFromDB)=>{
+        News.findNews(news.url,(err,newsFromDB)=>{
             if (err){
                 console.log(err);
                 logger.databaseError("RssFeeds","bitcoin.com",err);
@@ -125,7 +125,7 @@ async function runCoinDesk() {
         news.source = 'Coindesk';
         news.languageTag = 'EN';
         news.localeTag = '';
-        News.findNews(news.title,news.source,(err,newsFromDB)=>{
+        News.findNews(news.url,(err,newsFromDB)=>{
             if (err){
                 console.log(err);
                 logger.databaseError("RssFeeds","coindesk",err);
@@ -172,7 +172,7 @@ async function runBtcManager() {
         news.source = 'BtcManager';
         news.languageTag = 'EN';
         news.localeTag = '';
-        News.findNews(news.title,news.source,(err,newsFromDB)=>{
+        News.findNews(news.url,(err,newsFromDB)=>{
             if (err){
                 console.log(err);
                 logger.databaseError("RssFeeds","btcmanager",err);
@@ -220,7 +220,7 @@ async function runEthnews() {
         news.source = 'ETHNews.com';
         news.languageTag = 'EN';
         news.localeTag = '';
-        News.findNews(news.title,news.source,(err,newsFromDB)=>{
+        News.findNews(news.url,(err,newsFromDB)=>{
             if (err){
                 console.log(err);
                 logger.databaseError("RssFeeds","ethnews",err);
@@ -267,7 +267,7 @@ async function runCointelegraph() {
         news.source = 'CoinTelegraph';
         news.languageTag = 'EN';
         news.localeTag = '';
-        News.findNews(news.title,news.source,(err,newsFromDB)=>{
+        News.findNews(news.url,(err,newsFromDB)=>{
             if (err){
                 console.log(err);
                 logger.databaseError("RssFeeds","cointelegrap",err);

@@ -164,7 +164,7 @@ function getNews(content) {
                     news.languageTag = content.languageTag;
                     news.localeTag = "";
                     content.from = element.publishedAt;
-                    News.findNews(news.title,news.source,(err,newsFromDB)=>{
+                    News.findNews(news.url,(err,newsFromDB)=>{
                         if (err){
                             console.log(err);
                             logger.databaseError('NewsFromNewsAPI', 'server', err)
