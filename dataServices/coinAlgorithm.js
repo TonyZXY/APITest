@@ -16,10 +16,12 @@ module.exports.getPriceFromAPI = function (coinFrom, coinTo, market, callback){
             } else {
                 if (coin === null || coin === undefined){
                     console.log("Coin not found: "+coinFrom);
+                    return callback("Coin not found: "+ coinFrom);
                 }else {
                     let data = coin.quotes;
                     if (data === null || data === undefined){
                         console.log("Coin not found: "+coinFrom);
+                        return callback("Coin not found: "+ coinFrom);
                     } else {
                         data.forEach(element =>{
                             if (element.currency === coinTo){
