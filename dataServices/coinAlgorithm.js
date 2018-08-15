@@ -42,7 +42,6 @@ module.exports.getPriceFromAPI = function (coinFrom, coinTo, market, callback){
                             if (err){
                                 return callback(err);
                             } else {
-                                
                             }
                         });
                         data.forEach(element =>{
