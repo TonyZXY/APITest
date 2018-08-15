@@ -3,6 +3,7 @@ const request = require('request');
 const logger = require('../functions/logger');
 const config = require('../config');
 const Coin = require('../module/Coin');
+const db = require('../functions/postgredb');
 
 mongoose.connect(config.database,config.options);
 
@@ -16,14 +17,34 @@ module.exports.getPriceFromAPI = function (coinFrom, coinTo, market, callback){
             } else {
                 if (coin === null || coin === undefined){
                     console.log("Coin not found: "+coinFrom);
-
+                    db.setCoinAvailable(coinFrom,false,(err,msg)=>{
+                        if (err){
+                            return callback(err)
+                        } else {
+                            logger.APIUpdateLog('CoinAlgorithm','server','Set Coin '+ coinFrom+ ' available to false');
+                        }
+                    });
                     return callback("Coin not found: "+ coinFrom);
                 }else {
                     let data = coin.quotes;
                     if (data === null || data === undefined){
                         console.log("Coin not found: "+coinFrom);
+                        db.setCoinAvailable(coinFrom,false,(err,msg)=>{
+                            if (err){
+                                return callback(err)
+                            } else {
+                                logger.APIUpdateLog('CoinAlgorithm','server','Set Coin '+ coinFrom+ ' available to false');
+                            }
+                        });
                         return callback("Coin not found: "+ coinFrom);
                     } else {
+                        db.setCoinAvailable(coinFrom,true,(err,msg)=>{
+                            if (err){
+                                return callback(err);
+                            } else {
+                                
+                            }
+                        });
                         data.forEach(element =>{
                             if (element.currency === coinTo){
                                 return callback(null,element.data.price)

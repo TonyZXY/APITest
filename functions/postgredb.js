@@ -235,6 +235,13 @@ module.exports = {
         let param = [email];
         let query = 'Select * from verify_user where verify_user_id=(select user_id from users where email=$1);';
         return pool.query(query,param,callback);
+    },
+
+
+    setCoinAvailable:(coinSymbol,available,callback)=>{
+        let param = [available,coinSymbol];
+        let query = 'UPDATE coins SET available=$1 WHERE "from"=$2;';
+        return pool.query(query,param,callback);
     }
 };
 
