@@ -16,6 +16,7 @@ module.exports.getPriceFromAPI = function (coinFrom, coinTo, market, callback){
             } else {
                 if (coin === null || coin === undefined){
                     console.log("Coin not found: "+coinFrom);
+
                     return callback("Coin not found: "+ coinFrom);
                 }else {
                     let data = coin.quotes;
@@ -78,8 +79,8 @@ function compareTwoAPI() {
                   }else{
                     let jsonObject = JSON.parse(body2);
                     jsonObject.data.forEach(coin2 => {
-                        for(var key in jsonObject1.Data){
-                           let coin1 = jsonObject1.Data[key];
+                        for(let key in jsonObject1.Data){
+                            let coin1 = jsonObject1.Data[key];
                             if(coin1.Symbol === coin2.symbol){
                                 // console.log(coin1.Symbol+"          "+coin2.symbol)
                                 // i++

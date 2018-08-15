@@ -504,6 +504,7 @@ router.post('/getInterest', verifyToken, (req, res) => {
                     code: 200,
                     data: msg.rows
                 });
+                console.log(msg.rows);
                 logger.userRegistrationLoginLog(address, "Found Interest in db in Email: " + userEmail);
             }
         }

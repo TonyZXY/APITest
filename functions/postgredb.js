@@ -34,7 +34,7 @@ module.exports = {
 
     getInterests: (email, callback) => {
         let param = [email];
-        let query = 'select coins."from",coins."to",interests.price,interests.interest_id as _id,interests.isGreater,interests.status,coins.market\n' +
+        let query = 'select coins."from",coins."to",coins.available,interests.price,interests.interest_id as _id,interests.isGreater,interests.status,coins.market\n' +
             'from ((interests join coins on interests.interest_coin_id = coins.coin_id)\n' +
             '  join users on interests.interest_user_id = users.user_id)\n' +
             'where users.email=$1;';
