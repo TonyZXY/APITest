@@ -251,7 +251,7 @@ async function runEthnews() {
 
 
 async function runCointelegraph() {
-    let feed = await parser.parseURL('https://cointelegraph.com/rss');
+    let feed = await parser.parseURL('https://cointelegraph.com/editors_pick_rss');
     let feeds = feed.items;
     let length = feeds.length;
     let num = 0;
