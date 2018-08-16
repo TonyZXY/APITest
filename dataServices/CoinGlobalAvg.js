@@ -105,20 +105,18 @@ async function startcall() {
         do {
             let array = [];
             loginConsole(" start Loop for " + time);
-            logger.APIUpdateLog("CoinGlobalAvg","MarketCap","MarketCap Gobal Average Start loop for " + time);
+            logger.APIUpdateLog("CoinGlobalAvg","MarketCap","MarketCap Gobal Average Start loop for " + time)
             time++;
-            forCurrency(array);
-            await delay(second * 68 * 1000);
-            Coin.addCoins(array, (err, msg) => {
-                if (err) {
-                    console.log(err);
-                } else {
-
-                }
+            forCurrency(array).then(()=>{
+                Coin.addCoins(array, (err, msg) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                    }
+                });
             });
-            loginConsole("Add to database");
-            logger.APIUpdateLog("CoinGlobalAvg","MarketCap","MarketCap Gobal Average Added to database");
-            await delay(300000 - second * 68000);
+            logger.APIUpdateLog("CoinGlobalAvg","MarketCap","MarketCap Gobal Average Added to database")
+            await delay(300000);
         } while (true);
     } catch (e) {
         console.log(e);
