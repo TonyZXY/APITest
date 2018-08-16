@@ -321,10 +321,10 @@ async function runGet(){
     loginConsole("run ethnews.com");
     logger.APIUpdateLog("RssFeeds", "ethnews","ethnews Updated");
     await delay(7000);
-    // CryptoCompare.run();
-    // loginConsole("run cryptocompare.com");
-    // logger.APIUpdateLog("RssFeed","crypto","cryptocompare Updated");
-    // await delay(7000);
+    CryptoCompare.run();
+    loginConsole("run cryptocompare.com");
+    logger.APIUpdateLog("RssFeed","crypto","cryptocompare Updated");
+    await delay(7000);
 }
 
 const delay = (amount) => {
