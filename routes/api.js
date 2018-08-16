@@ -723,13 +723,3 @@ router.get('/searchGenuineTime', (req, res) => {
 
 /* GENUINE PART ENDS */
 /*----------------------------------------------------------------------------*/
-
-
-router.get('/testForNews',(req,res)=>{
-    let title = "Forrester Research: 90% of Blockchain Initiatives by US Firms Will Never Become Operational";
-    let source = "Crypto Coins News";
-    News.findNews(title, source,(err,msg)=>{
-        // console.log(msg);
-        res.send(msg);
-    })
-});

@@ -8,7 +8,7 @@ const myFormat = printf(info => {
 
 const fs = require( 'fs' );
 const path = require('path');
-const logDir = '/Users/tonyzheng/Dropbox/WorkSpace/APITest/log';
+const logDir = '/home/tonyzheng/Dropbox/WorkSpace/APITest/log';
 
 if ( !fs.existsSync( logDir ) ) {
     // Create the directory if it does not exist

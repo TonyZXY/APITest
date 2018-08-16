@@ -54,36 +54,37 @@ router.delete('/delete',(req,res)=>{
         }
     })
 });
-const CoinFilter = require('../module/Coinfilter');
+// const CoinFilter = require('../module/Coinfilter');
+const coinfilter = require('../module/coinFliterNew');
 
 router.get('/getCoinList',(req,res)=>{
     let address = req.connection.remoteAddress;
-    CoinFilter.getCoinList((err,coinList)=>{
+    coinfilter.getCoinList((err,coinList)=>{
         if(err){
             console.log(err);
             logger.databaseError('coin',address, err);
         } else{
-            res.json(coinList);
+            res.json(coinList.data);
             logger.coinLog(address,"Get filtered Coin List");
 
         }
     })
 });
 
-router.delete('/deleteCoin/:_id',(req,res)=>{
-    const id = req.params._id;
-    let address = req.connection.remoteAddress;
-    CoinFilter.deleteCoinById(id, (err,coin)=>{
-        console.log(id);
-        if(err){
-            console.log(err);
-            logger.databaseError('coin',address, err);
-        } else{
-            res.json(coin);
-            logger.coinLog(address,"Delete filtered Coin By id.");
-        }
-    })
-});
+// router.delete('/deleteCoin/:_id',(req,res)=>{
+//     const id = req.params._id;
+//     let address = req.connection.remoteAddress;
+//     CoinFilter.deleteCoinById(id, (err,coin)=>{
+//         console.log(id);
+//         if(err){
+//             console.log(err);
+//             logger.databaseError('coin',address, err);
+//         } else{
+//             res.json(coin);
+//             logger.coinLog(address,"Delete filtered Coin By id.");
+//         }
+//     })
+// });
 
 router.get('/getCoin',(req,res)=>{
     let symbol = req.query.coin;

@@ -47,7 +47,7 @@ function getNews() {
                 news.languageTag = 'EN';
                 news.localeTag = "";
                 // console.log(news);
-                News.findNews(news.title, news.source, (err, newsFromDB) => {
+                News.findNews(news.url, (err, newsFromDB) => {
                     if (err) {
                         console.log(err);
                         logger.databaseError('NewsFromCryptoCompare', 'server', err)

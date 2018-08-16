@@ -33,7 +33,7 @@ async function runBitcoinist() {
         news.source = 'Bitcoinist';
         news.languageTag = 'EN';
         news.localeTag = '';
-        News.findNews(news.title,news.source,(err,newsFromDB)=>{
+        News.findNews(news.url,(err,newsFromDB)=>{
             if (err){
                 console.log(err)
                 logger.databaseError("RssFeeds","bitcoinist",err);
@@ -79,9 +79,9 @@ async function runBitcoinCom() {
         news.source = 'Bitcoin.com';
         news.languageTag = 'EN';
         news.localeTag = '';
-        News.findNews(news.title,news.source,(err,newsFromDB)=>{
+        News.findNews(news.url,(err,newsFromDB)=>{
             if (err){
-                console.log(err)
+                console.log(err);
                 logger.databaseError("RssFeeds","bitcoin.com",err);
             } else {
                 if (!newsFromDB) {
@@ -125,7 +125,7 @@ async function runCoinDesk() {
         news.source = 'Coindesk';
         news.languageTag = 'EN';
         news.localeTag = '';
-        News.findNews(news.title,news.source,(err,newsFromDB)=>{
+        News.findNews(news.url,(err,newsFromDB)=>{
             if (err){
                 console.log(err);
                 logger.databaseError("RssFeeds","coindesk",err);
@@ -172,7 +172,7 @@ async function runBtcManager() {
         news.source = 'BtcManager';
         news.languageTag = 'EN';
         news.localeTag = '';
-        News.findNews(news.title,news.source,(err,newsFromDB)=>{
+        News.findNews(news.url,(err,newsFromDB)=>{
             if (err){
                 console.log(err);
                 logger.databaseError("RssFeeds","btcmanager",err);
@@ -220,7 +220,7 @@ async function runEthnews() {
         news.source = 'ETHNews.com';
         news.languageTag = 'EN';
         news.localeTag = '';
-        News.findNews(news.title,news.source,(err,newsFromDB)=>{
+        News.findNews(news.url,(err,newsFromDB)=>{
             if (err){
                 console.log(err);
                 logger.databaseError("RssFeeds","ethnews",err);
@@ -250,50 +250,50 @@ async function runEthnews() {
 
 
 
-async function runCointelegraph() {
-    let feed = await parser.parseURL('https://cointelegraph.com/rss');
-    let feeds = feed.items;
-    let length = feeds.length;
-    let num = 0;
-    feeds.forEach(element => {
-        let news = new News();
-        news.title = element.title;
-        news.author = element.creator;
-        news.newsDescription = element.contentSnippet;
-        news.imageURL = element.image.$.url;
-        news.url = element.link;
-        news.contentTag = element.categories;
-        news.publishedTime = element.isoDate;
-        news.source = 'CoinTelegraph';
-        news.languageTag = 'EN';
-        news.localeTag = '';
-        News.findNews(news.title,news.source,(err,newsFromDB)=>{
-            if (err){
-                console.log(err);
-                logger.databaseError("RssFeeds","cointelegrap",err);
-            } else {
-                if (!newsFromDB) {
-                    News.addNews(news,(err,msg)=>{
-                        if (err) {
-                            console.log(err);
-                            logger.databaseError("RssFeeds","cointelegrap",err);
-                        }else {
-                            num += 1;
-                            if (num === length){
-                                loginConsole("update cointelegraph.com");
-                            }
-                        }
-                    })
-                } else {
-                    num += 1;
-                    if (num === length){
-                        loginConsole("update cointelegraph.com");
-                    }
-                }
-            }
-        });
-    });
-}
+// async function runCointelegraph() {
+//     let feed = await parser.parseURL('https://cointelegraph.com/rss');
+//     let feeds = feed.items;
+//     let length = feeds.length;
+//     let num = 0;
+//     feeds.forEach(element => {
+//         let news = new News();
+//         news.title = element.title;
+//         news.author = element.creator;
+//         news.newsDescription = element.contentSnippet;
+//         news.imageURL = element.image.$.url;
+//         news.url = element.link;
+//         news.contentTag = element.categories;
+//         news.publishedTime = element.isoDate;
+//         news.source = 'CoinTelegraph';
+//         news.languageTag = 'EN';
+//         news.localeTag = '';
+//         News.findNews(news.url,(err,newsFromDB)=>{
+//             if (err){
+//                 console.log(err);
+//                 logger.databaseError("RssFeeds","cointelegrap",err);
+//             } else {
+//                 if (!newsFromDB) {
+//                     News.addNews(news,(err,msg)=>{
+//                         if (err) {
+//                             console.log(err);
+//                             logger.databaseError("RssFeeds","cointelegrap",err);
+//                         }else {
+//                             num += 1;
+//                             if (num === length){
+//                                 loginConsole("update cointelegraph.com");
+//                             }
+//                         }
+//                     })
+//                 } else {
+//                     num += 1;
+//                     if (num === length){
+//                         loginConsole("update cointelegraph.com");
+//                     }
+//                 }
+//             }
+//         });
+//     });
+// }
 
 
 async function runGet(){
@@ -313,10 +313,10 @@ async function runGet(){
     loginConsole("run coindesk.com");
     logger.APIUpdateLog("RssFeeds", "coindesk","coindesk Updated");
     await delay(7000);
-    runCointelegraph();
-    loginConsole("run cointelegraph.com");
-    logger.APIUpdateLog("RssFeeds", "cointelegraph","cointelegraph Updated");
-    await delay(7000);
+    // runCointelegraph();
+    // loginConsole("run cointelegraph.com");
+    // logger.APIUpdateLog("RssFeeds", "cointelegraph","cointelegraph Updated");
+    // await delay(7000);
     runEthnews();
     loginConsole("run ethnews.com");
     logger.APIUpdateLog("RssFeeds", "ethnews","ethnews Updated");
