@@ -112,7 +112,7 @@ function startcall() {
             }
         });
         logger.APIUpdateLog("CoinGlobalAvg", "MarketCap", "MarketCap Gobal Average Added to database");
-        delay(10*1000).then(()=>{
+        delay(50*1000).then(()=>{
             startcall();
         })
     });
