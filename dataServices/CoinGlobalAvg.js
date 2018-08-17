@@ -93,8 +93,7 @@ async function forLoop(array, currency) {
 
 async function forCurrency(array) {
     for (let i = 0; i < currencys.length; i++) {
-        forLoop(array, currencys[i]);
-        await delay(second * 17 * 1000);
+        await forLoop(array, currencys[i]);
     }
 }
 
@@ -105,7 +104,7 @@ async function startcall() {
         do {
             let array = [];
             loginConsole(" start Loop for " + time);
-            logger.APIUpdateLog("CoinGlobalAvg","MarketCap","MarketCap Gobal Average Start loop for " + time)
+            logger.APIUpdateLog("CoinGlobalAvg","MarketCap","MarketCap Gobal Average Start loop for " + time);
             time++;
             forCurrency(array).then(()=>{
                 Coin.addCoins(array, (err, msg) => {
@@ -115,7 +114,7 @@ async function startcall() {
                     }
                 });
             });
-            logger.APIUpdateLog("CoinGlobalAvg","MarketCap","MarketCap Gobal Average Added to database")
+            logger.APIUpdateLog("CoinGlobalAvg","MarketCap","MarketCap Gobal Average Added to database");
             await delay(300000);
         } while (true);
     } catch (e) {

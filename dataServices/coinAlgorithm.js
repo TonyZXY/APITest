@@ -76,7 +76,7 @@ const CoinFilter = require('../module/Coinfilter');
 const coinfliter = require('../module/coinFliterNew');
 
 
-function compareTwoAPI() {
+async function compareTwoAPI() {
     let array = [];
     request({
         method: 'GET',
@@ -136,7 +136,6 @@ function compareTwoAPI() {
             })
         }
     });
-    logger.APIUpdateLog("CoinAlgorithm", "server", "Compare and filter on Cyrpto Compare and Market Cap")
 }
 
 
@@ -146,13 +145,16 @@ const delay = (amount) => {
     });
 };
 
-async function start() {
+function start() {
     let time = 1;
-    do {
-        loginConsole(time);
-        compareTwoAPI();
-        await delay(24 * 3600 * 1000)
-    } while (true)
+    loginConsole(time);
+    compareTwoAPI().then(()=>{
+        logger.APIUpdateLog("CoinAlgorithm", "server", "Compare and filter on Cyrpto Compare and Market Cap");
+        delay(24*3600*1000).then(()=>{
+            time++;
+            start();
+        })
+    })
 }
 
 module.exports.run = () => {
