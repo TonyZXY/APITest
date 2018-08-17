@@ -84,7 +84,7 @@ async function forLoop(array, currency) {
                 })
             })
         }).on('error', (err) => {
-            logger.APIConnectionError("CoinGlobalAvg","MarketCap",err);
+            logger.APIConnectionError("CoinGlobalAvg", "MarketCap", err);
             throw new Error(err);
         });
         await delay(second * 1000);
@@ -97,29 +97,25 @@ async function forCurrency(array) {
     }
 }
 
+let time = 1;
 
-async function startcall() {
-    let time = 1;
-    try {
-        do {
-            let array = [];
-            loginConsole(" start Loop for " + time);
-            logger.APIUpdateLog("CoinGlobalAvg","MarketCap","MarketCap Gobal Average Start loop for " + time);
-            time++;
-            forCurrency(array).then(()=>{
-                Coin.addCoins(array, (err, msg) => {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                    }
-                });
-            });
-            logger.APIUpdateLog("CoinGlobalAvg","MarketCap","MarketCap Gobal Average Added to database");
-            await delay(300000);
-        } while (true);
-    } catch (e) {
-        console.log(e);
-    }
+function startcall() {
+    let array = [];
+    loginConsole(" start Loop for " + time);
+    logger.APIUpdateLog("CoinGlobalAvg", "MarketCap", "MarketCap Gobal Average Start loop for " + time);
+    time++;
+    forCurrency(array).then(() => {
+        Coin.addCoins(array, (err, msg) => {
+            if (err) {
+                console.log(err);
+            } else {
+            }
+        });
+        logger.APIUpdateLog("CoinGlobalAvg", "MarketCap", "MarketCap Gobal Average Added to database");
+        delay(10*1000).then(()=>{
+            startcall();
+        })
+    });
 }
 
 
