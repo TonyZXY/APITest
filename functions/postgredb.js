@@ -271,7 +271,7 @@ module.exports = {
 
     deleteTransaction: (coinID,callback)=>{
         let param = [coinID];
-        let query = 'delete from transactions where transaction_id=$1';
+        let query = 'delete from transactions where transaction_id=$1 returning *';
         return pool.query(query,param,callback);
     }
 };
