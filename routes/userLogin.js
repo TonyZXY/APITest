@@ -944,6 +944,7 @@ router.post('/addTransaction',verifyToken,(req,res)=>{
                         if (err){
                             databaseError(err,res);
                         } else {
+                            console.log(msg.rows);
                             res.send({
                                 message: 'successfully add transaction',
                                 code: 200,
@@ -973,6 +974,7 @@ router.post('/deleteTransaction',verifyToken,(req,res)=>{
             if (err){
                 databaseError(err,res);
             } else {
+                console.log(msg.rows);
                 res.send({
                     message: 'successfully delete transaction',
                     code: 200,
@@ -999,6 +1001,7 @@ router.post('/getTransactions',verifyToken,(req,res)=>{
             if (err) {
                 databaseError(err,res);
             } else {
+                console.log(msg.rows);
                 res.send({
                     message: 'successfully get all transactions',
                     code: 200,
