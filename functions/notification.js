@@ -5,7 +5,7 @@ const logger = require('../functions/logger');
 
 const config = require('../config');
 
-mongoose.connect(config.database,config.options);
+mongoose.connect(config.database, config.options);
 
 
 const optionsToFile = {
@@ -25,44 +25,44 @@ function sendIos(deviceId, message, badgeNumber) {
     notification.alert = message;
     notification.topic = "com.blockchainglobal.bglmedia";
     apnprovider.send(notification, deviceToken).then(result => {
-            console.log(result);
-            result.failed.forEach(failure => {
-                if (failure.status === '410') {
-                    db.deleteIOSDevice(deviceId,(err,res)=>{
-                        if(err){
-                            console.log(err);
-                            logger.databaseError("notification","server",err)
+        console.log(result);
+        result.failed.forEach(failure => {
+            if (failure.status === '410') {
+                db.deleteIOSDevice(deviceId, (err, res) => {
+                    if (err) {
+                        console.log(err);
+                        logger.databaseError("notification", "server", err)
 
-                        } else{
-                            console.log(deviceToken+" has been deleted from db due to invalid device token")
-                        }
-                    })
-                } else {
-                    console.log("not this one")
-                }
-            })
+                    } else {
+                        console.log(deviceToken + " has been deleted from db due to invalid device token")
+                    }
+                })
+            } else {
+                console.log("not this one")
+            }
+        })
     });
-    
+
 
     apnprovider.shutdown();
 }
 
 
 module.exports.sendFlashNotification = (message) => {
-    db.getAllIOSDeviceForFlashNotification((err, list) =>{
-        if(err){
+    db.getAllIOSDeviceForFlashNotification((err, list) => {
+        if (err) {
             console.log(err);
-            logger.databaseError("notification","server",err)
-        } else{
-            if(list.rows[0] === null || list.rows[0]===undefined){
+            logger.databaseError("notification", "server", err)
+        } else {
+            if (list.rows[0] === null || list.rows[0] === undefined) {
                 console.log("No device in device database");
-                logger.databaseError("notification","db","No device in device database")
+                logger.databaseError("notification", "db", "No device in device database")
             } else {
-                list.rows.forEach(row=>{
-                    db.addIOSDeviceNumber(row.device_token,(err, msg)=>{
-                        sendIos(row.device_token,message,msg.rows[0].number)
+                list.rows.forEach(row => {
+                    db.addIOSDeviceNumber(row.device_token, (err, msg) => {
+                        sendIos(row.device_token, message, msg.rows[0].number)
                     })
-                    
+
                 })
             }
         }
@@ -70,6 +70,6 @@ module.exports.sendFlashNotification = (message) => {
     })
 };
 
-module.exports.sendAlert = (deviceId, message,badgeNumber) => {
-    sendIos(deviceId, message,badgeNumber)
+module.exports.sendAlert = (deviceId, message, badgeNumber) => {
+    sendIos(deviceId, message, badgeNumber)
 };

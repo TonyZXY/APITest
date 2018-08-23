@@ -41,7 +41,7 @@ const Genuine = module.exports = mongoose.model('Genuine', genuineSchema);
 
 //get Genuine list
 module.exports.getGenuineList = function (callback, limit) {
-    Genuine.find(callback).limit(limit).sort({_id:-1});
+    Genuine.find(callback).limit(limit).sort({_id: -1});
 };
 
 //get Genuine by ID
@@ -101,7 +101,7 @@ module.exports.searchGenuineTime = (from, to, callback) => {
             '$gte': dateFrom,
             '$lt': dateTo
         }
-    },callback).sort({_id:-1})
+    }, callback).sort({_id: -1})
 };
 
 

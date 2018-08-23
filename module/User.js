@@ -23,8 +23,8 @@ module.exports.getPassword = (username, callback) => {
 };
 
 //set user
-module.exports.setUpUsers = (user,callback) => {
-    User.create(user,callback);
+module.exports.setUpUsers = (user, callback) => {
+    User.create(user, callback);
 };
 
 module.exports.get = (callback) => {

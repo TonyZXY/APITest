@@ -16,7 +16,6 @@ const mailAccount = config.mail;
 let mailSent = nodeMail.createTransport(mailAccount);
 
 
-
 router.post('/register', (req, res) => {
     let email = req.body.email;
     let firstName = req.body.firstName;
@@ -97,11 +96,11 @@ router.post('/register', (req, res) => {
                     //         })
                     //     }
                     // });
-                    mailSent.sendMail(mailOptions,(err,info)=>{
-                        if (err){
+                    mailSent.sendMail(mailOptions, (err, info) => {
+                        if (err) {
                             console.log(err);
                         } else {
-                            logger.userRegistrationLoginLog(address,"send verify email to: "+email+ " "+ info.response);
+                            logger.userRegistrationLoginLog(address, "send verify email to: " + email + " " + info.response);
                         }
                     });
                     res.send({
@@ -143,7 +142,7 @@ router.post('/login', (req, res) => {
                 })
             } else {
                 if (msg.rows[0] === undefined) {
-                    logger.userRegistrationLoginLog('userLogin', address, 'No user is found: '+ userName);
+                    logger.userRegistrationLoginLog('userLogin', address, 'No user is found: ' + userName);
                     res.send({
                         success: false,
                         message: 'Email or Password Error',
@@ -551,7 +550,7 @@ router.get('/verify/:msg/:str', (req, res) => {
                         if (err) {
                             databaseError(err, res);
                         } else {
-                            if (msg.rows[0] === undefined || msg.rows[0]===null) {
+                            if (msg.rows[0] === undefined || msg.rows[0] === null) {
                                 res.sendFile(path.join(__dirname + '/notfound.html'));
                             } else {
                                 let userID = msg.rows[0].user;
@@ -583,7 +582,7 @@ router.get('/resetPassword/:email', (req, res) => {
             databaseError(err, res);
             logger.databaseError('userLogin', address, err);
         } else {
-            if (msg.rows[0] === undefined|| msg.rows[0]===null) {
+            if (msg.rows[0] === undefined || msg.rows[0] === null) {
                 logger.userRegistrationLoginLog(address, 'user not found in reset: ' + email);
                 res.send({
                     message: 'no user found',
@@ -593,15 +592,15 @@ router.get('/resetPassword/:email', (req, res) => {
                 })
             } else {
                 let user = msg.rows[0];
-                if (user.verify === false){
-                    logger.userRegistrationLoginLog(address, 'user not verify: '+ email);
+                if (user.verify === false) {
+                    logger.userRegistrationLoginLog(address, 'user not verify: ' + email);
                     res.send({
                         message: "please verify your email",
                         success: false,
-                        code:888,
+                        code: 888,
                         token: null
                     })
-                }else {
+                } else {
                     let token = rs.generate(90);
                     let key = rs.generate(40);
                     let payload = {
@@ -635,7 +634,7 @@ router.get('/resetPassword/:email', (req, res) => {
                                                     "\t\t<div style=\"background-color: #ffffff; border-radius: 0px 0px 25px 25px; border: 1px solid #dddddd; padding: 25px\">\n" +
                                                     "\t\t\t<p>You have requested to reset your password in <b style=\"color: #2d6095\">CRYPTOGEEK</b>.</p>\n" +
                                                     "\t\t\t<p>Please click the button to reset your password.</p>\n" +
-                                                    "\t\t\t<p>This link will be expired in 15 mins</p>\n"+
+                                                    "\t\t\t<p>This link will be expired in 15 mins</p>\n" +
                                                     "\t\t\t<p>If you did not request to reset your password, please ignore this email.</p>\n" +
                                                     "\t\t\t<a href=\"" + url + "\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Reset Password</button></a>\n" +
                                                     "\t\t\t<p>If you unable to click the button, please use the URL below instead.</p>\n" +
@@ -659,11 +658,11 @@ router.get('/resetPassword/:email', (req, res) => {
                                             //         })
                                             //     }
                                             // });
-                                            mailSent.sendMail(mailOptions,(err,info)=>{
-                                                if (err){
+                                            mailSent.sendMail(mailOptions, (err, info) => {
+                                                if (err) {
                                                     console.log(err);
                                                 } else {
-                                                    logger.userRegistrationLoginLog(address,"send reset email to: "+email+ " "+ info.response);
+                                                    logger.userRegistrationLoginLog(address, "send reset email to: " + email + " " + info.response);
                                                 }
                                             });
                                             res.send({
@@ -691,7 +690,7 @@ router.get('/resetPassword/:email', (req, res) => {
                                     "\t\t<div style=\"background-color: #ffffff; border-radius: 0px 0px 25px 25px; border: 1px solid #dddddd; padding: 25px\">\n" +
                                     "\t\t\t<p>You have requested to reset your password in <b style=\"color: #2d6095\">CRYPTOGEEK</b>.</p>\n" +
                                     "\t\t\t<p>Please click the button to reset your password.</p>\n" +
-                                    "\t\t\t<p>This link will be expired in 15 mins</p>\n"+
+                                    "\t\t\t<p>This link will be expired in 15 mins</p>\n" +
                                     "\t\t\t<p>If you did not request to reset your password, please ignore this email.</p>\n" +
                                     "\t\t\t<a href=\"" + url + "\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Reset Password</button></a>\n" +
                                     "\t\t\t<p>If you unable to click the button, please use the URL below instead.</p>\n" +
@@ -715,11 +714,11 @@ router.get('/resetPassword/:email', (req, res) => {
                             //         })
                             //     }
                             // });
-                            mailSent.sendMail(mailOptions,(err,info)=>{
-                                if (err){
+                            mailSent.sendMail(mailOptions, (err, info) => {
+                                if (err) {
                                     console.log(err);
                                 } else {
-                                    logger.userRegistrationLoginLog(address,"send reset email to: "+email+ " "+ info.response);
+                                    logger.userRegistrationLoginLog(address, "send reset email to: " + email + " " + info.response);
                                 }
                             });
                             res.send({
@@ -757,7 +756,7 @@ router.get('/reset/:verify/:key', (req, res) => {
                         if (err) {
                             databaseError(err, res);
                         } else {
-                            if (msg.rows[0] === undefined || msg.rows[0]===null) {
+                            if (msg.rows[0] === undefined || msg.rows[0] === null) {
                                 res.sendFile(path.join(__dirname + '/notfound.html'));
                             } else {
                                 res.sendFile(path.join(__dirname + '/resetPassword.html'));
@@ -801,7 +800,7 @@ router.post('/reset/:verify/:key', (req, res) => {
                             databaseError(err, res);
                             logger.databaseError('userLogin', address, err);
                         } else {
-                            if (msg.rows[0] === undefined || msg.rows[0]===null) {
+                            if (msg.rows[0] === undefined || msg.rows[0] === null) {
                                 res.sendFile(path.join(__dirname + '/notfound.html'));
                             } else {
                                 let id = msg.rows[0].user;
@@ -815,7 +814,7 @@ router.post('/reset/:verify/:key', (req, res) => {
                                         logger.databaseError('userLogin', address, err);
                                     } else {
                                         res.sendFile(path.join(__dirname + '/successReset.html'));
-                                        logger.userRegistrationLoginLog(address, 'successfully reset password: '+ message.rows[0].email)
+                                        logger.userRegistrationLoginLog(address, 'successfully reset password: ' + message.rows[0].email)
                                     }
                                 });
                             }
@@ -851,7 +850,7 @@ router.get('/resendVerifyLink/:email', (req, res) => {
                     code: 404,
                     token: null
                 });
-                logger.userRegistrationLoginLog(address,'no verify code found: '+email);
+                logger.userRegistrationLoginLog(address, 'no verify code found: ' + email);
             } else {
                 let generate = verify.token;
                 let key = rs.generate(40);
@@ -894,11 +893,11 @@ router.get('/resendVerifyLink/:email', (req, res) => {
                 //         })
                 //     }
                 // });
-                mailSent.sendMail(mailOptions,(err,info)=>{
-                    if (err){
+                mailSent.sendMail(mailOptions, (err, info) => {
+                    if (err) {
                         console.log(err);
                     } else {
-                        logger.userRegistrationLoginLog(address,"resend verify email to: "+email+ " "+ info.response);
+                        logger.userRegistrationLoginLog(address, "resend verify email to: " + email + " " + info.response);
                     }
                 });
                 res.send({
@@ -913,12 +912,11 @@ router.get('/resendVerifyLink/:email', (req, res) => {
 });
 
 
-
-router.post('/addTransaction',verifyToken,(req,res)=>{
+router.post('/addTransaction', verifyToken, (req, res) => {
     let email = req.body.email;
     let transactions = req.body.transactions;
-    if (email===undefined||email===null||
-        transactions===undefined||transactions===null){
+    if (email === undefined || email === null ||
+        transactions === undefined || transactions === null) {
         res.send({
             message: 'invalid request',
             code: 700,
@@ -926,12 +924,12 @@ router.post('/addTransaction',verifyToken,(req,res)=>{
             data: null
         })
     } else {
-        db.getUser(email,(err,usermsg)=>{
-            if (err){
-                databaseError(err,res);
+        db.getUser(email, (err, usermsg) => {
+            if (err) {
+                databaseError(err, res);
             } else {
                 let user = usermsg.rows[0];
-                if (user === null || user === undefined){
+                if (user === null || user === undefined) {
                     res.send({
                         message: 'user not found',
                         code: 404,
@@ -940,11 +938,10 @@ router.post('/addTransaction',verifyToken,(req,res)=>{
                     })
                 } else {
                     let userID = user._id;
-                    db.addTransactionList(userID,transactions,(err,msg)=>{
-                        if (err){
-                            databaseError(err,res);
+                    db.addTransactionList(userID, transactions, (err, msg) => {
+                        if (err) {
+                            databaseError(err, res);
                         } else {
-                            console.log(msg.rows);
                             res.send({
                                 message: 'successfully add transaction',
                                 code: 200,
@@ -960,9 +957,9 @@ router.post('/addTransaction',verifyToken,(req,res)=>{
 });
 
 
-router.post('/deleteTransaction',verifyToken,(req,res)=>{
+router.post('/deleteTransaction', verifyToken, (req, res) => {
     let transactionID = req.body.transactionID;
-    if (transactionID===null||transactionID===undefined){
+    if (transactionID === null || transactionID === undefined) {
         res.send({
             message: 'invalid request',
             code: 701,
@@ -970,9 +967,9 @@ router.post('/deleteTransaction',verifyToken,(req,res)=>{
             data: null
         })
     } else {
-        db.deleteTransaction(transactionID,(err,msg)=>{
-            if (err){
-                databaseError(err,res);
+        db.deleteTransaction(transactionID, (err, msg) => {
+            if (err) {
+                databaseError(err, res);
             } else {
                 console.log(msg.rows);
                 res.send({
@@ -987,9 +984,9 @@ router.post('/deleteTransaction',verifyToken,(req,res)=>{
 });
 
 
-router.post('/getTransactions',verifyToken,(req,res)=>{
+router.post('/getTransactions', verifyToken, (req, res) => {
     let email = req.body.email;
-    if (email === undefined|| email === null){
+    if (email === undefined || email === null) {
         res.send({
             message: 'invalid request',
             code: 702,
@@ -997,13 +994,39 @@ router.post('/getTransactions',verifyToken,(req,res)=>{
             data: null
         })
     } else {
-        db.getAllTransaction(email,(err,msg)=>{
+        db.getAllTransaction(email, (err, msg) => {
             if (err) {
-                databaseError(err,res);
+                databaseError(err, res);
             } else {
                 console.log(msg.rows);
                 res.send({
                     message: 'successfully get all transactions',
+                    code: 200,
+                    success: true,
+                    data: msg.rows
+                })
+            }
+        })
+    }
+});
+
+
+router.post('/updateTransaction', verifyToken, (req, res) => {
+    let coin = req.body.transactions;
+    if (coin === null || coin === undefined) {
+        res.send({
+            message: 'invalid request',
+            code: 703,
+            success: false,
+            data: null
+        })
+    } else {
+        db.updateTransaction(coin, (err, msg) => {
+            if (err) {
+                databaseError(err, res);
+            } else {
+                res.send({
+                    message: 'successfully update transactions',
                     code: 200,
                     success: true,
                     data: msg.rows

@@ -3,108 +3,108 @@ const mongoose = require('mongoose');
 
 //news flash module
 const newsFlashSchrma = mongoose.Schema({
-    shortMassage:{
-        type:String,
+    shortMassage: {
+        type: String,
         require: true
     },
-    title:{
-        type:String,
-        require:true
+    title: {
+        type: String,
+        require: true
     },
-    publishedTime:{
+    publishedTime: {
         type: Date,
         default: Date.now
     },
-    link:{
-        type:String
+    link: {
+        type: String
     },
-    languageTag:{
-        type:String,
-        require:true
+    languageTag: {
+        type: String,
+        require: true
     },
-    toSent:{
+    toSent: {
         type: Boolean,
         require: true
     },
-    available:{
+    available: {
         type: Boolean,
         require: true
     }
 });
 
 
-const NewsFlash = module.exports = mongoose.model('NewsFlash',newsFlashSchrma);
+const NewsFlash = module.exports = mongoose.model('NewsFlash', newsFlashSchrma);
 
 
 //get list
-module.exports.getFlashList = function (leTag ,callback,limit) {
-    NewsFlash.find({languageTag:leTag},callback).limit(limit).sort({_id:-1});
+module.exports.getFlashList = function (leTag, callback, limit) {
+    NewsFlash.find({languageTag: leTag}, callback).limit(limit).sort({_id: -1});
 };
 
-module.exports.getFlash = function (callback,limit) {
-    NewsFlash.find(callback).limit(limit).sort({_id:-1});
+module.exports.getFlash = function (callback, limit) {
+    NewsFlash.find(callback).limit(limit).sort({_id: -1});
 };
 
 //get by id
-module.exports.getFlashByID = function (id,callback) {
-    NewsFlash.findById(id,callback);
+module.exports.getFlashByID = function (id, callback) {
+    NewsFlash.findById(id, callback);
 };
 
 //add Flash news
-module.exports.addFlashNews = function (flashAdded,callback) {
-    NewsFlash.create(flashAdded,callback);
+module.exports.addFlashNews = function (flashAdded, callback) {
+    NewsFlash.create(flashAdded, callback);
 };
 
 //update flash News
-module.exports.updateFlashNews = function (id,flash,option,callback) {
-    let query = {_id:id};
+module.exports.updateFlashNews = function (id, flash, option, callback) {
+    let query = {_id: id};
     let update = {
-        shortMassage:flash.shortMassage,
-        title:flash.title,
-        languageTag:flash.languageTag,
-        link:flash.link,
+        shortMassage: flash.shortMassage,
+        title: flash.title,
+        languageTag: flash.languageTag,
+        link: flash.link,
         toSent: flash.toSent,
         available: flash.available
     };
-    NewsFlash.findOneAndUpdate(query,update,option,callback);
+    NewsFlash.findOneAndUpdate(query, update, option, callback);
 };
 
-module.exports.searchFlashNews = (languageTag,patten,callback,skip,limit)=>{
+module.exports.searchFlashNews = (languageTag, patten, callback, skip, limit) => {
     NewsFlash.find({
-        $or:[{
+        $or: [{
             shortMassage:
                 {
-                    $regex:'.*'+patten+'.*',
-                    $options:'i'
+                    $regex: '.*' + patten + '.*',
+                    $options: 'i'
                 },
             title:
                 {
-                    $regex: '.*'+ patten + '.*',
+                    $regex: '.*' + patten + '.*',
                     $options: 'i'
                 }
         }],
-        languageTag:languageTag
-    },callback).sort({_id:-1}).skip(skip).limit(limit);
+        languageTag: languageTag
+    }, callback).sort({_id: -1}).skip(skip).limit(limit);
 };
 
 //delete news
-module.exports.deleteFlash = function (id,callback) {
-    let query = {_id:id};
+module.exports.deleteFlash = function (id, callback) {
+    let query = {_id: id};
     // NewsFlash.remove(query,callback);
     NewsFlash.update({
-        _id:id
-    },{
-        $set:{
-            available:false
+        _id: id
+    }, {
+        $set: {
+            available: false
         }
-    },callback)
+    }, callback)
 };
 
 module.exports.findFlashByType = function (toSent, laTag, callback, limit) {
-    NewsFlash.find({toSent: toSent,languageTag: laTag}, callback).sort({_id: -1}).limit(limit);
+    NewsFlash.find({toSent: toSent, languageTag: laTag}, callback).sort({_id: -1}).limit(limit);
 };
 
-module.exports.searchFlashTime = (from, to, callback) =>{
+module.exports.searchFlashTime = (from, to, callback) => {
     let dateFrom = new Date(from);
     let dateTo = new Date(to);
     dateTo.setDate(dateTo.getDate() + 1);
@@ -113,11 +113,11 @@ module.exports.searchFlashTime = (from, to, callback) =>{
             '$gte': dateFrom,
             '$lt': dateTo
         }
-    },callback).sort({_id:-1})
+    }, callback).sort({_id: -1})
 };
 
-module.exports.getFlashListWithLimit = (leTag,skip,limit,callback)=>{
+module.exports.getFlashListWithLimit = (leTag, skip, limit, callback) => {
     NewsFlash.find({
-        languageTag:leTag
-    },callback).sort({_id:-1}).skip(skip).limit(limit);
+        languageTag: leTag
+    }, callback).sort({_id: -1}).skip(skip).limit(limit);
 };

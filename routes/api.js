@@ -6,10 +6,9 @@ const Notification = require('../functions/notification');
 const logger = require('../functions/logger');
 
 
-
 const config = require('../config');
 
-mongoose.connect(config.database,config.options);
+mongoose.connect(config.database, config.options);
 
 
 module.exports = router;
@@ -18,6 +17,7 @@ const News = require('../module/News.js');
 const Video = require('../module/Video.js');
 const NewsFlash = require('../module/NewsFlash.js');
 const Genuine = require('../module/Genuine.js');
+
 // address = req.connection.remoteAddress
 
 function verifyToken(req, res, next) {
@@ -32,7 +32,7 @@ function verifyToken(req, res, next) {
         let token = req.headers.authorization.split(' ')[2];
         if (userProfile === null || userProfile === undefined ||
             token === null || token === undefined) {
-                logger.newsFlashLog(address, "User Profile or token empty in User Profile: " + userProfile);
+            logger.newsFlashLog(address, "User Profile or token empty in User Profile: " + userProfile);
             return res.status(401).json({
                 login: false
             })
@@ -75,7 +75,7 @@ router.get('/news', function (req, res) {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(newsList);
     })
@@ -87,7 +87,7 @@ router.get('/news/:_id', function (req, res) {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(news);
     })
@@ -100,7 +100,7 @@ router.post('/news', verifyToken, function (req, res) {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(news);
     })
@@ -114,7 +114,7 @@ router.put('/news/:_id', verifyToken, function (req, res) {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(news);
     })
@@ -127,7 +127,7 @@ router.delete('/news/:_id', verifyToken, function (req, res) {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(news);
     })
@@ -146,7 +146,7 @@ router.get("/getNews", function (req, res) {
             if (err) {
                 console.log(err);
                 let address = req.connection.remoteAddress;
-                logger.databaseError('apifile',address, err);
+                logger.databaseError('apifile', address, err);
             }
             res.json(news);
         }, parseInt(limit))
@@ -198,7 +198,7 @@ router.get("/getNewsContentOnly", function (req, res) {
             if (err) {
                 console.log(err);
                 let address = req.connection.remoteAddress;
-                logger.databaseError('apifile',address, err);
+                logger.databaseError('apifile', address, err);
             }
             res.json(news);
         }, parseInt(skip), parseInt(limit))
@@ -238,7 +238,7 @@ router.get("/searchnews", (req, res) => {
             if (err) {
                 console.log(err);
                 let address = req.connection.remoteAddress;
-                logger.databaseError('apifile',address, err);
+                logger.databaseError('apifile', address, err);
             }
             res.json(news);
         }, parseInt(skip), parseInt(limit))
@@ -248,19 +248,19 @@ router.get("/searchnews", (req, res) => {
 router.get("/searchNewsTime", (req, res) => {
     const from = req.query.from;
     const to = req.query.to;
-    if(from === null||from===undefined||to===null||to===undefined){
-        res.status(400).send({message:'bad request'});
+    if (from === null || from === undefined || to === null || to === undefined) {
+        res.status(400).send({message: 'bad request'});
     } else {
         News.searchNewsTime(from, to, (err, news) => {
             if (err) {
                 console.log(err);
                 let address = req.connection.remoteAddress;
-                logger.databaseError('apifile',address, err);
+                logger.databaseError('apifile', address, err);
             }
             res.json(news);
         })
     }
-    
+
 });
 /*  NEWS PART END  */
 /*----------------------------------------------------------------------------*/
@@ -286,7 +286,7 @@ router.get('/videos', function (req, res) {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(video);
     }, parseInt(skip), parseInt(limit))
@@ -297,7 +297,7 @@ router.get('/video', (req, res) => {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(video);
     })
@@ -309,7 +309,7 @@ router.get('/videos/:_id', function (req, res) {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(video);
     })
@@ -322,7 +322,7 @@ router.post('/videos', verifyToken, function (req, res) {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(video);
     })
@@ -336,7 +336,7 @@ router.put('/videos/:_id', verifyToken, function (req, res) {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(video);
     })
@@ -349,7 +349,7 @@ router.delete('/videos/:_id', verifyToken, function (req, res) {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(video);
     })
@@ -368,7 +368,7 @@ router.get("/getVideo", function (req, res) {
             if (err) {
                 console.log(err);
                 let address = req.connection.remoteAddress;
-                logger.databaseError('apifile',address, err);
+                logger.databaseError('apifile', address, err);
             }
             res.json(video);
         }, parseInt(limit))
@@ -382,7 +382,7 @@ router.get("/getVideoLocaleOnly", function (req, res) {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(video);
     }, parseInt(limit))
@@ -396,7 +396,7 @@ router.get("/getVideoTypeOnly", function (req, res) {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(video);
     }, parseInt(limit))
@@ -411,7 +411,7 @@ router.get("/searchVideo", (req, res) => {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(video);
     }, parseInt(skip), parseInt(limit))
@@ -424,7 +424,7 @@ router.get('/searchVideoTime', (req, res) => {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(videos)
     })
@@ -450,10 +450,10 @@ router.get('/flash', function (req, res) {
     NewsFlash.getFlashList(leTag, function (err, newsFlash) {
         if (err) {
             console.log(err);
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(newsFlash);
-        logger.newsFlashLog(address,"Get All flash with language tag");
+        logger.newsFlashLog(address, "Get All flash with language tag");
     })
 });
 
@@ -463,10 +463,10 @@ router.get('/flashList/:_id', function (req, res) {
     NewsFlash.getFlashByID(req.params._id, function (err, newsFlash) {
         if (err) {
             console.log(err);
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(newsFlash);
-        logger.newsFlashLog(address,"Get certain flash");
+        logger.newsFlashLog(address, "Get certain flash");
     })
 });
 
@@ -474,14 +474,13 @@ router.get('/flashList', function (req, res) {
     let address = req.connection.remoteAddress;
     NewsFlash.getFlash((err, newsFlash) => {
         if (err) {
-            console.log(err);          
-            logger.databaseError('apifile',address, err);
+            console.log(err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(newsFlash);
-        logger.newsFlashLog(address,"Get all flash");
+        logger.newsFlashLog(address, "Get all flash");
     })
 });
-
 
 
 //add News Flash
@@ -491,15 +490,15 @@ router.post('/flash', verifyToken, function (req, res) {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(flashAdded);
         let address2 = req.connection.remoteAddress;
-        logger.newsFlashLog("NewsFlashApi",address2,"A News Flash added ("+flashAdded._id+")");
-        if(flashAdded.toSent){
+        logger.newsFlashLog("NewsFlashApi", address2, "A News Flash added (" + flashAdded._id + ")");
+        if (flashAdded.toSent) {
             Notification.sendFlashNotification(flashAdded.shortMassage);
         }
-        
+
     })
 });
 
@@ -511,10 +510,10 @@ router.put('/flash/:_id', verifyToken, function (req, res) {
     NewsFlash.updateFlashNews(id, flashAdded, {}, function (err, flash) {
         if (err) {
             console.log(err);
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(flash);
-        logger.newsFlashLog(address,"Update one flash");
+        logger.newsFlashLog(address, "Update one flash");
     })
 });
 
@@ -526,10 +525,10 @@ router.delete('/flash/:_id', verifyToken, function (req, res) {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(newsFlash);
-        logger.newsFlashLog(address,"Delete one flash");
+        logger.newsFlashLog(address, "Delete one flash");
     })
 });
 
@@ -543,10 +542,10 @@ router.get("/searchFlash", (req, res) => {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(flash);
-        logger.newsFlashLog(address,"Search flash news");
+        logger.newsFlashLog(address, "Search flash news");
     }, parseInt(skip), parseInt(limit))
 });
 
@@ -571,25 +570,25 @@ router.get('/searchFlashTime', (req, res) => {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(flash);
-        logger.newsFlashLog(address,"Search flash by time");
+        logger.newsFlashLog(address, "Search flash by time");
     })
 });
 
-router.get('/getFlashWithLan',(req,res)=>{
+router.get('/getFlashWithLan', (req, res) => {
     const languageTag = req.query.languageTag;
     const skip = req.query.skip;
     const limit = req.query.limit;
     let address = req.connection.remoteAddress;
-    NewsFlash.getFlashListWithLimit(languageTag,parseInt(skip),parseInt(limit),(err,flash)=>{
+    NewsFlash.getFlashListWithLimit(languageTag, parseInt(skip), parseInt(limit), (err, flash) => {
         if (err) {
             console.log(err);
-            logger.databaseError('apifile',address,err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(flash);
-        logger.newsFlashLog(address,"Get Flash with SKIP and LIMIT");
+        logger.newsFlashLog(address, "Get Flash with SKIP and LIMIT");
     })
 });
 
@@ -614,7 +613,7 @@ router.get('/genuine', function (req, res) {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(genuine);
     })
@@ -626,7 +625,7 @@ router.get('/genuine/:_id', function (req, res) {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(genuine);
     })
@@ -639,7 +638,7 @@ router.post('/genuine', verifyToken, function (req, res) {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(genuine);
     })
@@ -653,7 +652,7 @@ router.put('/genuine/:_id', verifyToken, function (req, res) {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(genuine);
     })
@@ -666,7 +665,7 @@ router.delete('/genuine/:_id', verifyToken, function (req, res) {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(genuine);
     })
@@ -685,7 +684,7 @@ router.get("/getgenuine", function (req, res) {
             if (err) {
                 console.log(err);
                 let address = req.connection.remoteAddress;
-                logger.databaseError('apifile',address, err);
+                logger.databaseError('apifile', address, err);
             }
             res.json(genuine);
         }, parseInt(skip), parseInt(limit))
@@ -702,7 +701,7 @@ router.get("/searchgenuine", (req, res) => {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(genuine);
     }, parseInt(skip), parseInt(limit))
@@ -715,7 +714,7 @@ router.get('/searchGenuineTime', (req, res) => {
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('apifile',address, err);
+            logger.databaseError('apifile', address, err);
         }
         res.json(genuine);
     })

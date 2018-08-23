@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const coinSchema = mongoose.Schema({
-    id:{
+    id: {
         type: Number,
         require: true
     },
@@ -9,74 +9,74 @@ const coinSchema = mongoose.Schema({
         type: String,
         require: true
     },
-    symbol:{
+    symbol: {
         type: String
     },
     website_slug: String,
     rank: Number,
-    circulating_supply:Number,
-    total_supply:Number,
-    max_supply:Number,
-    quotes:[{
-        currency:String,
-        data:{
-            price:Number,
-            volume_24h:Number,
-            market_cap:Number,
-            percent_change_1h:Number,
-            percent_change_24h:Number,
-            percent_change_7d:Number
+    circulating_supply: Number,
+    total_supply: Number,
+    max_supply: Number,
+    quotes: [{
+        currency: String,
+        data: {
+            price: Number,
+            volume_24h: Number,
+            market_cap: Number,
+            percent_change_1h: Number,
+            percent_change_24h: Number,
+            percent_change_7d: Number
         }
     }],
-    last_updated:Number
+    last_updated: Number
 });
 
-const Coin = module.exports = mongoose.model('Coin',coinSchema);
+const Coin = module.exports = mongoose.model('Coin', coinSchema);
 
 
-module.exports.getCoinList = (callback)=>{
-    Coin.find(callback).sort({rank:1});
+module.exports.getCoinList = (callback) => {
+    Coin.find(callback).sort({rank: 1});
 };
 
-module.exports.addCoins = (coins,callback)=>{
-    coins.forEach(coin=>{
-        Coin.findOneAndUpdate({id:coin.id},coin,{upsert:true,returnNewDocument:true},callback);
+module.exports.addCoins = (coins, callback) => {
+    coins.forEach(coin => {
+        Coin.findOneAndUpdate({id: coin.id}, coin, {upsert: true, returnNewDocument: true}, callback);
     });
 };
 
-module.exports.getCoinListCurrency = (currency,callback)=>{
+module.exports.getCoinListCurrency = (currency, callback) => {
     Coin.aggregate([{
         $project: {
-            quotes:{
-                $filter:{
-                    input:"$quotes",
-                    as:"quotes",
+            quotes: {
+                $filter: {
+                    input: "$quotes",
+                    as: "quotes",
                     cond: {
-                        $eq:["$$quotes.currency",currency]
+                        $eq: ["$$quotes.currency", currency]
                     }
                 }
             },
-            id:1,
-            circulating_supply:1,
-            last_updated:1,
-            max_supply:1,
-            name:1,
-            rank:1,
-            symbol:1,
-            total_supply:1,
-            website_slug:1
+            id: 1,
+            circulating_supply: 1,
+            last_updated: 1,
+            max_supply: 1,
+            name: 1,
+            rank: 1,
+            symbol: 1,
+            total_supply: 1,
+            website_slug: 1
         }
-    }],callback).sort({rank:1});
+    }], callback).sort({rank: 1});
 };
 
-module.exports.deleteCoinByName = (name,callback)=>{
+module.exports.deleteCoinByName = (name, callback) => {
     Coin.remove({
-        name:name
-    },callback)
+        name: name
+    }, callback)
 };
 
-module.exports.getOneCoin = (symbol,callback)=>{
+module.exports.getOneCoin = (symbol, callback) => {
     Coin.findOne({
         symbol: symbol
-    },callback)
+    }, callback)
 };

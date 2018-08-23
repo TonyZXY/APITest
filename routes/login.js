@@ -9,7 +9,7 @@ const logger = require('../functions/logger');
 
 const config = require('../config');
 
-mongoose.connect(config.database,config.options);
+mongoose.connect(config.database, config.options);
 
 module.exports = router;
 
@@ -21,25 +21,25 @@ router.post("/set", (req, res) => {
     User.setUpUsers(user, (err, user) => {
         if (err) {
             console.log(err);
-            logger.databaseError('login',address, err);
+            logger.databaseError('login', address, err);
         }
         res.json(user);
-        logger.adminLoginLog(address,"Set user in database in User Name: " + user.username);
+        logger.adminLoginLog(address, "Set user in database in User Name: " + user.username);
     })
 });
 
 router.get("/get", (req, res) => {
     User.get((err, user) => {
-        if(err){
+        if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
-            logger.databaseError('login',address, err);
-        }else{
-           res.json(user);
-           let address = req.connection.remoteAddress;
-           logger.adminLoginLog(address,"Get all user in database in User Name: " + user.username);
+            logger.databaseError('login', address, err);
+        } else {
+            res.json(user);
+            let address = req.connection.remoteAddress;
+            logger.adminLoginLog(address, "Get all user in database in User Name: " + user.username);
         }
-        
+
     })
 });
 
@@ -50,20 +50,20 @@ router.post("/", (req, res) => {
     User.getPassword(username, (err, user) => {
         if (err) {
             console.log(err);
-            logger.databaseError('login',address, err);
+            logger.databaseError('login', address, err);
         } else {
             if (!user) {
                 res.send({login: false}).status(401);
-                logger.adminLoginLog(address,"No user found in User Name: " + username);
+                logger.adminLoginLog(address, "No user found in User Name: " + username);
             } else {
                 if (!hashPassword.verify(password, user.password)) {
                     res.send({login: false}).status(401);
-                    logger.adminLoginLog(address,"Password Not match in User Name: " + username);
+                    logger.adminLoginLog(address, "Password Not match in User Name: " + username);
                 } else {
                     let payload = {subject: user._id};
                     let tokenToSend = jwt.sign(payload, user._id.toString());
                     res.send({login: true, token: tokenToSend, username: user._id}).status(200);
-                    logger.adminLoginLog(address,"Successfully Login in User Name: " + username);
+                    logger.adminLoginLog(address, "Successfully Login in User Name: " + username);
                 }
             }
         }

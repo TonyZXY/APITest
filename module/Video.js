@@ -48,7 +48,7 @@ module.exports.getVideos = function (leTag, callback, skip, limit) {
 };
 
 module.exports.getVideoList = (callback, limit) => {
-    Video.find(callback).limit(limit).sort({_id:-1});
+    Video.find(callback).limit(limit).sort({_id: -1});
 };
 
 // get video by ID
@@ -85,7 +85,11 @@ module.exports.deleteVideo = function (id, callback) {
 
 // Get video by Tag
 module.exports.findVideoByTag = function (localetag, typetag, languageTag, callback, limit) {
-    Video.find({localeTag: localetag, typeTag: typetag, languageTag: languageTag}, callback).sort({_id: -1}).limit(limit);
+    Video.find({
+        localeTag: localetag,
+        typeTag: typetag,
+        languageTag: languageTag
+    }, callback).sort({_id: -1}).limit(limit);
 };
 
 module.exports.findVideoByLocale = function (localetag, callback, limit) {
@@ -93,7 +97,7 @@ module.exports.findVideoByLocale = function (localetag, callback, limit) {
 };
 
 module.exports.findVideoByType = function (typetag, laTag, callback, limit) {
-    Video.find({typeTag: typetag,languageTag: laTag}, callback).sort({_id: -1}).limit(limit);
+    Video.find({typeTag: typetag, languageTag: laTag}, callback).sort({_id: -1}).limit(limit);
 };
 
 module.exports.searchVideo = (languageTag, patten, callback, skip, limit) => {
@@ -112,9 +116,9 @@ module.exports.searchVideoTime = (from, to, callback) => {
     let dateTo = new Date(to);
     dateTo.setDate(dateTo.getDate() + 1);
     Video.find({
-        'publishedTime':{
+        'publishedTime': {
             '$gte': dateFrom,
             '$lt': dateTo
         }
-    }, callback).sort({_id:-1})
+    }, callback).sort({_id: -1})
 };

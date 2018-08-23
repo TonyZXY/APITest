@@ -126,9 +126,9 @@ async function compareTwoAPI() {
                     let coins = new coinfliter();
                     coins.data = array;
                     coins.name = 'coins';
-                    coinfliter.updateCoin(coins,'coins',(err,msg)=>{
-                        if (err){
-                            logger.APIConnectionError('coinAlgorithm','Update coin filter',err);
+                    coinfliter.updateCoin(coins, 'coins', (err, msg) => {
+                        if (err) {
+                            logger.APIConnectionError('coinAlgorithm', 'Update coin filter', err);
                         } else {
                         }
                     })
@@ -148,9 +148,9 @@ const delay = (amount) => {
 function start() {
     let time = 1;
     loginConsole(time);
-    compareTwoAPI().then(()=>{
+    compareTwoAPI().then(() => {
         logger.APIUpdateLog("CoinAlgorithm", "server", "Compare and filter on Cyrpto Compare and Market Cap");
-        delay(24*3600*1000).then(()=>{
+        delay(24 * 3600 * 1000).then(() => {
             time++;
             start();
         })

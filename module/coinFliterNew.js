@@ -4,44 +4,44 @@ const mongoose = require('mongoose');
 
 const coinFilterSchema = mongoose.Schema({
     data: [{
-        coinName:{
-            type:String,
-            require:true
+        coinName: {
+            type: String,
+            require: true
         },
-        coinSymbol:{
+        coinSymbol: {
             type: String,
             require: true
         },
         logoUrl: {
             type: String,
-            require:true
+            require: true
         }
     }],
-    name:{
-        type:String,
-        require:true
+    name: {
+        type: String,
+        require: true
     }
 });
 
 
-const CoinFilterNew = module.exports = mongoose.model('CoinFilterNew',coinFilterSchema);
+const CoinFilterNew = module.exports = mongoose.model('CoinFilterNew', coinFilterSchema);
 
 
-module.exports.getCoinList = (callback)=>{
+module.exports.getCoinList = (callback) => {
     CoinFilterNew.findOne(callback);
 };
 
 
-module.exports.addCoin = (coin,callback)=>{
-    CoinFilterNew.create(coin,callback);
+module.exports.addCoin = (coin, callback) => {
+    CoinFilterNew.create(coin, callback);
 };
 
 
-module.exports.updateCoin = (coin,name,callback)=>{
+module.exports.updateCoin = (coin, name, callback) => {
     let update = {
         data: coin.data,
         name: coin.name
     };
-    CoinFilterNew.findOneAndUpdate({name:name},update,{upsert:true,returnNewDocument:true},callback);
+    CoinFilterNew.findOneAndUpdate({name: name}, update, {upsert: true, returnNewDocument: true}, callback);
 };
 

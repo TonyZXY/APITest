@@ -7,7 +7,7 @@ const logger = require('../functions/logger')
 
 const config = require('../config');
 
-mongoose.connect(config.database,config.options);
+mongoose.connect(config.database, config.options);
 
 
 const postNews_options = {
@@ -21,7 +21,6 @@ const postNews_options = {
 };
 
 
-
 const urlHead = 'https://newsapi.org/v2/';
 const everyThing = 'everything';
 const top = 'top-headlines';
@@ -31,7 +30,6 @@ const languageEN = '&language=en';
 const languageCN = '&language=cn';
 const bitcoin = '?q=bitcoin';
 const sortByTime = '&sortBy=publishedAt';
-
 
 
 const techcrunch = '?sources=techcrunch';
@@ -120,11 +118,11 @@ function getNews(content) {
         httpUrl += '&from=' + content.from.toISOString();
     }
     console.log('Get Data From URL: ' + httpUrl);
-    logger.APIUpdateLog("NewsFromNewsAPI",httpUrl, "Get Data From URL: "+ httpUrl);
+    logger.APIUpdateLog("NewsFromNewsAPI", httpUrl, "Get Data From URL: " + httpUrl);
     https.get(httpUrl, (res) => {
         let data = '';
-        res.on('error', (err)=>{
-            console.log("error in receiving data: "+err);
+        res.on('error', (err) => {
+            console.log("error in receiving data: " + err);
             logger.APIConnectionError('NewsFromNewsAPI', httpUrl, err);
             delay(2000);
             getLoop();
@@ -135,10 +133,10 @@ function getNews(content) {
         res.on('end', function () {
             let dataJSON = JSON.parse(data);
             console.log('Total find results: ' + dataJSON.totalResults);
-            logger.APIUpdateLog("NewsFromNewsAPI",httpUrl, "Total find results: "+ dataJSON.totalResults);
+            logger.APIUpdateLog("NewsFromNewsAPI", httpUrl, "Total find results: " + dataJSON.totalResults);
             if (dataJSON.totalResults !== 0) {
                 let articles = dataJSON.articles;
-                console.log('Numbers of Data Got: '+articles.length);
+                console.log('Numbers of Data Got: ' + articles.length);
                 articles.forEach(function (element) {
                     let news = new News;
                     news.title = element.title;
@@ -164,17 +162,17 @@ function getNews(content) {
                     news.languageTag = content.languageTag;
                     news.localeTag = "";
                     content.from = element.publishedAt;
-                    News.findNews(news.url,(err,newsFromDB)=>{
-                        if (err){
+                    News.findNews(news.url, (err, newsFromDB) => {
+                        if (err) {
                             console.log(err);
                             logger.databaseError('NewsFromNewsAPI', 'server', err)
                         } else {
                             if (!newsFromDB) {
-                                News.addNews(news,(err,msg)=>{
+                                News.addNews(news, (err, msg) => {
                                     if (err) {
                                         console.log(err);
                                         logger.databaseError('NewsFromNewsAPI', 'server', err)
-                                    }else {
+                                    } else {
 
                                     }
                                 })
@@ -190,7 +188,7 @@ function getNews(content) {
             }
         });
     })
-    logger.APIUpdateLog("NewsFromNewsAPI",httpUrl, "News API Updated")
+    logger.APIUpdateLog("NewsFromNewsAPI", httpUrl, "News API Updated")
 }
 
 const delay = (amount) => {
@@ -220,11 +218,9 @@ function loginConsole(times) {
     console.log(new Date(Date.now()).toLocaleString() + '  Run for ' + times + ' times.');
 }
 
-module.exports.run = ()=>{
+module.exports.run = () => {
     getLoop();
 };
-
-
 
 
 //_________________________

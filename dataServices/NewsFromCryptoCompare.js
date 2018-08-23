@@ -7,8 +7,7 @@ const News = require('../module/News');
 
 const config = require('../config');
 
-mongoose.connect(config.database,config.options);
-
+mongoose.connect(config.database, config.options);
 
 
 function getNews() {
@@ -24,7 +23,7 @@ function getNews() {
                 let news = new News;
                 news.title = element.title;
                 news.newsDescription = element.body;
-                if (element.author === null|| element.author===undefined) {
+                if (element.author === null || element.author === undefined) {
                     news.author = 'N/A';
                 } else {
                     news.author = element.author;
@@ -38,7 +37,7 @@ function getNews() {
                 if (element.source_info.name === null) {
                     news.source = 'N/A';
                 } else {
-                    if (element.source_info.name ==="CCN"){
+                    if (element.source_info.name === "CCN") {
                         news.source = "Crypto Coins News";
                     } else {
                         news.source = element.source_info.name;
@@ -82,21 +81,20 @@ async function getLoop() {
     do {
         loginConsole(time);
         getNews();
-        await delay(5*60*1000);
+        await delay(5 * 60 * 1000);
         time++;
     } while (true)
 }
 
-module.exports.run = ()=>{
+module.exports.run = () => {
     getNews();
 };
-
 
 
 function loginConsole(times) {
     console.log(new Date(Date.now()).toLocaleString() + '  Run for ' + times + ' times.');
 }
 
-function consoleLog(msg){
-    console.log(new Date(Date.now()).toLocaleString()+" "+ msg);
+function consoleLog(msg) {
+    console.log(new Date(Date.now()).toLocaleString() + " " + msg);
 }

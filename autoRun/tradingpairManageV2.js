@@ -79,7 +79,7 @@ function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, ba
 
                 let message = "Now, " + from + " is worth " + coPrice + " " + to + " on " + market + ", lower than your expectation of " + inPrice;
                 notification.sendAlert(deviceId, message, badgeNumber + 1);
-                
+
                 console.log(deviceId + "      " + (badgeNumber + 1) + "       " + message);
                 db.changeInterestStatus([{
                     id: interestID,

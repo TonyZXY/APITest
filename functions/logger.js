@@ -6,13 +6,13 @@ const myFormat = printf(info => {
     return `${info.timestamp} [${info.label}]<${info.address}> ${info.level}: ${info.message}`;
 });
 
-const fs = require( 'fs' );
+const fs = require('fs');
 const path = require('path');
 const logDir = '/home/bglnewsdev00/NewsAPI/log';
 
-if ( !fs.existsSync( logDir ) ) {
+if (!fs.existsSync(logDir)) {
     // Create the directory if it does not exist
-    fs.mkdirSync( logDir );
+    fs.mkdirSync(logDir);
 }
 
 
@@ -25,7 +25,7 @@ function logIntoFile(filename, levelToSet, labelToSet, addressToLog, messageToLo
         )
     });
     let file = new transports.File({
-        filename: path.join(logDir,filename)
+        filename: path.join(logDir, filename)
     });
     logger.add(file);
     logger.add(consolelog);

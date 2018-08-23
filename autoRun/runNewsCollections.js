@@ -5,7 +5,6 @@ const alg = require('../dataServices/coinAlgorithm');
 const avg = require('../dataServices/CoinGlobalAvg');
 
 
-
 function run() {
     NewsAPI.run();
     RSSFeed.run();

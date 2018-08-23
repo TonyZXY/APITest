@@ -124,7 +124,7 @@ module.exports.findNewsByContent = function (leTag, callback, skip, limit) {
     News.find({
         languageTag: leTag
     }, callback).sort({
-        publishedTime:-1
+        publishedTime: -1
     }).skip(skip).limit(limit);
 };
 
@@ -163,14 +163,14 @@ module.exports.searchNewsTime = (from, to, callback) => {
  *  This is the Area that for testing code
  */
 
-module.exports.findNews = (url ,callback) => {
+module.exports.findNews = (url, callback) => {
     // let reg = new RegExp(title.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'),'i');
     let date = new Date();
-    date.setDate(date.getDate()-14);
+    date.setDate(date.getDate() - 14);
     News.findOne({
-        url:url,
-        publishedTime:{
-            $gte:date
+        url: url,
+        publishedTime: {
+            $gte: date
         }
     }, callback);
 };

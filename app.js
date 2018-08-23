@@ -6,11 +6,10 @@ const path = require('path');
 const cpmpression = require('compression');
 
 
-
 app.use(cors());
 app.use(cpmpression());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 
 
 const api = require('./routes/api');
@@ -23,17 +22,14 @@ const policy = require('./routes/policy');
 const terms = require('./routes/terms');
 
 
-
 app.use('/api', api);
 app.use('/userLogin', userLogin);
-app.use('/login',login);
-app.use('/deviceManage',deviceManage);
-app.use('/coin',coin);
-app.use('/adminpage',admin);
-app.use('/policy',policy);
-app.use('/terms',terms);
-
-
+app.use('/login', login);
+app.use('/deviceManage', deviceManage);
+app.use('/coin', coin);
+app.use('/adminpage', admin);
+app.use('/policy', policy);
+app.use('/terms', terms);
 
 
 //nothing

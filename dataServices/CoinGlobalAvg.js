@@ -5,7 +5,7 @@ const logger = require('../functions/logger');
 
 const config = require('../config');
 
-mongoose.connect(config.database,config.options);
+mongoose.connect(config.database, config.options);
 
 
 // const url = 'https://api.coinmarketcap.com/v2/ticker/?convert=AUD&start=1&limit=100&sort=rank&structure=array';
@@ -112,7 +112,7 @@ function startcall() {
             }
         });
         logger.APIUpdateLog("CoinGlobalAvg", "MarketCap", "MarketCap Gobal Average Added to database");
-        delay(50*1000).then(()=>{
+        delay(50 * 1000).then(() => {
             startcall();
         })
     });

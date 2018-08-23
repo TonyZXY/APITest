@@ -7,49 +7,49 @@ const logger = require('../functions/logger');
 
 const config = require('../config');
 
-mongoose.connect(config.database,config.options);
+mongoose.connect(config.database, config.options);
 
 
 module.exports = router;
 
 
-router.get('/getAll',(req,res)=>{
+router.get('/getAll', (req, res) => {
     let address = req.connection.remoteAddress;
-    Coin.getCoinList((err,list)=>{
+    Coin.getCoinList((err, list) => {
         if (err) {
             console.log(err);
-            logger.databaseError('coin',address, err);
+            logger.databaseError('coin', address, err);
         } else {
             res.json(list);
         }
     })
 });
 
-router.get('/getAllWithCurrency',(req,res)=>{
+router.get('/getAllWithCurrency', (req, res) => {
     let currency = req.query.currency;
     let address = req.connection.remoteAddress;
-    Coin.getCoinListCurrency(currency,(err,msg)=>{
+    Coin.getCoinListCurrency(currency, (err, msg) => {
         if (err) {
             console.log(err);
-            logger.databaseError('coin',address, err);
+            logger.databaseError('coin', address, err);
         } else {
             res.json(msg);
-            logger.coinLog(address,"Get all coins with currency.");
+            logger.coinLog(address, "Get all coins with currency.");
         }
     })
 });
 
-router.delete('/delete',(req,res)=>{
+router.delete('/delete', (req, res) => {
     let name = req.query.name;
     let address = req.connection.remoteAddress;
-    Coin.deleteCoinByName(name,(err,msg)=>{
+    Coin.deleteCoinByName(name, (err, msg) => {
         if (err) {
             console.log(err);
-            
-            logger.databaseError('coin',address, err);
-        }else {
+
+            logger.databaseError('coin', address, err);
+        } else {
             res.json(msg);
-            logger.coinLog(address,"Delete Coin By name.");
+            logger.coinLog(address, "Delete Coin By name.");
         }
     })
 });
@@ -57,15 +57,15 @@ router.delete('/delete',(req,res)=>{
 const coinfilter = require('../module/coinFliterNew');
 
 
-router.get('/getCoinList',(req,res)=>{
+router.get('/getCoinList', (req, res) => {
     let address = req.connection.remoteAddress;
-    coinfilter.getCoinList((err,coinList)=>{
-        if(err){
+    coinfilter.getCoinList((err, coinList) => {
+        if (err) {
             console.log(err);
-            logger.databaseError('coin',address, err);
-        } else{
+            logger.databaseError('coin', address, err);
+        } else {
             res.json(coinList.data);
-            logger.coinLog(address,"Get filtered Coin List");
+            logger.coinLog(address, "Get filtered Coin List");
 
         }
     })
@@ -87,16 +87,16 @@ router.get('/getCoinList',(req,res)=>{
 // });
 
 
-router.get('/getCoin',(req,res)=>{
+router.get('/getCoin', (req, res) => {
     let symbol = req.query.coin;
     let address = req.connection.remoteAddress;
-    Coin.getOneCoin(symbol,(err,coin)=>{
-        if (err){
+    Coin.getOneCoin(symbol, (err, coin) => {
+        if (err) {
             console.log(err);
-            logger.databaseError('coin',address,err);
+            logger.databaseError('coin', address, err);
         } else {
             res.json(coin);
-            logger.coinLog(address,"Get Coin Data "+ symbol);
+            logger.coinLog(address, "Get Coin Data " + symbol);
         }
     })
 });
