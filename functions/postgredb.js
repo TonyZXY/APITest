@@ -242,6 +242,37 @@ module.exports = {
         let param = [available,coinSymbol];
         let query = 'UPDATE coins SET available=$1 WHERE "from"=$2;';
         return pool.query(query,param,callback);
+    },
+
+    getAllTransaction: (email,callback) => {
+        let param = [email];
+        let query = 'select * from transactions where transaction_user_id=(select user_id from users where email=$1)';
+        return pool.query(query, param, callback)
+    },
+
+
+    addTransactionList: (userID, coinList, callback) => {
+        let param = [userID];
+        let query = 'insert into transactions (transaction_user_id, status, coin_name, coin_add_name, exchange_name, ' +
+            'trading_pair_name, single_price, amount, currency_aud, currency_usd, currency_jpy, currency_eur, ' +
+            'currency_cny, date, note) values';
+        let str = '';
+        coinList.forEach( coin =>{
+            str += '('+ userID+',\''+coin.status+'\',\''+coin.coinName+'\',\''+coin.coinAddName+'\',\''+coin.exchangeName+'\',\'' +
+                coin.tradingPairName+'\','+coin.singlePrice+','+coin.amount+','+coin.currencyAUD+','+coin.currencyUSD+','+
+                coin.currencyJPY+','+coin.currencyEUR+','+coin.currencyCNY+',\''+ coin.date+'\',\''+coin.note+'\'),';
+        });
+        query += str.substring(0, str.length - 1);
+        query += ' returning * ;';
+        // console.log(query);
+        return pool.query(query,[],callback);
+    },
+
+
+    deleteTransaction: (coinID,callback)=>{
+        let param = [coinID];
+        let query = 'delete from transactions where transaction_id=$1';
+        return pool.query(query,param,callback);
     }
 };
 
