@@ -934,5 +934,128 @@ router.get('/resendVerifyLink/:email', (req, res) => {
 });
 
 
+router.post('/addTransaction',verifyToken,(req,res)=>{
+    let email = req.body.email;
+    let transactions = req.body.transactions;
+    if (email===undefined||email===null||
+        transactions===undefined||transactions===null){
+        res.send({
+            message: 'invalid request',
+            code: 700,
+            success: false,
+            data: null
+        })
+    } else {
+        db.getUser(email,(err,usermsg)=>{
+            if (err){
+                databaseError(err,res);
+            } else {
+                let user = usermsg.rows[0];
+                if (user === null || user === undefined){
+                    res.send({
+                        message: 'user not found',
+                        code: 404,
+                        success: false,
+                        data: null
+                    })
+                } else {
+                    let userID = user._id;
+                    db.addTransactionList(userID,transactions,(err,msg)=>{
+                        if (err){
+                            databaseError(err,res);
+                        } else {
+                            res.send({
+                                message: 'successfully add transaction',
+                                code: 200,
+                                success: true,
+                                data: msg.rows
+                            })
+                        }
+                    })
+                }
+            }
+        })
+    }
+});
+
+
+router.post('/deleteTransaction',verifyToken,(req,res)=>{
+    let transactionID = req.body.transactionID;
+    if (transactionID===null||transactionID===undefined){
+        res.send({
+            message: 'invalid request',
+            code: 701,
+            success: false,
+            data: null
+        })
+    } else {
+        db.deleteTransaction(transactionID,(err,msg)=>{
+            if (err){
+                databaseError(err,res);
+            } else {
+                res.send({
+                    message: 'successfully delete transaction',
+                    code: 200,
+                    success: true,
+                    data: msg.rows
+                })
+            }
+        })
+    }
+});
+
+
+router.post('/getTransactions',verifyToken,(req,res)=>{
+    let email = req.body.email;
+    if (email === undefined|| email === null){
+        res.send({
+            message: 'invalid request',
+            code: 702,
+            success: false,
+            data: null
+        })
+    } else {
+        db.getAllTransaction(email,(err,msg)=>{
+            if (err) {
+                databaseError(err,res);
+            } else {
+                res.send({
+                    message: 'successfully get all transactions',
+                    code: 200,
+                    success: true,
+                    data: msg.rows
+                })
+            }
+        })
+    }
+});
+
+
+router.post('/updateTransaction',verifyToken,(req,res)=>{
+    let coin = req.body.transactions;
+    if (coin === null || coin === undefined){
+        res.send({
+            message: 'invalid request',
+            code: 703,
+            success: false,
+            data: null
+        })
+    } else {
+        db.updateTransaction(coin,(err,msg)=>{
+            if (err){
+                databaseError(err,res);
+            } else {
+                res.send({
+                    message: 'successfully update transactions',
+                    code: 200,
+                    success: true,
+                    data: msg.rows
+                })
+            }
+        })
+    }
+});
+
+
 module.exports = router;
 

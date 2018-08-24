@@ -94,8 +94,8 @@ module.exports = {
     },
 
 
-    updateNotificationStatus: (email, flash,interest, callback) => {
-        let param = [flash,interest, email];
+    updateNotificationStatus: (email, flash, interest, callback) => {
+        let param = [flash, interest, email];
         let query = 'update users set flash=$1,interest=$2 where email=$3 returning interest,flash;';
         return pool.query(query, param, callback);
     },
@@ -125,44 +125,44 @@ module.exports = {
 
 
     updateInterestPrice: (id, price, isGreater, callback) => {
-        let param = [price,isGreater,id];
+        let param = [price, isGreater, id];
         let query = 'Update interests set (price,isgreater) = ($1,$2) where interest_id=$3 returning *;';
-        return pool.query(query,param,callback);
+        return pool.query(query, param, callback);
     },
 
 
-    updateInterestCoin:(id,coinID,price,isGreater,callback)=>{
-        let param = [price,isGreater,coinID,id];
+    updateInterestCoin: (id, coinID, price, isGreater, callback) => {
+        let param = [price, isGreater, coinID, id];
         let query = 'Update interests set (price,isgreater,interest_coin_id) = ($1,$2,$3) where interest_id=$4 returning *;';
-        return pool.query(query,param,callback);
+        return pool.query(query, param, callback);
     },
 
 
-    addIOSDevice:(email,token,callback)=>{
-        let param = [email,token];
+    addIOSDevice: (email, token, callback) => {
+        let param = [email, token];
         let query = 'insert into iosdevices (device_user_id, device_token) VALUES ((SELECT user_id from users where email=$1),$2) returning *;';
-        return pool.query(query,param,callback);
+        return pool.query(query, param, callback);
     },
 
 
-    deleteIOSDevice:(token,callback)=>{
+    deleteIOSDevice: (token, callback) => {
         let param = [token];
         let query = 'DELETE FROM iosdevices where device_token=$1;';
-        return pool.query(query,param,callback);
+        return pool.query(query, param, callback);
     },
 
 
-    addIOSDeviceNumber: (token,callback)=>{
+    addIOSDeviceNumber: (token, callback) => {
         let param = [token];
         let query = 'update iosdevices set number = number+1 where device_token=$1 returning device_token,number;';
-        return pool.query(query,param,callback);
+        return pool.query(query, param, callback);
     },
 
 
-    setIOSDeviceNumberToZero: (token,callback)=>{
+    setIOSDeviceNumberToZero: (token, callback) => {
         let param = [token];
         let query = 'update iosdevices set number = 0 where device_token=$1 returning device_token,number;';
-        return pool.query(query,param,callback);
+        return pool.query(query, param, callback);
     },
 
 
@@ -173,73 +173,119 @@ module.exports = {
     // },
 
 
-    updateTradingPair:(id,price,callback)=>{
-        let param = [price,id];
+    updateTradingPair: (id, price, callback) => {
+        let param = [price, id];
         let query = 'update coins set price=$1 where coin_id=$2 returning *;';
-        return pool.query(query,param,callback);
+        return pool.query(query, param, callback);
     },
 
-    getAllTradingPair:(callback)=>{
+    getAllTradingPair: (callback) => {
         let param = [];
         let query = 'Select * from coins;';
-        return pool.query(query,param,callback);
+        return pool.query(query, param, callback);
     },
 
-    getAllIOSDeviceForFlashNotification:(callback)=>{
+    getAllIOSDeviceForFlashNotification: (callback) => {
         let param = [];
         let query = 'SELECT iosdevices.device_token \n' +
             'from (users join iosdevices on users.user_id=iosdevices.device_user_id) \n' +
             'where users.flash = true;';
-        return pool.query(query,param,callback);
+        return pool.query(query, param, callback);
     },
 
 
-    addIntoVerifyTable:(user_id,verifyToken,callback)=>{
-        let param = [verifyToken,user_id];
+    addIntoVerifyTable: (user_id, verifyToken, callback) => {
+        let param = [verifyToken, user_id];
         let query = 'insert into verify_user (token, verify_user_id) VALUES ($1, $2) returning *;';
-        return pool.query(query,param,callback);
+        return pool.query(query, param, callback);
     },
 
 
-    removeFromVerifyTable:(token,callback)=>{
+    removeFromVerifyTable: (token, callback) => {
         let param = [token];
         let query = 'delete from verify_user where token=$1 returning verify_user_id as user;';
-        return pool.query(query,param,callback);
+        return pool.query(query, param, callback);
     },
 
 
-    selectFromVerifyTable:(token,callback)=>{
+    selectFromVerifyTable: (token, callback) => {
         let param = [token];
         let query = 'select * from verify_user where token=$1;';
-        return pool.query(query,param,callback);
+        return pool.query(query, param, callback);
     },
 
 
-    verifyUser:(userID,callback)=>{
+    verifyUser: (userID, callback) => {
         let param = [userID];
         let query = 'update users set verify=true where user_id=$1 returning *';
-        return pool.query(query,param,callback);
+        return pool.query(query, param, callback);
     },
 
 
-    removeVerifyByReset:(id,callback)=>{
+    removeVerifyByReset: (id, callback) => {
         let param = [id];
         let query = 'DELETE FROM verify_user WHERE verify_user_id=$1 returning *;';
-        return pool.query(query,param,callback);
+        return pool.query(query, param, callback);
     },
 
 
-    updatePassword:(id,password,salt,callback)=>{
-        let param = [id,password,salt];
+    updatePassword: (id, password, salt, callback) => {
+        let param = [id, password, salt];
         let query = 'UPDATE users set password=$2,salt=$3 where user_id=$1 returning *;';
-        return pool.query(query,param,callback);
+        return pool.query(query, param, callback);
     },
 
 
-    resendVerifyEmail:(email,callback)=>{
+    resendVerifyEmail: (email, callback) => {
         let param = [email];
         let query = 'Select * from verify_user where verify_user_id=(select user_id from users where email=$1);';
+        return pool.query(query, param, callback);
+    },
+
+
+    getAllTransaction: (email,callback) => {
+        let param = [email];
+        let query = 'select * from transactions where transaction_user_id=(select user_id from users where email=$1)';
+        return pool.query(query, param, callback)
+    },
+
+
+    addTransactionList: (userID, coinList, callback) => {
+        let param = [userID];
+        let query = 'insert into transactions (transaction_user_id, status, coin_name, coin_add_name, exchange_name, ' +
+            'trading_pair_name, single_price, amount, currency_aud, currency_usd, currency_jpy, currency_eur, ' +
+            'currency_cny, date, note) values';
+        let str = '';
+        coinList.forEach( coin =>{
+            str += '('+ userID+',\''+coin.status+'\',\''+coin.coinName+'\',\''+coin.coinAddName+'\',\''+coin.exchangeName+'\',\'' +
+                coin.tradingPairName+'\','+coin.singlePrice+','+coin.amount+','+coin.currencyAUD+','+coin.currencyUSD+','+
+                coin.currencyJPY+','+coin.currencyEUR+','+coin.currencyCNY+',\''+ coin.date+'\',\''+coin.note+'\'),';
+        });
+        query += str.substring(0, str.length - 1);
+        query += ' returning * ;';
+        // console.log(query);
+        return pool.query(query,[],callback);
+    },
+
+
+    deleteTransaction: (coinID,callback)=>{
+        let param = [coinID];
+        let query = 'delete from transactions where transaction_id=$1 returning *';
         return pool.query(query,param,callback);
+    },
+
+
+    updateTransaction:(coin,callback)=>{
+        let query = 'UPDATE transactions\n' +
+            'SET\n' +
+            '    (status, coin_name, coin_add_name, exchange_name, trading_pair_name,\n' +
+            '    single_price, amount, currency_aud, currency_usd, currency_jpy, currency_eur, currency_cny,\n' +
+            '    date, note) =\n' +
+            '    (\''+coin.status+'\',\''+coin.coinName+'\',\''+coin.coinAddName+'\',\''+coin.exchangeName+'\',\''+coin.tradingPairName+'\',\n' +
+            '        '+coin.singlePrice+','+coin.amount+','+coin.currencyAUD+','+coin.currencyUSD+','+coin.currencyJPY+','+coin.currencyEUR+','+coin.currencyCNY+',\n' +
+            '        \''+coin.date+'\',\''+coin.note+'\')\n' +
+            'WHERE transaction_id = '+coin.transactionID+' returning *;';
+        return pool.query(query,[],callback);
     }
 };
 

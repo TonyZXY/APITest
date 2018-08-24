@@ -22,6 +22,10 @@ const newsFlashSchrma = mongoose.Schema({
     toSent:{
         type: Boolean,
         require: true
+    },
+    available:{
+        type: Boolean,
+        require: true
     }
 });
 
@@ -55,7 +59,8 @@ module.exports.updateFlashNews = function (id,flash,option,callback) {
         shortMassage:flash.shortMassage,
         title:flash.title,
         languageTag:flash.languageTag,
-        toSent: flash.toSent
+        toSent: flash.toSent,
+        available: flash.available
     };
     NewsFlash.findOneAndUpdate(query,update,option,callback);
 };
@@ -81,7 +86,14 @@ module.exports.searchFlashNews = (languageTag,patten,callback,skip,limit)=>{
 //delete news
 module.exports.deleteFlash = function (id,callback) {
     let query = {_id:id};
-    NewsFlash.remove(query,callback);
+    // NewsFlash.remove(query,callback);
+    NewsFlash.update({
+        _id:id
+    },{
+        $set:{
+            available:false
+        }
+    })
 };
 
 module.exports.findFlashByType = function (toSent, laTag, callback, limit) {

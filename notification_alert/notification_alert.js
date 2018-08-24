@@ -14,7 +14,7 @@ const optionsToFile = {
         keyId: "PFYGPR25U8",
         teamId: "4SMWL7L89M"
     },
-    production: false
+    production: true
 };
 
 function sendIos(deviceId, message, badgeNumber) {

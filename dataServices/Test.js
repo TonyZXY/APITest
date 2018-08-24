@@ -1,68 +1,75 @@
-const logger = require('../functions/logger');
-const CryptoCompare = require('./NewsFromCryptoCompare');
-let Parser = require('rss-parser');
-let parser = new Parser({
-    customFields: {
-        item: [
-            ['media:content', 'image'],
-        ]
-    }
-});
-const News = require('../module/News');
+var express = require('express')
+var app = express()
+const request = require('request');
 
-const mongoose = require('mongoose');
-const config = require('../config');
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect(config.database,config.options);
+app.get('api/query/:params', function (req, res) {
+    //secret read local file
+    var secret = "222222";
+    //recive params
+    var account = "";
+    var issuer = "";
+    var value = "";
+    var Destination = "";
+    var currency = "";
 
+    // let username = process.argv.length < 2 ? "default-username" : process.argv[2];
+    // let password = process.argv.length < 3 ? "default-password" : process.argv[3];
 
+    let options = {
+        url: "",
+        method: "post",
+        headers:
+            {
+                "content-type": "text/plain"
+            },
+        /*
+        auth: {
+            user: username,
+            pass: password
+        },
+        */
+        body: JSON.stringify({
+            "method": "sign",
+            "params": [
+                {
+                    "offline": true,
+                    "secret": secret,
+                    "tx_json": {
+                        "Account": account,
+                        "Amount": {
+                            "currency": currency,
+                            "issuer": issuer,
+                            "value": value
 
+                        },
+                        "Destination": Destination,
+                        "TransactionType": "Payment"
+                    },
 
+                    "fee_mult_max": 1000
+                }
+            ]
 
-async function runCointelegraph() {
-    let feed = await parser.parseURL('https://cointelegraph.com/rss/tag/bitcoin');
-    let feeds = feed.items;
-    let length = feeds.length;
-    let num = 0;
-    feeds.forEach(element => {
-        let news = new News();
-        news.title = element.title;
-        news.author = element.creator;
-        news.newsDescription = element.contentSnippet;
-        news.imageURL = element.image.$.url;
-        news.url = element.link;
-        news.contentTag = element.categories;
-        news.publishedTime = element.isoDate;
-        news.source = 'CoinTelegraph';
-        news.languageTag = 'EN';
-        news.localeTag = '';
-        console.log(news);
-        // News.findNews(news.url,(err,newsFromDB)=>{
-        //     if (err){
-        //         console.log(err);
-        //         logger.databaseError("RssFeeds","cointelegrap",err);
-        //     } else {
-        //         if (!newsFromDB) {
-        //             News.addNews(news,(err,msg)=>{
-        //                 if (err) {
-        //                     console.log(err);
-        //                     logger.databaseError("RssFeeds","cointelegrap",err);
-        //                 }else {
-        //                     num += 1;
-        //                     if (num === length){
-        //                         loginConsole("update cointelegraph.com");
-        //                     }
-        //                 }
-        //             })
-        //         } else {
-        //             num += 1;
-        //             if (num === length){
-        //                 loginConsole("update cointelegraph.com");
-        //             }
-        //         }
-        //     }
-        // });
+        })
+    };
+
+    //
+    // await msg = async request();
+    // res.send(msg);
+    request(options, (error, response, body) => { //callback || promise
+
+        if (error) {
+            console.error('An error has occurred: ', error);
+        } else {
+            console.log('Post successful: response: ', body);
+            let msg = response.get();
+            res.send(msg);
+        }
     });
-}
 
-runCointelegraph()
+
+    res.send(request.response.get(tx_blob));
+})
