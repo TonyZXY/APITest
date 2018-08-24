@@ -22,8 +22,8 @@ function sendIos(deviceId, message, badgeNumber) {
     let deviceToken = deviceId;
     let notification = new apn.Notification();
     notification.badge = badgeNumber;
-    notification.alert.title = "Alert!";
-    notification.alert.body = message;
+    notification.title = "Alert!";
+    notification.body = message;
     notification.sound = 'default';
     notification.topic = "com.blockchainglobal.bglmedia";
     apnprovider.send(notification, deviceToken).then(result => {
