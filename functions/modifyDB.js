@@ -19,6 +19,7 @@ function modify(){
                 if (err) {
                     console.log(err);
                 } else {
+                    console.log(flash._id);
                     db.addNewsIntoList(flash._id,(err,dbmsg)=>{
                         if (err){
                             console.log(err);
