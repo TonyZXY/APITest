@@ -616,17 +616,13 @@ router.get('/getFlashWithLan', (req, res) => {
             flashToSent.forEach( flashToEdit =>{
                 likes.forEach(e =>{
                     if (e.news_id.toString() === flashToEdit._id.toString()){
-                        console.log('true');
                         flashToEdit.like = e.likes;
                         flashToEdit.dislike = e.dislikes;
-                        // console.log(flashToEdit);
                     }
                 })
             });
-            // console.log(flashToSent);
             res.json(flashToSent);
         });
-
         logger.newsFlashLog(address, "Get Flash with SKIP and LIMIT");
     })
 });

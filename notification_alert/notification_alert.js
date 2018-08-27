@@ -27,7 +27,6 @@ function sendIos(deviceId, message, badgeNumber) {
     notification.sound = 'default';
     notification.topic = "com.blockchainglobal.bglmedia";
     apnprovider.send(notification, deviceToken).then(result => {
-        console.log(result);
         result.failed.forEach(failure => {
             if (failure.status === '410') {
                 db.deleteIOSDevice(deviceId, (err, res) => {
