@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const Notification = require('../functions/notification');
 const logger = require('../functions/logger');
+const db = require('../functions/postgredb');
 
 
 const config = require('../config');
@@ -17,6 +18,7 @@ const News = require('../module/News.js');
 const Video = require('../module/Video.js');
 const NewsFlash = require('../module/NewsFlash.js');
 const Genuine = require('../module/Genuine.js');
+const FlashLike = require('../module/FlashLike');
 
 // address = req.connection.remoteAddress
 
@@ -492,13 +494,28 @@ router.post('/flash', verifyToken, function (req, res) {
             let address = req.connection.remoteAddress;
             logger.databaseError('apifile', address, err);
         }
-        res.json(flashAdded);
-        let address2 = req.connection.remoteAddress;
-        logger.newsFlashLog("NewsFlashApi", address2, "A News Flash added (" + flashAdded._id + ")");
-        if (flashAdded.toSent) {
-            Notification.sendFlashNotification(flashAdded.title,flashAdded.shortMassage);
-        }
-
+        let like = new FlashLike();
+        like.newsID = flashAdded._id;
+        like.likes = [];
+        like.dislikes = [];
+        FlashLike.addNews(like,(err,msg)=>{
+            if (err){
+                console.log(err);
+            } else {
+                db.addNewsIntoList(flashAdded._id,(err,dbmsg)=>{
+                    if (err){
+                        console.log(err);
+                    } else {
+                        res.json(flashAdded);
+                        let address2 = req.connection.remoteAddress;
+                        logger.newsFlashLog("NewsFlashApi", address2, "A News Flash added (" + flashAdded._id + ")");
+                        if (flashAdded.toSent) {
+                            Notification.sendFlashNotification(flashAdded.title,flashAdded.shortMassage);
+                        }
+                    }
+                })
+            }
+        });
     })
 });
 
@@ -587,7 +604,25 @@ router.get('/getFlashWithLan', (req, res) => {
             console.log(err);
             logger.databaseError('apifile', address, err);
         }
-        res.json(flash);
+        let ids = [];
+        flash.forEach( element =>{
+            ids.push(element._id);
+        });
+        let likes = [];
+        db.getLikesNumberList(ids,(err,dbmsg)=>{
+            likes = dbmsg.rows;
+            console.log(likes);
+            flash.forEach( flash =>{
+                likes.forEach(e =>{
+                    if (e.news_id === flash._id){
+                        flash.like = e.likes;
+                        flash.dislike = e.dislikes;
+                    }
+                })
+            });
+            res.json(flash);
+        });
+
         logger.newsFlashLog(address, "Get Flash with SKIP and LIMIT");
     })
 });

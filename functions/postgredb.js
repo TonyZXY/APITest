@@ -292,6 +292,55 @@ module.exports = {
             '        \'' + coin.date + '\',\'' + coin.note + '\')\n' +
             'WHERE transaction_id = ' + coin.transactionID + ' returning *;';
         return pool.query(query, [], callback);
+    },
+
+
+    addLike:(newsID,callback)=>{
+        let query = 'update like_dislike set likes = likes+1 where news_id = $1 returning * ;';
+        let param = [newsID];
+        return pool.query(query,param,callback);
+    },
+
+    removeLike:(newsID,callback)=>{
+        let query = 'update like_dislike set likes = likes - 1 where news_id = $1 returning *;';
+        let param = [newsID];
+        return pool.query(query,param,callback);
+    },
+
+    addDislike:(newsID,callback)=>{
+        let query = 'update like_dislike set dislikes = dislikes +1 where news_id = $1 returning * ;';
+        let param = [newsID];
+        return pool.query(query,param,callback);
+    },
+
+    removeDislike:(newsID,callback)=>{
+        let query = 'update like_dislike set dislikes = dislikes -1 where news_id = $1 returning * ;';
+        let param = [newsID];
+        return pool.query(query,param,callback);
+    },
+
+    getLikesNumber:(newsID,callback)=>{
+        let query = 'select * from like_dislike where news_id=$1;';
+        let param = [newsID];
+        return pool.query(query,param,callback);
+    },
+
+    addNewsIntoList:(newsID,callback)=>{
+        let param = [newsID];
+        let query = 'insert into like_dislike (news_id) values ($1) returning *;';
+        return pool.query(query,param,callback);
+    },
+
+    getLikesNumberList: (newsIDs,callback)=>{
+        let query = 'select * from like_dislike where news_id in (';
+        let str = '';
+        newsIDs.forEach(e=>{
+            str += '\''+e+'\',';
+        });
+        query += str.substring(0,str.length -1);
+        query += ');';
+
+        return pool.query(query,[],callback);
     }
 };
 

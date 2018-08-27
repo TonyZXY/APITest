@@ -8,6 +8,12 @@ const rs = require('randomstring');
 const mail = require('@sendgrid/mail');
 const path = require('path');
 const config = require('../config');
+const NewsLike = require('../module/FlashLike');
+const mongoose = require('mongoose');
+
+
+mongoose.connect(config.database);
+
 
 mail.setApiKey(config.mailAPIKey);
 
@@ -1034,6 +1040,178 @@ router.post('/updateTransaction', verifyToken, (req, res) => {
             }
         })
     }
+});
+
+
+router.post('/like', verifyToken, (req, res) => {
+    let newsID = req.body.newsID;
+    let email = req.body.email;
+    NewsLike.getDislike(newsID, email, (err, li) => { // check if dislike
+        if (err) {
+            databaseError(err, res);
+        } else {
+            let disliked = li !== null;
+            if (disliked === true) {
+                NewsLike.removeDislike(newsID, email, (err, msg) => { // if true remove dislike
+                    if (err) {
+                        databaseError(err, res);
+                    } else {
+                        db.removeDislike(newsID, (err, rmdbmsg) => {
+                            if (err) {
+                                databaseError(err, res);
+                            } else {
+                                NewsLike.addLike(newsID, email, (err, msg) => { // after remove, add like
+                                    if (err) {
+                                        databaseError(err, res);
+                                    } else {
+                                        db.addLike(newsID, (err, dbmsg) => {
+                                            if (err) {
+                                                databaseError(err, res);
+                                            } else {
+                                                res.send({
+                                                    message: 'successfully liked',
+                                                    code: 200,
+                                                    success: true,
+                                                    data: dbmsg.rows[0]
+                                                });
+                                            }
+                                        });
+                                    }
+                                })
+                            }
+                        });
+                    }
+                })
+            } else {
+                NewsLike.getLikes(newsID, email, (err, di) => { // if not dislike, check if liked
+                    if (err) {
+                        databaseError(err, res);
+                    } else {
+                        let liked = di !== null;
+                        if (liked === true) { // if liked, return message
+                            db.getLikesNumber(newsID, (err, dbmsg) => {
+                                if (err) {
+                                    databaseError(err, res);
+                                } else {
+                                    res.send({
+                                        message: 'already liked',
+                                        code: 200,
+                                        success: true,
+                                        data: dbmsg.rows[0]
+                                    });
+                                }
+                            })
+                        } else {
+                            NewsLike.addLike(newsID, email, (err, msg) => { // if not liked, add to like list
+                                if (err) {
+                                    databaseError(err, res);
+                                } else {
+                                    db.addLike(newsID, (err, dbmsg) => {
+                                        if (err) {
+                                            databaseError(err, res);
+                                        } else {
+                                            res.send({
+                                                message: 'successfully liked',
+                                                code: 200,
+                                                success: true,
+                                                data: dbmsg.rows[0]
+                                            });
+                                        }
+                                    });
+                                }
+                            })
+                        }
+                    }
+                })
+            }
+        }
+    })
+});
+
+
+router.post('/dislike', verifyToken, (req, res) => {
+    let newsID = req.body.newsID;
+    let email = req.body.email;
+    NewsLike.getLikes(newsID, email, (err, li) => { // check if liked
+        if (err) {
+            databaseError(err, res);
+        } else {
+            let liked = li !== null;
+            if (liked === true) {
+                NewsLike.removeLike(newsID, email, (err, msg) => { // if true remove dislike
+                    if (err) {
+                        databaseError(err, res);
+                    } else {
+                        db.removeLike(newsID, (err, rmdbmsg) => {
+                            if (err) {
+                                databaseError(err, res);
+                            } else {
+                                NewsLike.addDislike(newsID, email, (err, msg) => { // after remove, add like
+                                    if (err) {
+                                        databaseError(err, res);
+                                    } else {
+                                        db.addDislike(newsID, (err, dbmsg) => {
+                                            if (err) {
+                                                databaseError(err, res);
+                                            } else {
+                                                res.send({
+                                                    message: 'successfully disliked',
+                                                    code: 200,
+                                                    success: true,
+                                                    data: dbmsg.rows[0]
+                                                });
+                                            }
+                                        });
+                                    }
+                                })
+                            }
+                        });
+                    }
+                })
+            } else {
+                NewsLike.getDislike(newsID, email, (err, di) => { // if not dislike, check if liked
+                    if (err) {
+                        databaseError(err, res);
+                    } else {
+                        let disliked = di !== null;
+                        if (disliked === true) { // if liked, return message
+                            db.getLikesNumber(newsID, (err, dbmsg) => {
+                                if (err) {
+                                    databaseError(err, res);
+                                } else {
+                                    res.send({
+                                        message: 'already disliked',
+                                        code: 200,
+                                        success: true,
+                                        data: dbmsg.rows[0]
+                                    });
+                                }
+                            })
+                        } else {
+                            NewsLike.addDislike(newsID, email, (err, msg) => { // if not liked, add to like list
+                                if (err) {
+                                    databaseError(err, res);
+                                } else {
+                                    db.addDislike(newsID, (err, dbmsg) => {
+                                        if (err) {
+                                            databaseError(err, res);
+                                        } else {
+                                            res.send({
+                                                message: 'successfully disliked',
+                                                code: 200,
+                                                success: true,
+                                                data: dbmsg.rows[0]
+                                            });
+                                        }
+                                    });
+                                }
+                            })
+                        }
+                    }
+                })
+            }
+        }
+    })
 });
 
 
