@@ -20,7 +20,7 @@ function modify(){
                     console.log(err);
                 } else {
                     console.log(flash._id);
-                    let id = flash._id;
+                    let id = flash._id.toString();
                     db.addNewsIntoList(id,(err,dbmsg)=>{
                         if (err){
                             console.log(err);
