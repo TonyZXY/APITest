@@ -605,14 +605,15 @@ router.get('/getFlashWithLan', (req, res) => {
             logger.databaseError('apifile', address, err);
         }
         let ids = [];
-        flash.forEach( element =>{
+        let flashToSent = flash;
+        flashToSent.forEach( element =>{
             ids.push(element._id);
         });
         let likes = [];
         db.getLikesNumberList(ids,(err,dbmsg)=>{
             likes = dbmsg.rows;
             // console.log(likes);
-            flash.forEach( flash =>{
+            flashToSent.forEach( flash =>{
                 likes.forEach(e =>{
                     if (e.news_id === flash._id){
                         flash.like = e.likes;
@@ -620,8 +621,8 @@ router.get('/getFlashWithLan', (req, res) => {
                     }
                 })
             });
-            console.log(flash);
-            res.json(flash);
+            console.log(flashToSent);
+            res.json(flashToSent);
         });
 
         logger.newsFlashLog(address, "Get Flash with SKIP and LIMIT");
