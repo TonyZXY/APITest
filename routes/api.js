@@ -612,12 +612,10 @@ router.get('/getFlashWithLan', (req, res) => {
         let likes = [];
         db.getLikesNumberList(ids,(err,dbmsg)=>{
             likes = dbmsg.rows;
-            console.log(likes);
-            // console.log(likes);
             flashToSent.forEach( flashToEdit =>{
                 likes.forEach(e =>{
-                    console.log(e.news_id.toString());
                     if (e.news_id.toString() === flashToEdit._id.toString()){
+                        console.log('true');
                         flashToEdit.like = e.likes;
                         flashToEdit.dislike = e.dislikes;
                         // console.log(flashToEdit);
