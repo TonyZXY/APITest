@@ -22,7 +22,9 @@ function sendIos(deviceId, message, badgeNumber) {
     let deviceToken = deviceId;
     let notification = new apn.Notification();
     notification.badge = badgeNumber;
-    notification.alert = message;
+    notification.title = "Alert!";
+    notification.body = message;
+    notification.sound = 'default';
     notification.topic = "com.blockchainglobal.bglmedia";
     apnprovider.send(notification, deviceToken).then(result => {
             console.log(result);
@@ -48,7 +50,7 @@ function sendIos(deviceId, message, badgeNumber) {
 }
 
 
-module.exports.sendFlashNotification = (message) => {
+module.exports.sendFlashNotification = (title, message) => {
     db.getAllIOSDeviceForFlashNotification((err, list) =>{
         if(err){
             console.log(err);
@@ -60,7 +62,7 @@ module.exports.sendFlashNotification = (message) => {
             } else {
                 list.rows.forEach(row=>{
                     db.addIOSDeviceNumber(row.device_token,(err, msg)=>{
-                        sendIos(row.device_token,message,msg.rows[0].number)
+                        sendIos(row.device_token,title,message,msg.rows[0].number)
                     })
                     
                 })

@@ -4,10 +4,17 @@ const hashPassword = require('password-hash');
 const jwt = require('jsonwebtoken');
 const db = require('../functions/postgredb');
 const logger = require('../functions/logger');
+const NewsLike = require('../module/FlashLike');
+const mongoose = require('mongoose');
+
+
+
+
 
 const config = require('../config');
 
 const mailAccound = config.mail;
+mongoose.connect(config.database);
 
 
 const nodeMail = require('nodemailer');
@@ -29,7 +36,6 @@ const path = require('path');
 // });
 
 mail.setApiKey('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');
-
 
 
 const agl = 'sha256';
@@ -95,17 +101,17 @@ router.post('/register', (req, res) => {
                             "\t\t<div style=\"background-color: #ffffff; border-radius: 0px 0px 25px 25px; border: 1px solid #dddddd; padding: 25px\">\n" +
                             "\t\t\t<p>Thank you for creating a new account in <b style=\"color: #2d6095\">CRYPTOGEEK</b>.</p>\n" +
                             "\t\t\t<p>To complete your registration, we need you to verify your email address.</p>\n" +
-                            "\t\t\t<a href=\""+url+"\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Verify Email Address</button></a>\n" +
+                            "\t\t\t<a href=\"" + url + "\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Verify Email Address</button></a>\n" +
                             "\t\t\t<p>If you unable to click the button, please use the URL below instead.</p>\n" +
-                            "\t\t\t<a href=\""+url+"\">"+url+"</a>\n" +
+                            "\t\t\t<a href=\"" + url + "\">" + url + "</a>\n" +
                             "\t\t\t<p style=\"padding-top: 30px; color: #bbbbbb\">Copyright©CRYPTOGEEK</p>\n" +
                             "\t\t</div>\n" +
                             "\t</div>\n" +
                             "</body>"
                     };
                     // mail.send(mailOptions);
-                    mailSent.sendMail(mailOptions,(err,info)=>{
-                        if (err){
+                    mailSent.sendMail(mailOptions, (err, info) => {
+                        if (err) {
                             console.log(err);
                         } else {
                             console.log("sent email to:" + email);
@@ -551,7 +557,6 @@ router.post('/getInterest', verifyToken, (req, res) => {
 });
 
 
-
 router.post('/getNotificationStatus', verifyToken, (req, res) => {
     let userEmail = req.body.email;
     let address = req.connection.remoteAddress;
@@ -570,8 +575,6 @@ router.post('/getNotificationStatus', verifyToken, (req, res) => {
         }
     })
 });
-
-
 
 
 router.get('/verify/:msg/:str', (req, res) => {
@@ -600,7 +603,7 @@ router.get('/verify/:msg/:str', (req, res) => {
                             } else {
                                 let userID = msg.rows[0].user;
                                 db.verifyUser(userID, (err, msgs) => {
-                                    if (err){
+                                    if (err) {
                                         res.sendFile(path.join(__dirname + '/error.html'));
                                     } else {
                                         res.sendFile(path.join(__dirname + '/successVerify.html'));
@@ -617,9 +620,6 @@ router.get('/verify/:msg/:str', (req, res) => {
         res.sendFile(path.join(__dirname + '/invalid_token.html'));
     }
 });
-
-
-
 
 
 router.get('/resetPassword/:email', (req, res) => {
@@ -670,16 +670,16 @@ router.get('/resetPassword/:email', (req, res) => {
                                                 "\t\t\t<p>You have requested to reset your password in <b style=\"color: #2d6095\">CRYPTOGEEK</b>.</p>\n" +
                                                 "\t\t\t<p>Please click the button to reset your password.</p>\n" +
                                                 "\t\t\t<p>If you did not request to reset your password, please ignore this email.</p>\n" +
-                                                "\t\t\t<a href=\""+url+"\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Reset Password</button></a>\n" +
+                                                "\t\t\t<a href=\"" + url + "\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Reset Password</button></a>\n" +
                                                 "\t\t\t<p>If you unable to click the button, please use the URL below instead.</p>\n" +
-                                                "\t\t\t<a href=\""+url+"\">"+url+"</a>\n" +
+                                                "\t\t\t<a href=\"" + url + "\">" + url + "</a>\n" +
                                                 "\t\t\t<p style=\"padding-top: 30px; color: #bbbbbb\">Copyright©CRYPTOGEEK</p>\n" +
                                                 "\t\t</div>\n" +
                                                 "\t</div>\n" +
                                                 "</body>"
                                         };
-                                        mailSent.sendMail(mailOptions,(err,info)=>{
-                                            if (err){
+                                        mailSent.sendMail(mailOptions, (err, info) => {
+                                            if (err) {
                                                 console.log(err);
                                             } else {
                                                 console.log("sent email to:" + email);
@@ -721,16 +721,16 @@ router.get('/resetPassword/:email', (req, res) => {
                                 "\t\t\t<p>You have requested to reset your password in <b style=\"color: #2d6095\">CRYPTOGEEK</b>.</p>\n" +
                                 "\t\t\t<p>Please click the button to reset your password.</p>\n" +
                                 "\t\t\t<p>If you did not request to reset your password, please ignore this email.</p>\n" +
-                                "\t\t\t<a href=\""+url+"\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Reset Password</button></a>\n" +
+                                "\t\t\t<a href=\"" + url + "\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Reset Password</button></a>\n" +
                                 "\t\t\t<p>If you unable to click the button, please use the URL below instead.</p>\n" +
-                                "\t\t\t<a href=\""+url+"\">"+url+"</a>\n" +
+                                "\t\t\t<a href=\"" + url + "\">" + url + "</a>\n" +
                                 "\t\t\t<p style=\"padding-top: 30px; color: #bbbbbb\">Copyright©CRYPTOGEEK</p>\n" +
                                 "\t\t</div>\n" +
                                 "\t</div>\n" +
                                 "</body>"
                         };
-                        mailSent.sendMail(mailOptions,(err,info)=>{
-                            if (err){
+                        mailSent.sendMail(mailOptions, (err, info) => {
+                            if (err) {
                                 console.log(err);
                             } else {
                                 console.log("sent email to:" + email);
@@ -758,8 +758,6 @@ router.get('/resetPassword/:email', (req, res) => {
         }
     });
 });
-
-
 
 
 router.get('/reset/:verify/:key', (req, res) => {
@@ -802,8 +800,6 @@ router.get('/reset/:verify/:key', (req, res) => {
         }
     }
 });
-
-
 
 
 router.post('/reset/:verify/:key', (req, res) => {
@@ -862,8 +858,6 @@ router.post('/reset/:verify/:key', (req, res) => {
 });
 
 
-
-
 router.get('/resendVerifyLink/:email', (req, res) => {
     let email = req.params.email;
     db.resendVerifyEmail(email, (err, msg) => {
@@ -899,16 +893,16 @@ router.get('/resendVerifyLink/:email', (req, res) => {
                         "\t\t<div style=\"background-color: #ffffff; border-radius: 0px 0px 25px 25px; border: 1px solid #dddddd; padding: 25px\">\n" +
                         "\t\t\t<p>Thank you for creating a new account in <b style=\"color: #2d6095\">CRYPTOGEEK</b>.</p>\n" +
                         "\t\t\t<p>To complete your registration, we need you to verify your email address.</p>\n" +
-                        "\t\t\t<a href=\""+url+"\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Verify Email Address</button></a>\n" +
+                        "\t\t\t<a href=\"" + url + "\"><button type=\"button\" style=\"width: 300px; height: 40px; font-size: 20px; font-weight: bold; color: #ffffff; background-color: #36ddab; border-radius: 10px; border: 0px; margin: 10px;\">Verify Email Address</button></a>\n" +
                         "\t\t\t<p>If you unable to click the button, please use the URL below instead.</p>\n" +
-                        "\t\t\t<a href=\""+url+"\">"+url+"</a>\n" +
+                        "\t\t\t<a href=\"" + url + "\">" + url + "</a>\n" +
                         "\t\t\t<p style=\"padding-top: 30px; color: #bbbbbb\">Copyright©CRYPTOGEEK</p>\n" +
                         "\t\t</div>\n" +
                         "\t</div>\n" +
                         "</body>"
                 };
-                mailSent.sendMail(mailOptions,(err,info)=>{
-                    if (err){
+                mailSent.sendMail(mailOptions, (err, info) => {
+                    if (err) {
                         console.log(err);
                     } else {
                         console.log("sent email to:" + email);
@@ -934,11 +928,11 @@ router.get('/resendVerifyLink/:email', (req, res) => {
 });
 
 
-router.post('/addTransaction',verifyToken,(req,res)=>{
+router.post('/addTransaction', verifyToken, (req, res) => {
     let email = req.body.email;
     let transactions = req.body.transactions;
-    if (email===undefined||email===null||
-        transactions===undefined||transactions===null){
+    if (email === undefined || email === null ||
+        transactions === undefined || transactions === null) {
         res.send({
             message: 'invalid request',
             code: 700,
@@ -946,12 +940,12 @@ router.post('/addTransaction',verifyToken,(req,res)=>{
             data: null
         })
     } else {
-        db.getUser(email,(err,usermsg)=>{
-            if (err){
-                databaseError(err,res);
+        db.getUser(email, (err, usermsg) => {
+            if (err) {
+                databaseError(err, res);
             } else {
                 let user = usermsg.rows[0];
-                if (user === null || user === undefined){
+                if (user === null || user === undefined) {
                     res.send({
                         message: 'user not found',
                         code: 404,
@@ -960,9 +954,9 @@ router.post('/addTransaction',verifyToken,(req,res)=>{
                     })
                 } else {
                     let userID = user._id;
-                    db.addTransactionList(userID,transactions,(err,msg)=>{
-                        if (err){
-                            databaseError(err,res);
+                    db.addTransactionList(userID, transactions, (err, msg) => {
+                        if (err) {
+                            databaseError(err, res);
                         } else {
                             res.send({
                                 message: 'successfully add transaction',
@@ -979,9 +973,9 @@ router.post('/addTransaction',verifyToken,(req,res)=>{
 });
 
 
-router.post('/deleteTransaction',verifyToken,(req,res)=>{
+router.post('/deleteTransaction', verifyToken, (req, res) => {
     let transactionID = req.body.transactionID;
-    if (transactionID===null||transactionID===undefined){
+    if (transactionID === null || transactionID === undefined) {
         res.send({
             message: 'invalid request',
             code: 701,
@@ -989,9 +983,9 @@ router.post('/deleteTransaction',verifyToken,(req,res)=>{
             data: null
         })
     } else {
-        db.deleteTransaction(transactionID,(err,msg)=>{
-            if (err){
-                databaseError(err,res);
+        db.deleteTransaction(transactionID, (err, msg) => {
+            if (err) {
+                databaseError(err, res);
             } else {
                 res.send({
                     message: 'successfully delete transaction',
@@ -1005,9 +999,9 @@ router.post('/deleteTransaction',verifyToken,(req,res)=>{
 });
 
 
-router.post('/getTransactions',verifyToken,(req,res)=>{
+router.post('/getTransactions', verifyToken, (req, res) => {
     let email = req.body.email;
-    if (email === undefined|| email === null){
+    if (email === undefined || email === null) {
         res.send({
             message: 'invalid request',
             code: 702,
@@ -1015,9 +1009,9 @@ router.post('/getTransactions',verifyToken,(req,res)=>{
             data: null
         })
     } else {
-        db.getAllTransaction(email,(err,msg)=>{
+        db.getAllTransaction(email, (err, msg) => {
             if (err) {
-                databaseError(err,res);
+                databaseError(err, res);
             } else {
                 res.send({
                     message: 'successfully get all transactions',
@@ -1031,9 +1025,9 @@ router.post('/getTransactions',verifyToken,(req,res)=>{
 });
 
 
-router.post('/updateTransaction',verifyToken,(req,res)=>{
+router.post('/updateTransaction', verifyToken, (req, res) => {
     let coin = req.body.transactions;
-    if (coin === null || coin === undefined){
+    if (coin === null || coin === undefined) {
         res.send({
             message: 'invalid request',
             code: 703,
@@ -1041,9 +1035,9 @@ router.post('/updateTransaction',verifyToken,(req,res)=>{
             data: null
         })
     } else {
-        db.updateTransaction(coin,(err,msg)=>{
-            if (err){
-                databaseError(err,res);
+        db.updateTransaction(coin, (err, msg) => {
+            if (err) {
+                databaseError(err, res);
             } else {
                 res.send({
                     message: 'successfully update transactions',
@@ -1054,6 +1048,178 @@ router.post('/updateTransaction',verifyToken,(req,res)=>{
             }
         })
     }
+});
+
+
+router.post('/like', verifyToken, (req, res) => {
+    let newsID = req.body.newsID;
+    let email = req.body.email;
+    NewsLike.getDislike(newsID, email, (err, li) => { // check if dislike
+        if (err) {
+            databaseError(err, res);
+        } else {
+            let disliked = li !== null;
+            if (disliked === true) {
+                NewsLike.removeDislike(newsID, email, (err, msg) => { // if true remove dislike
+                    if (err) {
+                        databaseError(err, res);
+                    } else {
+                        db.removeDislike(newsID, (err, rmdbmsg) => {
+                            if (err) {
+                                databaseError(err, res);
+                            } else {
+                                NewsLike.addLike(newsID, email, (err, msg) => { // after remove, add like
+                                    if (err) {
+                                        databaseError(err, res);
+                                    } else {
+                                        db.addLike(newsID, (err, dbmsg) => {
+                                            if (err) {
+                                                databaseError(err, res);
+                                            } else {
+                                                res.send({
+                                                    message: 'successfully liked',
+                                                    code: 200,
+                                                    success: true,
+                                                    data: dbmsg.rows[0]
+                                                });
+                                            }
+                                        });
+                                    }
+                                })
+                            }
+                        });
+                    }
+                })
+            } else {
+                NewsLike.getLikes(newsID, email, (err, di) => { // if not dislike, check if liked
+                    if (err) {
+                        databaseError(err, res);
+                    } else {
+                        let liked = di !== null;
+                        if (liked === true) { // if liked, return message
+                            db.getLikesNumber(newsID, (err, dbmsg) => {
+                                if (err) {
+                                    databaseError(err, res);
+                                } else {
+                                    res.send({
+                                        message: 'already liked',
+                                        code: 200,
+                                        success: true,
+                                        data: dbmsg.rows[0]
+                                    });
+                                }
+                            })
+                        } else {
+                            NewsLike.addLike(newsID, email, (err, msg) => { // if not liked, add to like list
+                                if (err) {
+                                    databaseError(err, res);
+                                } else {
+                                    db.addLike(newsID, (err, dbmsg) => {
+                                        if (err) {
+                                            databaseError(err, res);
+                                        } else {
+                                            res.send({
+                                                message: 'successfully liked',
+                                                code: 200,
+                                                success: true,
+                                                data: dbmsg.rows[0]
+                                            });
+                                        }
+                                    });
+                                }
+                            })
+                        }
+                    }
+                })
+            }
+        }
+    })
+});
+
+
+router.post('/dislike', verifyToken, (req, res) => {
+    let newsID = req.body.newsID;
+    let email = req.body.email;
+    NewsLike.getLikes(newsID, email, (err, li) => { // check if liked
+        if (err) {
+            databaseError(err, res);
+        } else {
+            let liked = li !== null;
+            if (liked === true) {
+                NewsLike.removeLike(newsID, email, (err, msg) => { // if true remove dislike
+                    if (err) {
+                        databaseError(err, res);
+                    } else {
+                        db.removeLike(newsID, (err, rmdbmsg) => {
+                            if (err) {
+                                databaseError(err, res);
+                            } else {
+                                NewsLike.addDislike(newsID, email, (err, msg) => { // after remove, add like
+                                    if (err) {
+                                        databaseError(err, res);
+                                    } else {
+                                        db.addDislike(newsID, (err, dbmsg) => {
+                                            if (err) {
+                                                databaseError(err, res);
+                                            } else {
+                                                res.send({
+                                                    message: 'successfully disliked',
+                                                    code: 200,
+                                                    success: true,
+                                                    data: dbmsg.rows[0]
+                                                });
+                                            }
+                                        });
+                                    }
+                                })
+                            }
+                        });
+                    }
+                })
+            } else {
+                NewsLike.getDislike(newsID, email, (err, di) => { // if not dislike, check if liked
+                    if (err) {
+                        databaseError(err, res);
+                    } else {
+                        let disliked = di !== null;
+                        if (disliked === true) { // if liked, return message
+                            db.getLikesNumber(newsID, (err, dbmsg) => {
+                                if (err) {
+                                    databaseError(err, res);
+                                } else {
+                                    res.send({
+                                        message: 'already disliked',
+                                        code: 200,
+                                        success: true,
+                                        data: dbmsg.rows[0]
+                                    });
+                                }
+                            })
+                        } else {
+                            NewsLike.addDislike(newsID, email, (err, msg) => { // if not liked, add to like list
+                                if (err) {
+                                    databaseError(err, res);
+                                } else {
+                                    db.addDislike(newsID, (err, dbmsg) => {
+                                        if (err) {
+                                            databaseError(err, res);
+                                        } else {
+                                            res.send({
+                                                message: 'successfully disliked',
+                                                code: 200,
+                                                success: true,
+                                                data: dbmsg.rows[0]
+                                            });
+                                        }
+                                    });
+                                }
+                            })
+                        }
+                    }
+                })
+            }
+        }
+    })
 });
 
 

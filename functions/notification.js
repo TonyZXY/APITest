@@ -17,13 +17,15 @@ const optionsToFile = {
     production: true
 };
 
-function sendIos(deviceId, message, badgeNumber) {
+function sendIos(deviceId, title, message, badgeNumber) {
     let apnprovider = new apn.Provider(optionsToFile);
     let deviceToken = deviceId;
     let notification = new apn.Notification();
     notification.badge = badgeNumber;
-    notification.alert = message;
+    notification.title = title;
+    notification.body = message;
     notification.topic = "com.blockchainglobal.bglmedia";
+    notification.sound = 'default';
     apnprovider.send(notification, deviceToken).then(result => {
             console.log(result);
             result.failed.forEach(failure => {
@@ -49,7 +51,7 @@ function sendIos(deviceId, message, badgeNumber) {
 }
 
 
-module.exports.sendFlashNotification = (message) => {
+module.exports.sendFlashNotification = (title,message) => {
     db.getAllIOSDeviceForFlashNotification((err, list) =>{
         if(err){
             console.log(err);
@@ -61,7 +63,7 @@ module.exports.sendFlashNotification = (message) => {
             } else {
                 list.rows.forEach(row=>{
                     db.addIOSDeviceNumber(row.device_token,(err, msg)=>{
-                        sendIos(row.device_token,message,msg.rows[0].number)
+                        sendIos(row.device_token,title,message,msg.rows[0].number)
                     })
                     
                 })
@@ -71,6 +73,6 @@ module.exports.sendFlashNotification = (message) => {
     })
 };
 
-module.exports.sendAlert = (deviceId, message,badgeNumber) => {
-    sendIos(deviceId, message,badgeNumber)
+module.exports.sendAlert = (deviceId,title ,message,badgeNumber) => {
+    sendIos(deviceId,"Alert!",message,badgeNumber)
 };

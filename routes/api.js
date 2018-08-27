@@ -512,7 +512,7 @@ router.post('/flash', verifyToken, function (req, res) {
         let address2 = req.connection.remoteAddress;
         logger.newsFlashLog("NewsFlashApi",address2,"A News Flash added ("+flashAdded._id+")");
         if(flashAdded.toSent){
-            Notification.sendFlashNotification(flashAdded.shortMassage);
+            Notification.sendFlashNotification(flashAdded.title,flashAdded.shortMassage);
         }
         
     })
