@@ -608,21 +608,23 @@ router.get('/getFlashWithLan', (req, res) => {
         let flashToSent = flash;
         flashToSent.forEach( element =>{
             ids.push(element._id);
+            console.log(element._id);
         });
         let likes = [];
         db.getLikesNumberList(ids,(err,dbmsg)=>{
             likes = dbmsg.rows;
+            console.log(likes);
             // console.log(likes);
             flashToSent.forEach( flashToEdit =>{
                 likes.forEach(e =>{
                     if (e.news_id.toString() === flashToEdit._id.toString()){
                         flashToEdit.like = e.likes;
                         flashToEdit.dislike = e.dislikes;
-                        console.log(flashToEdit);
+                        // console.log(flashToEdit);
                     }
                 })
             });
-            console.log(flashToSent);
+            // console.log(flashToSent);
             res.json(flashToSent);
         });
 
