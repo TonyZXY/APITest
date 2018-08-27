@@ -269,10 +269,15 @@ module.exports = {
     },
 
 
-    deleteTransaction: (coinID, callback) => {
-        let param = [coinID];
-        let query = 'delete from transactions where transaction_id=$1 returning *';
-        return pool.query(query, param, callback);
+    deleteTransaction: (coinID,callback)=>{
+        let query = 'delete from transactions where transaction_id in (';
+        let str = '';
+        coinID.forEach(element =>{
+            str += element + ',';
+        });
+        query += str.substring(0, str.length - 1);
+        query += ') returning *;';
+        return pool.query(query,[],callback);
     },
 
 
