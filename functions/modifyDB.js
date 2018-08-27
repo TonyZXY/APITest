@@ -20,11 +20,12 @@ function modify(){
                     console.log(err);
                 } else {
                     console.log(flash._id);
-                    db.addNewsIntoList(flash._id,(err,dbmsg)=>{
+                    let id = flash._id;
+                    db.addNewsIntoList(id,(err,dbmsg)=>{
                         if (err){
                             console.log(err);
                         } else {
-                            console.log(flash.title+' DONE');
+                            console.log(dbmsg.rows[0]);
                         }
                     })
                 }
