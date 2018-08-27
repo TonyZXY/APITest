@@ -605,7 +605,8 @@ router.get('/getFlashWithLan', (req, res) => {
             logger.databaseError('apifile', address, err);
         }
         let ids = [];
-        let flashToSent = JSON.parse(flash);
+        let flashToString = JSON.stringify(flash);
+        let flashToSent = JSON.parse(flashToString);
         flashToSent.forEach( element =>{
             ids.push(element._id);
         });
