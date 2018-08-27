@@ -613,11 +613,12 @@ router.get('/getFlashWithLan', (req, res) => {
         db.getLikesNumberList(ids,(err,dbmsg)=>{
             likes = dbmsg.rows;
             // console.log(likes);
-            flashToSent.forEach( flash =>{
+            flashToSent.forEach( flashToEdit =>{
                 likes.forEach(e =>{
-                    if (e.news_id === flash._id){
-                        flash.like = e.likes;
-                        flash.dislike = e.dislikes;
+                    if (e.news_id === flashToEdit._id){
+                        flashToEdit.like = e.likes;
+                        flashToEdit.dislike = e.dislikes;
+                        console.log(flashToEdit);
                     }
                 })
             });
