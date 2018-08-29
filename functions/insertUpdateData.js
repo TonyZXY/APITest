@@ -1,5 +1,6 @@
 const Update = require('../module/UpdateInfo');
 const mongoose = require('mongoose');
+const config = require('../config');
 
 mongoose.connect(config.database, config.options);
 
