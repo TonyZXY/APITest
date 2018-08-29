@@ -19,6 +19,7 @@ const Video = require('../module/Video.js');
 const NewsFlash = require('../module/NewsFlash.js');
 const Genuine = require('../module/Genuine.js');
 const FlashLike = require('../module/FlashLike');
+const UpdateInfo = require('../module/UpdateInfo');
 
 // address = req.connection.remoteAddress
 
@@ -757,3 +758,29 @@ router.get('/searchGenuineTime', (req, res) => {
 
 /* GENUINE PART ENDS */
 /*----------------------------------------------------------------------------*/
+
+
+
+router.post('/update',verifyToken,(req,res)=>{
+    let update = req.body.update;
+    UpdateInfo.setUpdate(update,(err,msg)=>{
+        if (err) {
+            console.log(err);
+        } else {
+            res.json(msg);
+        }
+    })
+});
+
+
+router.get('/update',(req,res)=>{
+    let address = req.connection.remoteAddress;
+    UpdateInfo.getUpdate((err,msg)=>{
+        if (err) {
+            console.log(err);
+            logger.databaseError('apifile',address,err);
+        } else {
+            res.json(msg);
+        }
+    })
+});
