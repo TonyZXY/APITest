@@ -8,9 +8,6 @@ const NewsLike = require('../module/FlashLike');
 const mongoose = require('mongoose');
 
 
-
-
-
 const config = require('../config');
 
 const mailAccound = config.mail;
@@ -1222,6 +1219,85 @@ router.post('/dislike', verifyToken, (req, res) => {
     })
 });
 
+
+router.post('/unlike', verifyToken, (req, res) => {
+    let newsID = req.body.newsID;
+    let email = req.body.email;
+
+    NewsLike.removeLike(newsID, email, (err, momsg) => {
+        if (err) {
+            databaseError(err, res);
+        } else {
+            if (momsg.nModified !== 0) {
+                db.removeLike(newsID, (err, dbmsg) => {
+                    if (err) {
+                        databaseError(err, res);
+                    } else {
+                        res.send({
+                            message: 'successfully remove like',
+                            code: 200,
+                            success: true,
+                            data: dbmsg.rows[0]
+                        });
+                    }
+                })
+            } else {
+                db.getLikesNumber(newsID, (err, dbmsg) => {
+                    if (err) {
+                        databaseError(err, res);
+                    } else {
+                        res.send({
+                            message: 'user not like this message but remove anyway',
+                            code: 200,
+                            success: true,
+                            data: dbmsg.rows[0]
+                        });
+                    }
+                })
+            }
+        }
+    })
+});
+
+
+router.post('/undislike', verifyToken, (req, res) => {
+    let newsID = req.body.newsID;
+    let email = req.body.email;
+
+    NewsLike.removeDislike(newsID, email, (err, monmsg) => {
+        if (err) {
+            databaseError(err, res);
+        } else {
+            if (monmsg.nModified !== 0) {
+                db.removeDislike(newsID, (err, dbmsg) => {
+                    if (err) {
+                        databaseError(err, res);
+                    } else {
+                        res.send({
+                            message: 'successfully remove dislike',
+                            code: 200,
+                            success: true,
+                            data: dbmsg.rows[0]
+                        });
+                    }
+                })
+            } else {
+                db.getLikesNumber(newsID, (err, dbmsg) => {
+                    if (err) {
+                        databaseError(err, res);
+                    } else {
+                        res.send({
+                            message: 'user not dislike this message but remove anyway',
+                            code: 200,
+                            success: true,
+                            data: dbmsg.rows[0]
+                        })
+                    }
+                })
+            }
+        }
+    })
+});
 
 module.exports = router;
 

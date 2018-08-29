@@ -205,6 +205,36 @@ function addLike (){
 
 find();
 
+function removeLike() {
+    let newsID = '10000000000123456789';
+    let email = 'test3232525';
+
+
+    NewsLike.removeLike(newsID,email,(err,momsg)=>{
+        if (err){
+            console.log(err);
+        } else {
+            if (momsg.nModified !== 0){
+                db.removeLike(newsID,(err,dbmsg)=>{
+                    if (err){
+                        console.log(err);
+                    } else {
+                        console.log(dbmsg.rows[0]);
+                    }
+                })
+            } else {
+                db.getLikesNumber(newsID,(err,dbmsg)=>{
+                    if (err){
+                        console.log(err);
+                    } else {
+                        console.log(dbmsg.rows[0]);
+                    }
+                })
+            }
+        }
+    })
+}
+
 
 function testRemove() {
     let newsID = '10000000000123456789';
@@ -220,7 +250,11 @@ function testRemove() {
 }
 
 
-addLike();
+removeLike();
+
+
+
+// addLike();
 // testRemove();
 // test();
 // addDislike();
