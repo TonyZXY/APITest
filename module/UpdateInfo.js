@@ -32,7 +32,6 @@ module.exports.getUpdate = (callback)=>{
 
 
 module.exports.setUpdate = (update,callback)=>{
-    console.log(update);
     UpdateInfo.findOneAndUpdate({name:'update'},update,{new:true},callback);
 };
 
