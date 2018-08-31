@@ -496,14 +496,15 @@ router.post('/flash', verifyToken, function (req, res) {
             logger.databaseError('apifile', address, err);
         }
         let like = new FlashLike();
-        like.newsID = flashAdded._id.toString();
+        like.newsID = flashAdded._id;
         like.likes = [];
         like.dislikes = [];
         FlashLike.addNews(like,(err,msg)=>{
             if (err){
                 console.log(err);
             } else {
-                db.addNewsIntoList(flashAdded._id,(err,dbmsg)=>{
+                let id = flashAdded._id.toString();
+                db.addNewsIntoList(id,(err,dbmsg)=>{
                     if (err){
                         console.log(err);
                     } else {
