@@ -496,7 +496,7 @@ router.post('/flash', verifyToken, function (req, res) {
             logger.databaseError('apifile', address, err);
         }
         let like = new FlashLike();
-        like.newsID = flashAdded._id;
+        like.newsID = flashAdded._id.toString();
         like.likes = [];
         like.dislikes = [];
         FlashLike.addNews(like,(err,msg)=>{
