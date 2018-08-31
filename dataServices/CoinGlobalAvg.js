@@ -105,6 +105,11 @@ function startcall() {
     logger.APIUpdateLog("CoinGlobalAvg", "MarketCap", "MarketCap Gobal Average Start loop for " + time);
     time++;
     forCurrency(array).then(() => {
+        array.forEach( element =>{
+            if (element.name === 'Holo'){
+                element.symbol = 'HOT';
+            }
+        });
         Coin.addCoins(array, (err, msg) => {
             if (err) {
                 console.log(err);
