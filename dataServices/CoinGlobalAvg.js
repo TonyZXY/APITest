@@ -107,7 +107,7 @@ function startcall() {
     forCurrency(array).then(() => {
         array.forEach( element =>{
             if (element.name === 'Holo'){
-                element.symbol = 'HOT';
+                element.symbol = 'HOT*';
             }
         });
         Coin.addCoins(array, (err, msg) => {
