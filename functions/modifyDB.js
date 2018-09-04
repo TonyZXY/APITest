@@ -12,7 +12,7 @@ function modify(){
     Flash.getFlash((err,flashs)=>{
         flashs.forEach(flash=>{
             let like = new FlashLike();
-            like.news_id = flash._id;
+            like.newsID = flash._id;
             like.likes = [];
             like.dislikes = [];
             FlashLike.addNews(like,(err,mmsg)=>{
