@@ -726,7 +726,7 @@ router.get('/searchGenuineTime', (req, res) => {
 /*----------------------------------------------------------------------------*/
 
 router.post('/update',verifyToken,(req,res)=>{
-    let update = req.body.update;
+    let update = req.body;
     UpdateInfo.setUpdate(update,(err,msg)=>{
         if (err) {
             console.log(err);

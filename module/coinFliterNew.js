@@ -42,6 +42,6 @@ module.exports.updateCoin = (coin,name,callback)=>{
         data: coin.data,
         name: coin.name
     };
-    CoinFilterNew.findOneAndUpdate({name:name},update,{upsert:true,returnNewDocument:true},callback);
+    CoinFilterNew.findOneAndUpdate({name:name},update,{new:true},callback);
 };
 

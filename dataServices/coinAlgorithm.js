@@ -66,23 +66,21 @@ function compareTwoAPI() {
                     jsonObject.data.forEach(coin2 => {
                         for (var key in jsonObject1.Data) {
                             let coin1 = jsonObject1.Data[key];
+                            let name1 = coin1.CoinName;
+                            let name2 = coin2.name;
                             if (coin1.Symbol === coin2.symbol) {
-                                // console.log(coin1.Symbol+"          "+coin2.symbol)
-                                // i++
-                                // console.log(i)
                                 let coin = new CoinFilter();
                                 coin.coinName = coin1.CoinName;
                                 coin.coinSymbol = coin1.Symbol;
                                 coin.logoUrl = coin1.ImageUrl;
                                 array.push(coin);
-                                // CoinFilter.findCoinBySymbol(coin, (err, coinToAdd) => {
-                                //     if (err) {
-                                //         console.log(err);
-                                //         logger.databaseError('coinAlgorithm', 'server', error)
-                                //     } else {
-                                //         // console.log(coinToAdd)
-                                //     }
-                                // })
+                            } else if (name2 === 'Holo' && name1 === 'Holo'){
+                                console.log(coin1.Symbol);
+                                let coin = new CoinFilter();
+                                coin.coinName = coin1.CoinName;
+                                coin.coinSymbol = 'HOT*';
+                                coin.logoUrl = coin1.ImageUrl;
+                                array.push(coin);
                             }
                         }
                     });
