@@ -22,10 +22,6 @@ const genuineSchema = mongoose.Schema({
         type: String,
         require: true
     },
-    genuineTag: {
-        type: String,
-        require: true
-    },
     publishedTime: {
         type: Date,
         default: Date.now
@@ -63,7 +59,6 @@ module.exports.updateGenuine = function (id, genuine, option, callback) {
         genuineDescription: genuine.genuineDescription,
         imageURL: genuine.imageURL,
         url: genuine.url,
-        genuineTag: genuine.genuineTag,
         languageTag: genuine.languageTag
     };
     Genuine.findOneAndUpdate(query, update, option, callback);
@@ -76,8 +71,8 @@ module.exports.deleteGenuine = function (id, callback) {
 };
 
 // get Genuine by Tag
-module.exports.findGenuineByTag = function (geunineTag, languageTag, callback, skip, limit) {
-    Genuine.find({genuineTag: geunineTag, languageTag: languageTag}, callback).sort({_id: -1}).skip(skip).limit(limit);
+module.exports.findGenuineByTag = function ( languageTag, callback, skip, limit) {
+    Genuine.find({languageTag: languageTag}, callback).sort({_id: -1}).skip(skip).limit(limit);
 };
 
 // this method used to search genuine news

@@ -710,14 +710,14 @@ router.delete('/genuine/:_id', verifyToken, function (req, res) {
 
 //get genuine news by Category
 router.get("/getgenuine", function (req, res) {
-    const geTag = req.query.genuineTag;
+    // const geTag = req.query.genuineTag;
     const leTag = req.query.languageTag;
     const limit = req.query.limit;
     const skip = req.query.skip;
-    if (leTag === null || leTag === undefined || geTag === null || geTag === undefined) {
+    if (leTag === null || leTag === undefined) {
         res.status(400)
     } else {
-        Genuine.findGenuineByTag(geTag, leTag, function (err, genuine) {
+        Genuine.findGenuineByTag(leTag, function (err, genuine) {
             if (err) {
                 console.log(err);
                 let address = req.connection.remoteAddress;
