@@ -53,6 +53,23 @@ module.exports.getPriceFromAPI = function (coinFrom, coinTo, market, callback) {
                 }
             }
         })
+    }else if(market === 'Huobi Australia') {
+        request({
+            method: 'GET',
+            uri: 'https://api.huobi.com.au/market/trade?symbol='+coinFrom.toLowerCase()+coinTo.toLowerCase(),
+            headers: {'Content-type': 'application/json'}
+        },(error, response, body)=>{
+            if (error){
+                console.log(error);
+                logger.APIConnectionError('coinAlgorithm','HuobiAUAPI', error);
+                return callback(error);
+            } else {
+                // console.log(body);
+                let ObjectJSON = JSON.parse(body);
+                // console.log(ObjectJSON.tick.data[0].price);
+                return callback(null, ObjectJSON.tick.data[0].price)
+            }
+        });
     } else {
         request({
             method: 'GET',
