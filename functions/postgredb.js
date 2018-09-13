@@ -251,7 +251,6 @@ module.exports = {
 
 
     addTransactionList: (userID, coinList, callback) => {
-        let param = [userID];
         let query = 'insert into transactions (transaction_user_id, status, coin_name, coin_add_name, exchange_name, ' +
             'trading_pair_name, single_price, amount, currency_aud, currency_usd, currency_jpy, currency_eur, ' +
             'currency_cny, date, note) values';
