@@ -19,6 +19,7 @@ const Video = require('../module/Video.js');
 const NewsFlash = require('../module/NewsFlash.js');
 const Genuine = require('../module/Genuine.js');
 const UpdateInfo = require('../module/UpdateInfo');
+const Event = require('../module/Event');
 // address = req.connection.remoteAddress
 
 function verifyToken(req, res, next) {
@@ -745,6 +746,45 @@ router.get('/update',(req,res)=>{
             logger.databaseError('apifile',address,err);
         } else {
             res.json(msg);
+        }
+    })
+});
+
+
+router.get('/eventAll',(req,res)=>{
+    let address = req.connection.remoteAddress;
+
+    Event.getAllEvent((err,msg)=>{
+        if (err){
+            console.log(err);
+        } else {
+            res.json(msg);
+        }
+    })
+});
+
+router.get('/event/:host',(req,res)=>{
+    let host = req.params.host;
+    let hostToServer = '';
+    if (host === 'BCC'){
+        hostToServer = 'The Blockchain Centre';
+    }
+    Event.getEventList(hostToServer,(err,msg)=>{
+        if (err){
+            console.log(err);
+        } else {
+            res.json(msg);
+        }
+    })
+});
+
+
+router.get('/removeEvent',(req,res)=>{
+    Event.remove((err,msg)=>{
+        if (err){
+            console.log(err);
+        } else {
+            res.send(msg);
         }
     })
 });

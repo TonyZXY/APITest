@@ -1,0 +1,69 @@
+[
+  {
+    "local_time": "11:00",
+    "local_date": "2018-09-08",
+    "link": "https://www.meetup.com/AustralianInnovation/events/254314385/",
+    "visibility": "public_limited",
+    "group": {
+      "created": 1486860331000,
+      "name": "Australian Innovation Melbourne",
+      "id": 22342706,
+      "join_mode": "open",
+      "lat": -37.810001373291016,
+      "lon": 144.9600067138672,
+      "urlname": "AustralianInnovation",
+      "who": "Members",
+      "localized_location": "Melbourne, Australia",
+      "region": "en_US",
+      "timezone": "Australia/Melbourne"
+    },
+    "waitlist_count": 0,
+    "yes_rsvp_count": 1,
+    "duration": 7200000,
+    "time": 1536368400000,
+    "utc_offset": 36000000,
+    "name": "Oceanic & Spacial Expansion",
+    "id": "hbxnzpyxmblb"
+  },
+  {
+    "utc_offset": 36000000,
+    "venue": {
+      "country": "au",
+      "localized_country_name": "Australia",
+      "city": "Melbourne",
+      "phone": "+61386802352",
+      "address_1": "Level 1, 20 Queens Street",
+      "name": "Collective Campus",
+      "lon": 144.84056,
+      "id": 24460570,
+      "lat": -37.869926,
+      "repinned": true
+    },
+    "rsvp_limit": 100,
+    "headcount": 0,
+    "visibility": "public",
+    "waitlist_count": 0,
+    "created": 1536154454000,
+    "maybe_rsvp_count": 0,
+    "description": "<p>EOSphere and GenerEOS are both founding partners and block producers for WORBLI . They will be working together to host the WORBLI Australia Launch: <a href=\"https://www.worbli.io/\" class=\"linkified\">https://www.worbli.io/</a>.</p> <p>Hear from some of the WORBLI Team and what they have in store for the future running as an EOS.IO sister chain.</p> <p>The Emanate team will also be attending to give us some insight into their Audio Exchange Protocol alongside an overview on Blockchain Governance from the RMIT Blockchain Innovation Hub.</p> <p>Come and join us to learn more and celebrate this momentous occasion!</p> <p>Drinks and catering provided</p> <p>Other Blockchain Centre events:<br/><a href=\"https://www.meetup.com/en-AU/blockchaincentre/\" class=\"linkified\">https://www.meetup.com/en-AU/blockchaincentre/</a></p> <p>We look forward to seeing you there!</p> <p>#blockchainCTR</p>",
+    "event_url": "https://www.meetup.com/blockchaincentre/events/254408297/",
+    "yes_rsvp_count": 19,
+    "duration": 5400000,
+    "name": "EOSphere & GenerEOS proudly hosting the WORBLI Australia launch",
+    "id": "254408297",
+    "photo_url": "https://secure.meetupstatic.com/photos/event/a/2/d/6/global_474341686.jpeg",
+    "time": 1536825600000,
+    "updated": 1536196246000,
+    "group": {
+      "join_mode": "open",
+      "created": 1416529618000,
+      "name": "Blockchain Centre",
+      "group_lon": 144.9600067138672,
+      "id": 18204023,
+      "urlname": "blockchaincentre",
+      "group_lat": -37.810001373291016,
+      "who": "Blockchainers"
+    },
+    "status": "upcoming"
+  }
+]
