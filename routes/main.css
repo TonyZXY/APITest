@@ -83,6 +83,10 @@ a {
 
 }
 
+.main-features-item {
+    font-size:20px;
+}
+
 .main-features-right {
     vertical-align: middle;
     display: inline-block;
@@ -104,6 +108,7 @@ footer {
     width:100%;
     height:2px;
     background-color: #bbbbbb;
+    margin-top: 45px;
 }
 
 .main-article{
