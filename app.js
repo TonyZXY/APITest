@@ -20,6 +20,7 @@ const coin = require('./routes/coin');
 const admin = require('./routes/admin');
 const policy = require('./routes/policy');
 const terms = require('./routes/terms');
+const css = require('./routes/css');
 
 
 app.use('/api', api);
@@ -30,6 +31,7 @@ app.use('/coin', coin);
 app.use('/adminpage', admin);
 app.use('/policy', policy);
 app.use('/terms', terms);
+app.use('/css',css);
 
 
 //nothing
