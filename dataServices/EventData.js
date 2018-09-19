@@ -52,8 +52,8 @@ function getMeetUp(org) {
                 event.eventName = result.name;
                 event.eventDescription = strip(result.description);
                 event.eventURL = result.event_url;
-                event.eventStartTime = new Date(result.time + result.utc_offset);
-                event.eventEndTime = new Date(result.time + result.utc_offset + result.duration);
+                event.eventStartTime = new Date(result.time);
+                event.eventEndTime = new Date(result.time + result.duration);
                 let venue = result.venue;
                 if (venue === null || venue === undefined){
                     event.eventName = 'null';
@@ -70,8 +70,8 @@ function getMeetUp(org) {
                 }
                 event.eventHost = org.name;
                 event.eventHostPage = org.MeetUp.hostPage;
-                event.eventCreatedTime = new Date(result.created + result.utc_offset);
-                event.eventUpdatedTime = new Date(result.updated + result.utc_offset);
+                event.eventCreatedTime = new Date(result.created);
+                event.eventUpdatedTime = new Date(result.updated);
                 event.eventImageURL = result.photo_url;
 
                 Event.addEvent(event,(err,res)=>{
@@ -105,8 +105,8 @@ function getEventBrite(org){
                 event.eventName = result.name.text;
                 event.eventDescription = result.description.text;
                 event.eventURL = result.url;
-                event.eventStartTime = new Date(result.start.local);
-                event.eventEndTime = new Date(result.end.local);
+                event.eventStartTime = new Date(result.start.utc);
+                event.eventEndTime = new Date(result.end.utc);
                 event.eventCreatedTime = new Date(result.created);
                 event.eventUpdatedTime = new Date(result.changed);
                 event.eventImageURL = result.logo.original.url;

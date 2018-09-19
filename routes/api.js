@@ -815,3 +815,16 @@ router.get('/event/:host',(req,res)=>{
         }
     })
 });
+
+
+router.post('/addEvent',verifyToken, (req,res)=>{
+    let event = req.body;
+    Event.addEvent(event,(err,dbmsg)=>{
+        if (err){
+            console.log(err);
+        } else {
+            console.log(dbmsg);
+            res.send("ojbk");
+        }
+    })
+});
