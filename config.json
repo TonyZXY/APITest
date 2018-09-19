@@ -1,5 +1,5 @@
 {
-  "database": "mongodb://10.10.6.44:27017/APITest",
+  "database": "mongodb://localhost:27017/APITest",
 
 
 
