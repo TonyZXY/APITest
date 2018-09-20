@@ -56,8 +56,14 @@ module.exports.sendFlashNotification = (title,message)=>{
             logger.databaseError("notification","server",err);
         } else {
             if(dbmsg1.rows[0] === null || dbmsg1.rows[0]===undefined){
-                console.log("No device in device database");
-                logger.databaseError("notification","db","No device in device database")
+                db.getAllIOSDeviceForFlashNotification((err,dbmsg3)=>{
+                    let list = dbmsg3.rows;
+                    list.forEach( element =>{
+                        db.addIOSDeviceNumber(element.device_token,(err,msg3)=>{
+                            sendIos(element.device_token,title,message,msg3.rows[0].number)
+                        })
+                    })
+                });
             } else {
                 let list1 = dbmsg1.rows;
                 db.getAllIOSDeviceForFlashNotification((err,dbmsg2)=>{
