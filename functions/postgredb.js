@@ -344,7 +344,7 @@ module.exports = {
     },
 
     addIOSNewsFlash: (device,callback)=>{
-        let query = 'insert into ios_newsflash_devices (device_token) values ($1) returning *;';
+        let query = 'insert into ios_newsflash (device_token) values ($1) returning *;';
         let param = [device];
 
         console.log(query);
@@ -353,7 +353,7 @@ module.exports = {
 
 
     getIOSNewsFlash: (callback)=>{
-        let query = 'SELECT device_token from ios_newsflash_devices;';
+        let query = 'SELECT device_token from ios_newsflash;';
 
         return pool.query(query,[],callback);
     },
@@ -361,13 +361,13 @@ module.exports = {
 
     addIOSNewsFlashNumber: (token, callback) => {
         let param = [token];
-        let query = 'update ios_newsflash_devices set number = number+1 where device_token=$1 returning device_token,number;';
+        let query = 'update ios_newsflash set number = number+1 where device_token=$1 returning device_token,number;';
         return pool.query(query, param, callback);
     },
 
     setIOSNewsFlashNumberToZero: (token, callback) => {
         let param = [token];
-        let query = 'update ios_newsflash_devices set number = 0 where device_token=$1 returning device_token,number;';
+        let query = 'update ios_newsflash set number = 0 where device_token=$1 returning device_token,number;';
         return pool.query(query, param, callback);
     },
 };
