@@ -200,6 +200,68 @@ router.post('/logoutIOSDevice', verifyToken, (req, res) => {
     })
 });
 
+
+
+
+router.post('/IOSNewsFlash',(req,res)=>{
+    let deveiceToken = req.body.deviceToken;
+    let address = req.connection.remoteAddress;
+    if (deveiceToken === null || deveiceToken === undefined){
+        res.send({
+            success: false,
+            message: "invalid request",
+            code: 500,
+            data: null
+        })
+    } else {
+        db.addIOSNewsFlash(deveiceToken,(err,dbmsg1)=>{
+            if (err){
+                res.send({
+                    success: true,
+                    message: 'Device Token already in Database',
+                    code: 300,
+                    data: null
+                })
+            } else {
+                res.send({
+                    success: true,
+                    message: 'Success add Token into Database',
+                    code: 300,
+                    data: null
+                })
+            }
+        })
+    }
+});
+
+router.post('/receivedIOSNotification',(req,res)=>{
+    let token = req.body.deviceToken;
+    let address = req.connection.remoteAddress;
+    if (token === null || token === undefined ){
+        res.send({
+            success: false,
+            message: "invalid request",
+            code: 500,
+            data: null
+        })
+    } else {
+        db.setIOSNewsFlashNumberToZero(token,(err,msg)=>{
+            if (err){
+                databaseError(err,res);
+                logger.databaseError('deviceManage',address, err);
+            } else {
+                logger.deviceManageLog(address, "Change Notification to Zero in Email: " + email);
+                res.send({
+                    success: true,
+                    message: "Change Notification to Zero",
+                    code: 200,
+                    data: msg.rows[0]
+                })
+            }
+        })
+    }
+});
+
 // router.post('/changeFlashNotificationStatus', verifyToken,(req,res)=>{
 //     let userEmail = req.body.email;
 //     let status = req.body.status;

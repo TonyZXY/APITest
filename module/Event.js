@@ -57,7 +57,7 @@ module.exports.addEvent = (event,callback)=>{
 // };
 
 module.exports.getAllEvent = (callback)=>{
-    Event.find(callback);
+    Event.find(callback).sort({_id:-1}).limit(100);
 };
 
 module.exports.removeEvent = (id,callback)=>{
