@@ -60,10 +60,10 @@ module.exports.sendFlashNotification = (title, message) => {
                 logger.databaseError("notification", "db", "No device in device database")
             } else {
                 list.rows.forEach(row => {
-                    db.addIOSDeviceNumber(row.device_token, (err, msg) => {
-                        sendIos(row.device_token,title,message,msg.rows[0].number)
-                    })
-
+                    // db.addIOSDeviceNumber(row.device_token, (err, msg) => {
+                    //     sendIos(row.device_token,title,message,msg.rows[0].number)
+                    // })
+                    sendIos(row.device_token,title,message,0)
                 })
             }
         }
