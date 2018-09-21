@@ -43,8 +43,6 @@ function sendIos(deviceId, message, badgeNumber) {
             }
         })
     });
-
-
     apnprovider.shutdown();
 }
 

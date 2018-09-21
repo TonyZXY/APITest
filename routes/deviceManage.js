@@ -262,6 +262,65 @@ router.post('/receivedIOSNotification',(req,res)=>{
     }
 });
 
+
+
+
+router.post('/getNumber',(req,res)=>{
+    let token = req.body.deviceToken;
+    let address = req.connection.remoteAddress;
+    if (token ===null || token === undefined){
+        res.send({
+            success: false,
+            message: "invalid request",
+            code: 500,
+            data: null
+        })
+    } else {
+        db.getIOSNewsNumber(token,(err,msg)=>{
+            if (err) {
+                databaseError(err,res);
+                logger.databaseError('deviceManage',address, err)
+            } else {
+                res.send({
+                    success: true,
+                    message: "successful get number",
+                    code: 200,
+                    data: msg.rows[0]
+                })
+            }
+        })
+    }
+});
+
+
+
+router.post('/getIOSNewsNumber',verifyToken,(req,res)=>{
+    let token = req.body.deviceToken;
+    let address = req.connection.remoteAddress;
+    if (token === null || token === undefined){
+        res.send({
+            success: false,
+            message: "invalid request",
+            code: 500,
+            data: null
+        })
+    } else {
+        db.getIOSDeviceNumber(token,(err,msg)=>{
+            if (err) {
+                databaseError(err,res);
+                logger.databaseError('deviceManage',address, err)
+            } else {
+                res.send({
+                    success: true,
+                    message: "successful get number",
+                    code: 200,
+                    data: msg.rows[0]
+                })
+            }
+        })
+    }
+});
+
 // router.post('/changeFlashNotificationStatus', verifyToken,(req,res)=>{
 //     let userEmail = req.body.email;
 //     let status = req.body.status;

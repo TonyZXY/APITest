@@ -164,6 +164,22 @@ module.exports = {
     },
 
 
+
+    getIOSDeviceNumber:(token,callback)=>{
+        let query = 'select number from iosdevices where device_token = $1;';
+        let param = [token];
+        return pool.query(query,param,callback)
+    },
+
+
+
+    getIOSNewsNumber:(token,callback)=>{
+        let query = 'select number from ios_newsflash where device_token = $1;';
+        let param = [token];
+        return pool.query(query,param,callback);
+    },
+
+
     // updateFlashNotificationStatus:(email,status,callback)=>{
     //     let param = [email,status];
     //     let query = 'update users set flash=$2 where email=$1 returning user_id,flash;';
