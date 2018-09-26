@@ -57,7 +57,15 @@ module.exports.addEvent = (event,callback)=>{
 // };
 
 module.exports.getAllEvent = (callback)=>{
-    Event.find(callback).sort({_id:-1}).limit(100);
+    let dateNow = new Date();
+    let dateTo = new Date();
+    dateTo.setDate(dateTo.getDate()+91);
+    Event.find({
+        "eventStartTime":{
+            "$gte":dateNow,
+            "$lt":dateTo
+        }
+    },callback);
 };
 
 module.exports.removeEvent = (id,callback)=>{
