@@ -56,7 +56,7 @@ function getMeetUp(org) {
                 event.eventEndTime = new Date(result.time + result.duration);
                 let venue = result.venue;
                 if (venue === null || venue === undefined){
-                    event.eventName = 'null';
+                    event.eventVenue = 'null';
                     event.eventAddress = 'null';
                     event.eventCity = 'null';
                     event.eventLati =null;
