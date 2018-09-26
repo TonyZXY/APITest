@@ -250,7 +250,6 @@ router.post('/receivedIOSNotification',(req,res)=>{
                 databaseError(err,res);
                 logger.databaseError('deviceManage',address, err);
             } else {
-                logger.deviceManageLog(address, "Change Notification to Zero in Email: " + email);
                 res.send({
                     success: true,
                     message: "Change Notification to Zero",
