@@ -58,11 +58,11 @@ function getNews() {
                                     console.log(err);
                                     logger.databaseError('NewsFromCryptoCompare', 'server', err)
                                 } else {
-                                    consoleLog("Add to db: "+ news.title+ " "+ news.source);
+                                    // consoleLog("Add to db: "+ news.title+ " "+ news.source);
                                 }
                             })
                         } else {
-                            consoleLog("Already in db: "+ news.title+ " "+ news.source);
+                            // consoleLog("Already in db: "+ news.title+ " "+ news.source);
                         }
                     }
                 });

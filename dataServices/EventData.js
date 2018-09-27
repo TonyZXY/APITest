@@ -57,7 +57,7 @@ function getMeetUp(org) {
                 console.log(result.venue);
                 let venue = result.venue;
                 if (venue === null || venue === undefined) {
-                    event.eventName = 'null';
+                    event.eventVenue = 'null';
                     event.eventAddress = 'null';
                     event.eventCity = 'null';
                     event.eventLati = null;

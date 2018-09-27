@@ -112,7 +112,7 @@ async function startcall() {
                 array.forEach( element =>{
                     if (element.name === 'Holo') {
                         element.symbol = 'HOT*';
-                        console.log(element);
+                        // console.log(element);
                     }
                 });
                 Coin.addCoins(array, (err, msg) => {

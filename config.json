@@ -1,11 +1,11 @@
 {
-  "database": "mongodb://localhost:27017/APITest",
+  "database": "mongodb://10.10.6.44:27017/APITest",
 
 
 
   "postgre": {
     "user": "tonyzheng",
-    "host": "localhost",
+    "host": "10.10.6.44",
     "database": "postgres",
     "password": "bgltest",
     "port": 5432

@@ -92,7 +92,7 @@ function compareTwoAPI() {
                                 coin.logoUrl = coin1.ImageUrl;
                                 array.push(coin);
                             } else if (name2 === 'Holo' && name1 === 'Holo'){
-                                console.log(coin1.Symbol);
+                                // console.log(coin1.Symbol);
                                 let coin = new CoinFilter();
                                 coin.coinName = coin1.CoinName;
                                 coin.coinSymbol = 'HOT*';
@@ -108,8 +108,8 @@ function compareTwoAPI() {
                         if (err){
                             console.log(err);
                         } else {
-                            console.log(msg);
-                            console.log('Add to database');
+                            // console.log(msg);
+                            // console.log('Add to database');
                         }
                     })
                 }
