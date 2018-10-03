@@ -501,20 +501,20 @@ router.post('/flash', verifyToken, function (req, res) {
         like.newsID = flashAdded._id;
         like.likes = [];
         like.dislikes = [];
-        FlashLike.addNews(like,(err,msg)=>{
-            if (err){
+        FlashLike.addNews(like, (err, msg) => {
+            if (err) {
                 console.log(err);
             } else {
                 let id = flashAdded._id.toString();
-                db.addNewsIntoList(id,(err,dbmsg)=>{
-                    if (err){
+                db.addNewsIntoList(id, (err, dbmsg) => {
+                    if (err) {
                         console.log(err);
                     } else {
                         res.json(flashAdded);
                         let address2 = req.connection.remoteAddress;
                         logger.newsFlashLog("NewsFlashApi", address2, "A News Flash added (" + flashAdded._id + ")");
                         if (flashAdded.toSent) {
-                            Notification.sendFlashNotification(flashAdded.title,flashAdded.shortMassage);
+                            Notification.sendFlashNotification(flashAdded.title, flashAdded.shortMassage);
                         }
                     }
                 })
@@ -611,15 +611,15 @@ router.get('/getFlashWithLan', (req, res) => {
         let ids = [];
         let flashToString = JSON.stringify(flash);
         let flashToSent = JSON.parse(flashToString);
-        flashToSent.forEach( element =>{
+        flashToSent.forEach(element => {
             ids.push(element._id);
         });
         let likes = [];
-        db.getLikesNumberList(ids,(err,dbmsg)=>{
+        db.getLikesNumberList(ids, (err, dbmsg) => {
             likes = dbmsg.rows;
-            flashToSent.forEach( flashToEdit =>{
-                likes.forEach(e =>{
-                    if (e.news_id.toString() === flashToEdit._id.toString()){
+            flashToSent.forEach(flashToEdit => {
+                likes.forEach(e => {
+                    if (e.news_id.toString() === flashToEdit._id.toString()) {
                         flashToEdit.like = e.likes;
                         flashToEdit.dislike = e.dislikes;
                     }
@@ -763,10 +763,9 @@ router.get('/searchGenuineTime', (req, res) => {
 /*----------------------------------------------------------------------------*/
 
 
-
-router.post('/update',verifyToken,(req,res)=>{
+router.post('/update', verifyToken, (req, res) => {
     let update = req.body;
-    UpdateInfo.setUpdate(update,(err,msg)=>{
+    UpdateInfo.setUpdate(update, (err, msg) => {
         if (err) {
             console.log(err);
         } else {
@@ -776,12 +775,12 @@ router.post('/update',verifyToken,(req,res)=>{
 });
 
 
-router.get('/update',(req,res)=>{
+router.get('/update', (req, res) => {
     let address = req.connection.remoteAddress;
-    UpdateInfo.getUpdate((err,msg)=>{
+    UpdateInfo.getUpdate((err, msg) => {
         if (err) {
             console.log(err);
-            logger.databaseError('apifile',address,err);
+            logger.databaseError('apifile', address, err);
         } else {
             res.json(msg);
         }
@@ -789,11 +788,11 @@ router.get('/update',(req,res)=>{
 });
 
 
-router.get('/eventAll',(req,res)=>{
+router.get('/eventAll', (req, res) => {
     let address = req.connection.remoteAddress;
 
-    Event.getAllEvent((err,msg)=>{
-        if (err){
+    Event.getAllEvent((err, msg) => {
+        if (err) {
             console.log(err);
         } else {
             res.json(msg);
@@ -801,14 +800,14 @@ router.get('/eventAll',(req,res)=>{
     })
 });
 
-router.get('/event/:host',(req,res)=>{
+router.get('/event/:host', (req, res) => {
     let host = req.params.host;
     let hostToServer = '';
-    if (host === 'BCC'){
+    if (host === 'BCC') {
         hostToServer = 'The Blockchain Centre';
     }
-    Event.getEventList(hostToServer,(err,msg)=>{
-        if (err){
+    Event.getEventList(hostToServer, (err, msg) => {
+        if (err) {
             console.log(err);
         } else {
             res.json(msg);
@@ -817,10 +816,10 @@ router.get('/event/:host',(req,res)=>{
 });
 
 
-router.post('/addEvent',verifyToken, (req,res)=>{
-    let event = req.body;
-    Event.addEvent(event,(err,dbmsg)=>{
-        if (err){
+router.post('/addEvent', verifyToken, (req, res) => {
+    let event = req.body.event;
+    Event.addEvent(event, (err, dbmsg) => {
+        if (err) {
             console.log(err);
         } else {
             console.log(dbmsg);
@@ -828,3 +827,17 @@ router.post('/addEvent',verifyToken, (req,res)=>{
         }
     })
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
