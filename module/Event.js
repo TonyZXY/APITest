@@ -45,6 +45,7 @@ module.exports.addEvent = (event,callback)=>{
         eventImageURL:event.eventImageURL,
         eventLati:event.eventLati,
         eventLong:event.eventLong,
+        custom: event.custom
     };
 
     Event.findOneAndUpdate({

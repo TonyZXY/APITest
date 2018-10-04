@@ -81,6 +81,7 @@ function getMeetUp(org) {
                 event.eventCreatedTime = new Date(result.created);
                 event.eventUpdatedTime = new Date(result.updated);
                 event.eventImageURL = result.photo_url;
+                event.custom = false;
 
                 Event.addEvent(event, (err, res) => {
                     if (err) {
@@ -120,6 +121,7 @@ function getEventBrite(org) {
                 event.eventImageURL = result.logo.original.url;
                 event.eventHost = org.name;
                 event.eventHostPage = org.EventBrite.hostPage;
+                event.custom = false;
                 https.get('https://www.eventbriteapi.com/v3/venues/' + result.venue_id + '/?token=VKY7KRN2LTUKG2EAFULE', (response) => {
                     response.on("error", (err) => {
                         console.log(err);
