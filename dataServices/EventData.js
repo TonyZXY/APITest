@@ -152,10 +152,12 @@ function getEventBrite(org) {
 
 
 function getEvents(org) {
-    if (org.EventBrite !== null) {
+    if (org.EventBrite === null|| org.EventBrite === undefined) {
+    } else {
         getEventBrite(org);
     }
-    if (org.MeetUp !== null) {
+    if (org.MeetUp === null || org.MeetUp === undefined) {
+    } else {
         getMeetUp(org);
     }
 }
