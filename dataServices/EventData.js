@@ -10,21 +10,29 @@ mongoose.connect(config.database, config.options);
 let meetUpUrl = 'https://api.meetup.com/2/events?key=4e46424491c5b3830231b2ce4ec6c&group_urlname=';
 
 let BCC = {
-    EventBrite:{
-        id:14851725402,
-        hostPage:'https://www.eventbrite.com.au/o/the-blockchain-centre-14851725402'
+    EventBrite: {
+        id: 14851725402,
+        hostPage: 'https://www.eventbrite.com.au/o/the-blockchain-centre-14851725402'
     },
-    MeetUp:{
-        url:'blockchaincentre',
-        hostPage:'https://www.meetup.com/en-AU/blockchaincentre/'
+    MeetUp: {
+        url: 'blockchaincentre',
+        hostPage: 'https://www.meetup.com/en-AU/blockchaincentre/'
     },
-    name:'The Blockchain Centre',
+    name: 'The Blockchain Centre',
 
+};
+
+let SBCC = {
+    MeetUp: {
+        url:'https://api.meetup.com/2/events?key=4e46424491c5b3830231b2ce4ec6c&group_urlname=Sydney-Blockchain-Centre',
+        hostPage: 'https://www.meetup.com/Sydney-Blockchain-Centre/'
+    },
+    name: 'Sydney Blockchain Centre'
 };
 
 
 function strip(str) {
-    if ((str===null) || (str===''))
+    if ((str === null) || (str === ''))
         return false;
     else
         str = str.toString();
@@ -32,21 +40,21 @@ function strip(str) {
 }
 
 function getMeetUp(org) {
-    https.get(meetUpUrl+org.MeetUp.url,(response)=>{
-        response.on("error", (err)=>{
+    https.get(meetUpUrl + org.MeetUp.url, (response) => {
+        response.on("error", (err) => {
             console.log(err);
         });
 
         let data = '';
 
-        response.on("data", d=>{
+        response.on("data", d => {
             data += d;
         });
 
-        response.on("end", ()=>{
+        response.on("end", () => {
             let JSONData = JSON.parse(data);
             let results = JSONData.results;
-            results.forEach( result =>{
+            results.forEach(result => {
                 let event = new Event();
                 event.eventID = result.id;
                 event.eventName = result.name;
@@ -55,11 +63,11 @@ function getMeetUp(org) {
                 event.eventStartTime = new Date(result.time);
                 event.eventEndTime = new Date(result.time + result.duration);
                 let venue = result.venue;
-                if (venue === null || venue === undefined){
+                if (venue === null || venue === undefined) {
                     event.eventVenue = 'null';
                     event.eventAddress = 'null';
                     event.eventCity = 'null';
-                    event.eventLati =null;
+                    event.eventLati = null;
                     event.eventlong = null;
                 } else {
                     event.eventVenue = result.venue.name;
@@ -74,7 +82,7 @@ function getMeetUp(org) {
                 event.eventUpdatedTime = new Date(result.updated);
                 event.eventImageURL = result.photo_url;
 
-                Event.addEvent(event,(err,res)=>{
+                Event.addEvent(event, (err, res) => {
                     if (err) {
                         console.log(err);
                     } else {
@@ -85,21 +93,21 @@ function getMeetUp(org) {
     });
 }
 
-function getEventBrite(org){
-    https.get('https://www.eventbriteapi.com/v3/organizers/'+org.EventBrite.id+'/events/?order_by=start_desc&token=VKY7KRN2LTUKG2EAFULE',(response)=>{
-        response.on("error", (err)=>{
+function getEventBrite(org) {
+    https.get('https://www.eventbriteapi.com/v3/organizers/' + org.EventBrite.id + '/events/?order_by=start_desc&token=VKY7KRN2LTUKG2EAFULE', (response) => {
+        response.on("error", (err) => {
             console.log(err);
         });
 
         let data = '';
-        response.on("data", d=>{
+        response.on("data", d => {
             data += d;
         });
 
-        response.on("end", ()=>{
+        response.on("end", () => {
             let JSONData = JSON.parse(data);
             let results = JSONData.events;
-            results.forEach(result =>{
+            results.forEach(result => {
                 let event = new Event();
                 event.eventID = result.id;
                 event.eventName = result.name.text;
@@ -112,7 +120,7 @@ function getEventBrite(org){
                 event.eventImageURL = result.logo.original.url;
                 event.eventHost = org.name;
                 event.eventHostPage = org.EventBrite.hostPage;
-                https.get('https://www.eventbriteapi.com/v3/venues/'+result.venue_id+'/?token=VKY7KRN2LTUKG2EAFULE',(response)=> {
+                https.get('https://www.eventbriteapi.com/v3/venues/' + result.venue_id + '/?token=VKY7KRN2LTUKG2EAFULE', (response) => {
                     response.on("error", (err) => {
                         console.log(err);
                     });
@@ -129,7 +137,7 @@ function getEventBrite(org){
                         event.eventCity = JS.address.city;
                         event.eventLati = JS.address.latitude;
                         event.eventLong = JS.address.longitude;
-                        Event.addEvent(event,(err,msg)=>{
+                        Event.addEvent(event, (err, msg) => {
                             if (err) {
                                 console.log(err);
                             } else {
@@ -144,14 +152,18 @@ function getEventBrite(org){
 
 
 function getEvents(org) {
-    getMeetUp(org);
-    getEventBrite(org);
+    if (org.EventBrite !== null) {
+        getEventBrite(org);
+    }
+    if (org.MeetUp !== null) {
+        getMeetUp(org);
+    }
 }
 
 async function runGetEvent() {
-    let orgs = [BCC];
+    let orgs = [BCC,SBCC];
 
-    orgs.forEach( org =>{
+    orgs.forEach(org => {
         getEvents(org);
     })
 }
@@ -165,11 +177,11 @@ const delay = amount => {
 async function runScript() {
     do {
         runGetEvent();
-        await delay(3600*1000);
+        await delay(3600 * 1000);
     } while (true)
 }
 
-module.exports.run = () =>{
+module.exports.run = () => {
     runScript();
 };
 
