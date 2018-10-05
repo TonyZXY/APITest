@@ -30,6 +30,14 @@ let SBCC = {
     name: 'Sydney Blockchain Centre'
 };
 
+let MELE = {
+    EventBrite:{
+        url:'https://www.eventbriteapi.com/v3/organizers/17897843003/events/?order_by=start_desc&token=VKY7KRN2LTUKG2EAFULE',
+        hostPage:'https://www.eventbrite.com/o/merklize-ledgerium-17897843003'
+    },
+    name: "Merklize, Ledgerium"
+};
+
 
 function strip(str) {
     if ((str === null) || (str === ''))
@@ -165,7 +173,7 @@ function getEvents(org) {
 }
 
 async function runGetEvent() {
-    let orgs = [BCC,SBCC];
+    let orgs = [BCC,SBCC,MELE];
 
     orgs.forEach(org => {
         getEvents(org);
