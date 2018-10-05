@@ -31,7 +31,7 @@ let SBCC = {
 };
 
 
-let Leg = {
+let MELE = {
     EventBrite:{
         url:'https://www.eventbriteapi.com/v3/organizers/17897843003/events/?order_by=start_desc&token=VKY7KRN2LTUKG2EAFULE',
         hostPage:'https://www.eventbrite.com/o/merklize-ledgerium-17897843003'
