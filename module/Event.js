@@ -61,7 +61,7 @@ module.exports.addEvent = (event,callback)=>{
 module.exports.getAllEvent = (callback)=>{
     let dateNow = new Date();
     let dateTo = new Date();
-    dateNow.setDate(dateNow.getDate()-1);
+    // dateNow.setDate(dateNow.getDate()-1);
     dateTo.setDate(dateTo.getDate()+91);
     Event.find({
         "eventStartTime":{
