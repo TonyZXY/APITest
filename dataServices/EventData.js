@@ -11,11 +11,11 @@ let meetUpUrl = 'https://api.meetup.com/2/events?key=4e46424491c5b3830231b2ce4ec
 
 let BCC = {
     EventBrite: {
-        id: 14851725402,
+        url:'https://www.eventbriteapi.com/v3/organizers/14851725402/events/?order_by=start_desc&token=VKY7KRN2LTUKG2EAFULE',
         hostPage: 'https://www.eventbrite.com.au/o/the-blockchain-centre-14851725402'
     },
     MeetUp: {
-        url: 'blockchaincentre',
+        url: 'https://api.meetup.com/2/events?key=4e46424491c5b3830231b2ce4ec6c&group_urlname=blockchaincentre',
         hostPage: 'https://www.meetup.com/en-AU/blockchaincentre/'
     },
     name: 'The Blockchain Centre',
@@ -30,7 +30,8 @@ let SBCC = {
     name: 'Sydney Blockchain Centre'
 };
 
-let MELE = {
+
+let Leg = {
     EventBrite:{
         url:'https://www.eventbriteapi.com/v3/organizers/17897843003/events/?order_by=start_desc&token=VKY7KRN2LTUKG2EAFULE',
         hostPage:'https://www.eventbrite.com/o/merklize-ledgerium-17897843003'
@@ -48,7 +49,7 @@ function strip(str) {
 }
 
 function getMeetUp(org) {
-    https.get(meetUpUrl + org.MeetUp.url, (response) => {
+    https.get(org.MeetUp.url, (response) => {
         response.on("error", (err) => {
             console.log(err);
         });
@@ -103,7 +104,7 @@ function getMeetUp(org) {
 }
 
 function getEventBrite(org) {
-    https.get('https://www.eventbriteapi.com/v3/organizers/' + org.EventBrite.id + '/events/?order_by=start_desc&token=VKY7KRN2LTUKG2EAFULE', (response) => {
+    https.get(org.EventBrite.url, (response) => {
         response.on("error", (err) => {
             console.log(err);
         });
