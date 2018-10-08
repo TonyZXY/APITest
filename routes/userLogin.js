@@ -1293,5 +1293,26 @@ router.post('/undislike', verifyToken, (req, res) => {
 });
 
 
+router.post('/checkAccount',verifyToken,(req,res)=>{
+    let user_email = req.body.email;
+    db.gameCheckAccount(user_email,(err,dbmsg)=>{
+        if (err){
+            databaseError(err,res);
+        } else {
+            let data = dbmsg.rows[0];
+            if(dbmsg.rows[0]===undefined){
+                data = null
+            }
+            res.send({
+                message: 'Successfully get account info',
+                code: 200,
+                success: true,
+                data: data
+            })
+        }
+    })
+});
+
+
 module.exports = router;
 

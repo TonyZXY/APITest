@@ -21,6 +21,7 @@ const admin = require('./routes/admin');
 const policy = require('./routes/policy');
 const terms = require('./routes/terms');
 const css = require('./routes/css');
+// const game = require('./game/game');
 
 
 app.use('/api', api);
@@ -32,6 +33,7 @@ app.use('/adminpage', admin);
 app.use('/policy', policy);
 app.use('/terms', terms);
 app.use('/css',css);
+// app.use('/game',game);
 
 
 //nothing
