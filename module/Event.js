@@ -17,6 +17,8 @@ const eventSchema = mongoose.Schema({
     eventImageURL:String,
     eventLati:Number,
     eventLong:Number,
+    custom:Boolean,
+    logalURL:String
 });
 
 const Event = module.exports = mongoose.model('Event',eventSchema);
@@ -45,6 +47,8 @@ module.exports.addEvent = (event,callback)=>{
         eventImageURL:event.eventImageURL,
         eventLati:event.eventLati,
         eventLong:event.eventLong,
+        custom: event.custom,
+        logoURL:event.logoURL
     };
 
     Event.findOneAndUpdate({
@@ -66,4 +70,9 @@ module.exports.removeEvent = (id,callback)=>{
 
 module.exports.remove = (callback)=>{
     Event.remove(callback);
+};
+
+
+module.exports.getOneEvent = (ID,callback)=>{
+    Event.findOne({eventID:ID},callback);
 };

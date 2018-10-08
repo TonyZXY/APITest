@@ -1,0 +1,388 @@
+{
+  "data": [
+    {
+      "title": "Week 1 Ranking",
+      "time": "2018-10-02T05:49:22.565Z",
+      "time_string": "2018-10-02T05:49:22.565Z",
+      "week_number": 1,
+      "data": [
+        {
+          "user_id": 1000001,
+          "user_nickname": "User 1",
+          "total": 100104535.14,
+          "week_percentage": 45,
+          "week_rank": 1,
+          "total_rank": 15
+        },
+        {
+          "user_id": 1000004,
+          "user_nickname": "User 4",
+          "total": 1000000010.43,
+          "week_percentage": 42,
+          "week_rank": 2,
+          "total_rank": 14
+        },
+        {
+          "user_id": 1000005,
+          "user_nickname": "User 5",
+          "total": 100031231231,
+          "week_percentage": 40,
+          "week_rank": 3,
+          "total_rank": 13
+        },
+        {
+          "user_id": 1000007,
+          "user_nickname": "User 7",
+          "total": 10000010.43,
+          "week_percentage": 30,
+          "week_rank": 4,
+          "total_rank": 12
+        },
+        {
+          "user_id": 1000009,
+          "user_nickname": "User 9",
+          "total": 10000010.43,
+          "week_percentage": 28,
+          "week_rank": 5,
+          "total_rank": 11
+        },
+        {
+          "user_id": 1000020,
+          "user_nickname": "User 20",
+          "total": 1000010.43,
+          "week_percentage": 25,
+          "week_rank": 6,
+          "total_rank": 10
+        },
+        {
+          "user_id": 1000013,
+          "user_nickname": "User 13",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 7,
+          "total_rank": 9
+        },
+        {
+          "user_id": 1000012,
+          "user_nickname": "User 12",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 8,
+          "total_rank": 8
+        },
+        {
+          "user_id": 1000123,
+          "user_nickname": "User 123",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 9,
+          "total_rank": 7
+        },
+        {
+          "user_id": 1000014,
+          "user_nickname": "User 14",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 10,
+          "total_rank": 6
+        },
+        {
+          "user_id": 1000019,
+          "user_nickname": "User 19",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 11,
+          "total_rank": 5
+        },
+        {
+          "user_id": 1000234,
+          "user_nickname": "User 234",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 12,
+          "total_rank": 4
+        },
+        {
+          "user_id": 1000017,
+          "user_nickname": "User 17",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 13,
+          "total_rank": 3
+        },
+        {
+          "user_id": 1000025,
+          "user_nickname": "User 25",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 14,
+          "total_rank": 2
+        },
+        {
+          "user_id": 1000044,
+          "user_nickname": "User 44",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 15,
+          "total_rank": 1
+        }
+      ]
+    },
+    {
+      "title": "Week 2 Ranking",
+      "time": "2018-10-02T05:49:22.565Z",
+      "time_string": "2018-10-02T05:49:22.565Z",
+      "week_number": 2,
+      "data": [
+        {
+          "user_id": 2000001,
+          "user_nickname": "User 1",
+          "total": 100104535.14,
+          "week_percentage": 45,
+          "week_rank": 1,
+          "total_rank": 15
+        },
+        {
+          "user_id": 2000004,
+          "user_nickname": "User 4",
+          "total": 1000000010.43,
+          "week_percentage": 42,
+          "week_rank": 2,
+          "total_rank": 14
+        },
+        {
+          "user_id": 2000005,
+          "user_nickname": "User 5",
+          "total": 100031231231,
+          "week_percentage": 40,
+          "week_rank": 3,
+          "total_rank": 13
+        },
+        {
+          "user_id": 2000007,
+          "user_nickname": "User 7",
+          "total": 10000010.43,
+          "week_percentage": 30,
+          "week_rank": 4,
+          "total_rank": 12
+        },
+        {
+          "user_id": 2000009,
+          "user_nickname": "User 9",
+          "total": 10000010.43,
+          "week_percentage": 28,
+          "week_rank": 5,
+          "total_rank": 11
+        },
+        {
+          "user_id": 2000020,
+          "user_nickname": "User 20",
+          "total": 1000010.43,
+          "week_percentage": 25,
+          "week_rank": 6,
+          "total_rank": 10
+        },
+        {
+          "user_id": 2000013,
+          "user_nickname": "User 13",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 7,
+          "total_rank": 9
+        },
+        {
+          "user_id": 2000012,
+          "user_nickname": "User 12",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 8,
+          "total_rank": 8
+        },
+        {
+          "user_id": 2000123,
+          "user_nickname": "User 123",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 9,
+          "total_rank": 7
+        },
+        {
+          "user_id": 2000014,
+          "user_nickname": "User 14",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 10,
+          "total_rank": 6
+        },
+        {
+          "user_id": 2000019,
+          "user_nickname": "User 19",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 11,
+          "total_rank": 5
+        },
+        {
+          "user_id": 2000234,
+          "user_nickname": "User 234",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 12,
+          "total_rank": 4
+        },
+        {
+          "user_id": 2000017,
+          "user_nickname": "User 17",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 13,
+          "total_rank": 3
+        },
+        {
+          "user_id": 2000025,
+          "user_nickname": "User 25",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 14,
+          "total_rank": 2
+        },
+        {
+          "user_id": 2000044,
+          "user_nickname": "User 44",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 15,
+          "total_rank": 1
+        }
+      ]
+    },
+    {
+      "title": "Week 3 Ranking",
+      "time": "2018-10-02T05:49:22.565Z",
+      "time_string": "2018-10-02T05:49:22.565Z",
+      "week_number": 3,
+      "data": [
+        {
+          "user_id": 3000001,
+          "user_nickname": "User 1",
+          "total": 100104535.14,
+          "week_percentage": 45,
+          "week_rank": 1,
+          "total_rank": 15
+        },
+        {
+          "user_id": 3000004,
+          "user_nickname": "User 4",
+          "total": 1000000010.43,
+          "week_percentage": 42,
+          "week_rank": 2,
+          "total_rank": 14
+        },
+        {
+          "user_id": 3000005,
+          "user_nickname": "User 5",
+          "total": 100031231231,
+          "week_percentage": 40,
+          "week_rank": 3,
+          "total_rank": 13
+        },
+        {
+          "user_id": 3000007,
+          "user_nickname": "User 7",
+          "total": 10000010.43,
+          "week_percentage": 30,
+          "week_rank": 4,
+          "total_rank": 12
+        },
+        {
+          "user_id": 3000009,
+          "user_nickname": "User 9",
+          "total": 10000010.43,
+          "week_percentage": 28,
+          "week_rank": 5,
+          "total_rank": 11
+        },
+        {
+          "user_id": 3000020,
+          "user_nickname": "User 20",
+          "total": 1000010.43,
+          "week_percentage": 25,
+          "week_rank": 6,
+          "total_rank": 10
+        },
+        {
+          "user_id": 3000013,
+          "user_nickname": "User 13",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 7,
+          "total_rank": 9
+        },
+        {
+          "user_id": 3000012,
+          "user_nickname": "User 12",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 8,
+          "total_rank": 8
+        },
+        {
+          "user_id": 3000123,
+          "user_nickname": "User 123",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 9,
+          "total_rank": 7
+        },
+        {
+          "user_id": 3000014,
+          "user_nickname": "User 14",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 10,
+          "total_rank": 6
+        },
+        {
+          "user_id": 3000019,
+          "user_nickname": "User 19",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 11,
+          "total_rank": 5
+        },
+        {
+          "user_id": 3000234,
+          "user_nickname": "User 234",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 12,
+          "total_rank": 4
+        },
+        {
+          "user_id": 3000017,
+          "user_nickname": "User 17",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 13,
+          "total_rank": 3
+        },
+        {
+          "user_id": 3000025,
+          "user_nickname": "User 25",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 14,
+          "total_rank": 2
+        },
+        {
+          "user_id": 3000044,
+          "user_nickname": "User 44",
+          "total": 10000010.43,
+          "week_percentage": 22,
+          "week_rank": 15,
+          "total_rank": 1
+        }
+      ]
+    }
+  ]
+}

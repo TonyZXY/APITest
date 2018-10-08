@@ -790,3 +790,101 @@ router.get('/removeEvent',(req,res)=>{
 });
 
 
+
+router.post('/addEvent',verifyToken, (req,res)=>{
+    let event = req.body;
+    Event.addEvent(event,(err,dbmsg)=>{
+        if (err){
+            console.log(err);
+        } else {
+            console.log(dbmsg);
+            res.send("ojbk");
+        }
+    })
+});
+
+
+router.get('/getEvent/:id',(req,res)=>{
+    let ID = req.params.id;
+    Event.getOneEvent(ID,(err,msg)=>{
+        if (err){
+            console.log(err);
+        } else {
+            res.send(msg);
+        }
+    })
+});
+
+
+router.put('/event', verifyToken,(req,res)=>{
+    let event = req.body;
+    Event.addEvent(event,(err,msg)=>{
+        if (err){
+            console.log(err);
+        } else {
+            res.send(msg);
+        }
+    })
+});
+
+
+
+router.post('/flashWithTime',verifyToken,(req,res)=>{
+    let flash = req.body;
+    if (flash.time ===null || flash.time === undefined){
+        NewsFlash.addFlashNews(flash,(err,msg1)=>{
+            if (err){
+                console.log(err);
+            } else {
+                res.send(msg1);
+            }
+        })
+    } else {
+        sendAfter(flash.time,flash,res);
+    }
+});
+
+
+function sendAfter(time,newsFlash,res) {
+    delay(time).then(()=>{
+        NewsFlash.addFlashNews(newsFlash,(err,msg2)=>{
+            if (err){
+                console.log(err);
+            } else {
+                res.send(msg2)
+            }
+        })
+    })
+}
+
+const delay = (amount) => {
+    return new Promise((resolve) => {
+        setTimeout(resolve, amount);
+    });
+};
+
+router.post('/testTime',(req,res)=>{
+    let message = req.body;
+    if (message.time === null || message.time === undefined){
+        loginConsole(message);
+        res.send(message);
+    } else {
+        logAfter(message,res);
+        res.send(message);
+    }
+});
+
+
+function logAfter(message) {
+    delay(message.time).then(()=>{
+        loginConsole(message);
+
+    })
+}
+
+
+function loginConsole(msg) {
+    console.log(
+        new Date(Date.now()).toLocaleString() + " " + msg
+    );
+}
