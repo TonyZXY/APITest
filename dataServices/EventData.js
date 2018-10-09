@@ -18,6 +18,7 @@ let BCC = {
         url: 'https://api.meetup.com/2/events?key=4e46424491c5b3830231b2ce4ec6c&group_urlname=blockchaincentre',
         hostPage: 'https://www.meetup.com/en-AU/blockchaincentre/'
     },
+    logoURL:'https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/EtAylkEN_400x400.png?alt=media&token=3f470971-9486-44e4-ba4e-285b5d4533cf',
     name: 'The Blockchain Centre',
 
 };
@@ -27,7 +28,8 @@ let SBCC = {
         url:'https://api.meetup.com/2/events?key=4e46424491c5b3830231b2ce4ec6c&group_urlname=Sydney-Blockchain-Centre',
         hostPage: 'https://www.meetup.com/Sydney-Blockchain-Centre/'
     },
-    name: 'Sydney Blockchain Centre'
+    name: 'Sydney Blockchain Centre',
+    logoURL:'https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/WechatIMG7.jpeg?alt=media&token=535e7c30-7dbb-4cd0-8938-c0b4a79f5806',
 };
 
 
@@ -36,7 +38,8 @@ let MELE = {
         url:'https://www.eventbriteapi.com/v3/organizers/17897843003/events/?order_by=start_desc&token=VKY7KRN2LTUKG2EAFULE',
         hostPage:'https://www.eventbrite.com/o/merklize-ledgerium-17897843003'
     },
-    name: "Merklize, Ledgerium"
+    name: "Merklize, Ledgerium",
+    logoURL:'https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/WechatIMG5.jpeg?alt=media&token=889d2c6a-1b9a-42fc-8c3d-8721de566706',
 };
 
 
@@ -91,7 +94,7 @@ function getMeetUp(org) {
                 event.eventUpdatedTime = new Date(result.updated);
                 event.eventImageURL = result.photo_url;
                 event.custom = false;
-
+                event.logoURL = org.logoURL;
                 Event.addEvent(event, (err, res) => {
                     if (err) {
                         console.log(err);
@@ -131,6 +134,7 @@ function getEventBrite(org) {
                 event.eventHost = org.name;
                 event.eventHostPage = org.EventBrite.hostPage;
                 event.custom = false;
+                event.logoURL = org.logoURL;
                 https.get('https://www.eventbriteapi.com/v3/venues/' + result.venue_id + '/?token=VKY7KRN2LTUKG2EAFULE', (response) => {
                     response.on("error", (err) => {
                         console.log(err);

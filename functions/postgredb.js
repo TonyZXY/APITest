@@ -606,6 +606,27 @@ module.exports = {
         let query = 'update game_account set (aud,btc,eth,bch,ltc,powr,elf,ctxc,dta,iost,etc,last_week,reset) = (10000,0,0,0,0,0,0,0,0,0,0,null,false) where user_id = $1 returning *;';
         let param = [user_id];
         return pool.query(query,param,callback);
+    },
+
+    gameCheckAccount: (email,callback)=>{
+        let query = 'select users.nick_name,users.email,users.user_id,game_account.* from (users join game_account on users.user_id = game_account.user_id) where users.email =$1;';
+        let param = [email];
+        return pool.query(query,param,callback);
+    },
+
+
+    gameCheckWeekNumber: (callback)=>{
+        let query = 'select "value" from config where "key" = \'weekNumber\';';
+        let param = [];
+        return pool.query(query,param,callback);
+    },
+
+
+    gameUpdateWeekNumber: (number,callback)=>{
+        number = number +1;
+        let query = 'update config set "value" = $1 where "key" = \'weekNumber\' returning *;';
+        let param = [number];
+        return pool.query(query,param,callback);
     }
 
 };

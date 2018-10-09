@@ -871,27 +871,39 @@ router.put('/event', verifyToken,(req,res)=>{
 router.post('/flashWithTime',verifyToken,(req,res)=>{
     let flash = req.body;
     if (flash.time ===null || flash.time === undefined){
-        NewsFlash.addFlashNews(flash,(err,msg1)=>{
-            if (err){
+        NewsFlash.addFlashNews(flash, function (err, flashAdded) {
+            if (err) {
                 console.log(err);
-            } else {
-                res.send(msg1);
+                let address = req.connection.remoteAddress;
+                logger.databaseError('apifile',address, err);
+            }
+            res.json(flashAdded);
+            let address2 = req.connection.remoteAddress;
+            logger.newsFlashLog("NewsFlashApi",address2,"A News Flash added ("+flashAdded._id+")");
+            if(flashAdded.toSent){
+                Notification.sendFlashNotification(flashAdded.title,flashAdded.shortMassage);
             }
         })
     } else {
-        sendAfter(flash.time,flash,res);
+        sendAfter(flash.time,flash,req,res);
     }
 });
 
 
-function sendAfter(time,newsFlash,res) {
+function sendAfter(time,flashAdded,req,res) {
     delay(time).then(()=>{
-        NewsFlash.addFlashNews(newsFlash,(err,msg2)=>{
-            if (err){
+        let address = req.connection.remoteAddress;
+        NewsFlash.addFlashNews(flashAdded, function (err, flashAdded) {
+            if (err) {
                 console.log(err);
-            } else {
-                res.send(msg2)
+                logger.databaseError('apifile',address, err);
             }
+            res.json(flashAdded);
+            logger.newsFlashLog("NewsFlashApi",address,"A News Flash added ("+flashAdded._id+")");
+            if(flashAdded.toSent){
+                Notification.sendFlashNotification(flashAdded.title,flashAdded.shortMassage);
+            }
+
         })
     })
 }
