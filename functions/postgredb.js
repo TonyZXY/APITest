@@ -416,19 +416,19 @@ module.exports = {
 
     gameAddTransactionList: (userID, coinList, callback) => {
         let query = 'insert into game_transactions (user_id, status, coin_name, coin_add_name, exchange_name, ' +
-            ' trading_pair_name, single_price, amount, date, note, auto) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)' +
+            ' trading_pair_name, single_price, amount, date, note, auto,transaction_fee) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)' +
             ' returning *;';
         let param = [userID, coinList.status, coinList.coinName, coinList.coinAddName, coinList.exchangeName,
-            coinList.tradingPairName, coinList.singlePrice, coinList.amount, coinList.date, coinList.note, false];
+            coinList.tradingPairName, coinList.singlePrice, coinList.amount, coinList.date, coinList.note, false, coinList.transaction_fee];
         return pool.query(query, param, callback);
     },
 
     gameAddTransactionListAuto: (userID, coin, callback) => {
         let query = 'insert into game_transactions (user_id, status, coin_name, coin_add_name, exchange_name, ' +
-            ' trading_pair_name, single_price, amount, date, note, auto) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)' +
+            ' trading_pair_name, single_price, amount, date, note, auto, transaction_fee) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)' +
             ' returning *;';
         let param = [userID, coin.status, coin.coinName, coin.coinAddName, coin.exchangeName,
-            coin.tradingPairName, coin.singlePrice, coin.amount, coin.date, coin.note, true];
+            coin.tradingPairName, coin.singlePrice, coin.amount, coin.date, coin.note, true, coin.transaction_fee];
         return pool.query(query,param,callback);
     },
 
@@ -442,9 +442,10 @@ module.exports = {
     gameUpdateAccountAmount:(userID,status,coinAmount,coinName,audAmount,callback)=>{
         let query = '';
         if (status === "sell"){
-            query = 'update game_account set (aud,'+coinName+') = (aud+'+audAmount+','+coinName+'-'+coinAmount+') where user_id='+userID+' returning *;';
+            // add transaction fee
+            query = 'update game_account set (aud,'+coinName+') = (aud+'+(audAmount *0.99)+','+coinName+'-'+coinAmount+') where user_id='+userID+' returning *;';
         } else {
-            query = 'update game_account set (aud,'+coinName+') = (aud-'+audAmount+','+coinName+'+'+coinAmount+') where user_id='+userID+' returning *;';
+            query = 'update game_account set (aud,'+coinName+') = (aud-'+audAmount +','+coinName+'+'+coinAmount * 0.99+') where user_id='+userID+' returning *;';
         }
         return pool.query(query,[],callback);
     },

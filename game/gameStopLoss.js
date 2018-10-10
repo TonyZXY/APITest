@@ -92,7 +92,7 @@ function porformTransaction(set, coin) {
                 console.log(err);
             }
         } else {
-            console.log(dbmsg1.rows);
+            coinTo.transaction_fee = coinTo.singlePrice * coinTo.amount * 0.01;
             db.gameAddTransactionListAuto(set.user_id, coinTo, (err, dbmsg) => {
                 if (err) {
                     console.log(err);
