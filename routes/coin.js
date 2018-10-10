@@ -1,6 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const mongoose = require('mongoose');
+const express = require('express'); //express
+const router = express.Router();    //router to export
+const mongoose = require('mongoose');   //mongoose used to connect to mongodb
 const jwt = require('jsonwebtoken');
 const Coin = require('../module/Coin');
 const logger = require('../functions/logger');

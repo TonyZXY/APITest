@@ -42,6 +42,46 @@ let MELE = {
     logoURL:'https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/WechatIMG5.jpeg?alt=media&token=889d2c6a-1b9a-42fc-8c3d-8721de566706',
 };
 
+let WIBM = {
+    MeetUp: {
+        url:'https://api.meetup.com/2/events?key=4e46424491c5b3830231b2ce4ec6c&group_urlname=Women-in-Blockchain-Melbourne',
+        hostPage:'https://www.meetup.com/Women-in-Blockchain-Melbourne/events/'
+    },
+    name:'Women in Blockchain Melbourne',
+    logoURL:'https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/Women%20in%20Blockchain%20Melbourne.jpeg?alt=media&token=0a2d7e1e-130a-45b3-8ba0-1d3d9abe3160'
+};
+
+let SETH = {
+    MeetUp: {
+        url:'https://api.meetup.com/2/events?key=4e46424491c5b3830231b2ce4ec6c&group_urlname=SydEthereum',
+        hostPage:'https://www.meetup.com/SydEthereum/events/'
+    },
+    name:'SydEthereum',
+    logoURL:'https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/SydEthereum.png?alt=media&token=412d7bd0-c4fd-4c2e-bea8-f64c33d5ede5'
+};
+
+
+let CS = {
+    MeetUp: {
+        url: 'https://api.meetup.com/2/events?key=3f563b782f62605237c6a6441286574&group_urlname=Crypto-Sydney',
+        hostPage: 'https://www.meetup.com/en-AU/Crypto Sydney/events'
+    },
+    logoURL:'https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/Crypto%20Sydney.PNG?alt=media&token=b60bc1da-49c9-4d68-9d17-5fadadefd393',
+    name:'Crypto Sydney'
+};
+
+let TCT = {
+    MeetUp: {
+        url: 'https://api.meetup.com/2/events?key=3f563b782f62605237c6a6441286574&group_urlname=The-Crypto-Traders',
+        hostPage: 'https://www.meetup.com/en-AU/The-Crypto-Traders/events'
+    },
+    logoURL:'https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/The%20Crypto%20Traders.jpg?alt=media&token=ff7d47c7-7c01-4e6b-9db2-bda8c404e5a9',
+    name:'The Crypto Traders'
+};
+
+
+let hostList = [BCC,SBCC,MELE,WIBM,SETH,CS,TCT];
+exports.hosts = hostList;
 
 function strip(str) {
     if ((str === null) || (str === ''))
@@ -177,10 +217,11 @@ function getEvents(org) {
     }
 }
 
-async function runGetEvent() {
-    let orgs = [BCC,SBCC,MELE];
 
-    orgs.forEach(org => {
+async function runGetEvent() {
+    // let orgs = [BCC,SBCC,MELE,WIBM,SETH];
+
+    hostList.forEach(org => {
         getEvents(org);
     })
 }

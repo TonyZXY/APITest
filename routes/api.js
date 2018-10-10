@@ -1,39 +1,39 @@
-const express = require('express');
-const router = express.Router();
-const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
-const Notification = require('../functions/notification');
-const logger = require('../functions/logger');
-const db = require('../functions/postgredb');
+const express = require('express'); //express server
+const router = express.Router();    //export router
+const mongoose = require('mongoose');   //mongoose used to connect mongodb
+const jwt = require('jsonwebtoken');    //json web token to send token
+const Notification = require('../functions/notification');  //require to send notification
+const logger = require('../functions/logger');  //logger
+const db = require('../functions/postgredb');   //postgresql db connection
 
 
-const config = require('../config');
+const config = require('../config');        //config files
 
-mongoose.connect(config.database, config.options);
+mongoose.connect(config.database, config.options);  //connect to mongodb
 
 
-module.exports = router;
+module.exports = router;    //export router to app.js
 
-const News = require('../module/News.js');
-const Video = require('../module/Video.js');
-const NewsFlash = require('../module/NewsFlash.js');
-const Genuine = require('../module/Genuine.js');
-const FlashLike = require('../module/FlashLike');
-const UpdateInfo = require('../module/UpdateInfo');
-const Event = require('../module/Event');
-
+const News = require('../module/News.js');          //News Schema and mongodb functions
+const Video = require('../module/Video.js');        //Video
+const NewsFlash = require('../module/NewsFlash.js');//NewsFlash
+const Genuine = require('../module/Genuine.js');    //Genuine
+const FlashLike = require('../module/FlashLike');   //FlashNews Like and dislike mongodb schema and functions
+const UpdateInfo = require('../module/UpdateInfo'); //Update info for force update app (not used)
+const Event = require('../module/Event');           //Event Schema and mongodb functions
+const EventData = require('../dataServices/EventData'); //Use to get Event host name list and logo url
 
 // address = req.connection.remoteAddress
 
-function verifyToken(req, res, next) {
-    let address = req.connection.remoteAddress;
-    if (!req.headers.authorization) {
-        logger.newsFlashLog(address, "No authorization");
+function verifyToken(req, res, next) {          //use to check user when post and put data into server
+    let address = req.connection.remoteAddress;     // the user need to login via Admin page using the preset username and password
+    if (!req.headers.authorization) {               // token need to be in the header and generate by server
+        logger.newsFlashLog(address, "No authorization");       //if fail to pass token verifying, user are not allow to login or send data
         return res.status(401).json({
             login: false
         })
     } else {
-        let userProfile = req.headers.authorization.split(' ')[1];
+        let userProfile = req.headers.authorization.split(' ')[1];  //split header to get token and key
         let token = req.headers.authorization.split(' ')[2];
         if (userProfile === null || userProfile === undefined ||
             token === null || token === undefined) {
@@ -42,21 +42,21 @@ function verifyToken(req, res, next) {
                 login: false
             })
         } else {
-            let payload = jwt.verify(token, userProfile);
+            let payload = jwt.verify(token, userProfile);       //decode token and get data stored in the token
             if (!payload) {
                 logger.newsFlashLog(address, "No payload in User Profile: " + userProfile);
                 return res.status(401).json({
                     login: false
                 })
             } else {
-                req.userID = payload.subject;
+                req.userID = payload.subject;           //decode payload to verify user
                 if (payload.subject !== userProfile) {
                     logger.newsFlashLog(address, "Payload and user profile not match in User Profile: " + userProfile);
                     return res.status(401).json({
                         login: false
                     })
                 } else {
-                    next()
+                    next()      //when pass, can process next step
                 }
             }
         }
@@ -76,13 +76,13 @@ function verifyToken(req, res, next) {
  */
 //get news list (all news)
 router.get('/news', function (req, res) {
-    News.getNewsList(function (err, newsList) {
+    News.getNewsList(function (err, newsList) { //function in News.js file
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
             logger.databaseError('apifile', address, err);
         }
-        res.json(newsList);
+        res.json(newsList); //get data and response the data
     })
 });
 
@@ -140,14 +140,14 @@ router.delete('/news/:_id', verifyToken, function (req, res) {
 
 //get news by category
 router.get("/getNews", function (req, res) {
-    const loTag = req.query.localeTag;
+    const loTag = req.query.localeTag;  //get and check if information is currect
     const typeTag = req.query.contentTag;
     const lanTag = req.query.languageTag;
     const limit = req.query.limit;
     if (loTag === null || loTag === undefined || typeTag === null || typeTag === undefined || lanTag === null || lanTag === undefined) {
         res.status(400)
     } else {
-        News.findNewsByTag(loTag, typeTag, lanTag, function (err, news) {
+        News.findNewsByTag(loTag, typeTag, lanTag, function (err, news) { //function in News.js file
             if (err) {
                 console.log(err);
                 let address = req.connection.remoteAddress;
@@ -210,7 +210,7 @@ router.get("/getNewsContentOnly", function (req, res) {
     }
 });
 
-router.get("/getTags", (req, res) => {
+router.get("/getTags", (req, res) => {      //not used end point
     const tags = [{
         tag: 'tech',
         name: 'technology'
@@ -239,7 +239,7 @@ router.get("/searchnews", (req, res) => {
             message: 'bad request'
         });
     } else {
-        News.searchNews(languageTag, patten, (err, news) => {
+        News.searchNews(languageTag, patten, (err, news) => {   //see detail in News.js File
             if (err) {
                 console.log(err);
                 let address = req.connection.remoteAddress;
@@ -256,7 +256,7 @@ router.get("/searchNewsTime", (req, res) => {
     if (from === null || from === undefined || to === null || to === undefined) {
         res.status(400).send({message: 'bad request'});
     } else {
-        News.searchNewsTime(from, to, (err, news) => {
+        News.searchNewsTime(from, to, (err, news) => {  //see detail in News.js File
             if (err) {
                 console.log(err);
                 let address = req.connection.remoteAddress;
@@ -475,7 +475,7 @@ router.get('/flashList/:_id', function (req, res) {
     })
 });
 
-router.get('/flashList', function (req, res) {
+router.get('/flashList', function (req, res) {  //use to get all NewsFlash
     let address = req.connection.remoteAddress;
     NewsFlash.getFlash((err, newsFlash) => {
         if (err) {
@@ -489,24 +489,24 @@ router.get('/flashList', function (req, res) {
 
 
 //add News Flash
-router.post('/flash', verifyToken, function (req, res) {
+router.post('/flash', verifyToken, function (req, res) {    //Add news flash
     const flashAdded = req.body;
-    NewsFlash.addFlashNews(flashAdded, function (err, flashAdded) {
+    NewsFlash.addFlashNews(flashAdded, function (err, flashAdded) { //receive News Flash and add this into Mongodb
         if (err) {
             console.log(err);
             let address = req.connection.remoteAddress;
             logger.databaseError('apifile', address, err);
         }
-        let like = new FlashLike();
+        let like = new FlashLike(); //generate new flashLike Object
         like.newsID = flashAdded._id;
         like.likes = [];
         like.dislikes = [];
-        FlashLike.addNews(like, (err, msg) => {
+        FlashLike.addNews(like, (err, msg) => { // add Flash Like (people who like or dislike this news flash) list into Mongodb
             if (err) {
                 console.log(err);
             } else {
                 let id = flashAdded._id.toString();
-                db.addNewsIntoList(id, (err, dbmsg) => {
+                db.addNewsIntoList(id, (err, dbmsg) => { //add new line in postgresql db to store number of people like or dislike
                     if (err) {
                         console.log(err);
                     } else {
@@ -524,7 +524,7 @@ router.post('/flash', verifyToken, function (req, res) {
 });
 
 //update News Flash
-router.put('/flash/:_id', verifyToken, function (req, res) {
+router.put('/flash/:_id', verifyToken, function (req, res) {    //see NewsFlash.js file
     const id = req.params._id;
     const flashAdded = req.body;
     let address = req.connection.remoteAddress;
@@ -598,12 +598,12 @@ router.get('/searchFlashTime', (req, res) => {
     })
 });
 
-router.get('/getFlashWithLan', (req, res) => {
+router.get('/getFlashWithLan', (req, res) => {  // this func used in iOS app to get all news flash in different language tag
     const languageTag = req.query.languageTag;
     const skip = req.query.skip;
     const limit = req.query.limit;
     let address = req.connection.remoteAddress;
-    NewsFlash.getFlashListWithLimit(languageTag, parseInt(skip), parseInt(limit), (err, flash) => {
+    NewsFlash.getFlashListWithLimit(languageTag, parseInt(skip), parseInt(limit), (err, flash) => { //get NewsFlash from mongodb
         if (err) {
             console.log(err);
             logger.databaseError('apifile', address, err);
@@ -615,9 +615,9 @@ router.get('/getFlashWithLan', (req, res) => {
             ids.push(element._id);
         });
         let likes = [];
-        db.getLikesNumberList(ids, (err, dbmsg) => {
+        db.getLikesNumberList(ids, (err, dbmsg) => { // get Number of like and dislike from postgresql db for each flash
             likes = dbmsg.rows;
-            flashToSent.forEach(flashToEdit => {
+            flashToSent.forEach(flashToEdit => { // add each number with their news flash
                 likes.forEach(e => {
                     if (e.news_id.toString() === flashToEdit._id.toString()) {
                         flashToEdit.like = e.likes;
@@ -625,7 +625,7 @@ router.get('/getFlashWithLan', (req, res) => {
                     }
                 })
             });
-            res.json(flashToSent);
+            res.json(flashToSent); //send to ios devices
         });
         logger.newsFlashLog(address, "Get Flash with SKIP and LIMIT");
     })
@@ -787,15 +787,46 @@ router.get('/update', (req, res) => {
     })
 });
 
-
-router.get('/eventAll', (req, res) => {
-    let address = req.connection.remoteAddress;
-
-    Event.getAllEvent((err, msg) => {
-        if (err) {
+router.get('/eventAll',(req,res)=>{ //get all event from mongodb (V1)
+    let address = req.connection.address;
+    Event.getAllEvent((err,msg)=>{
+        if (err){
             console.log(err);
         } else {
             res.json(msg);
+        }
+    })
+});
+
+router.get('/eventAllV2', (req, res) => { //get all event from mongodb (V2) with host logoURL list and default logoURL
+    let address = req.connection.remoteAddress;
+    let hosts = EventData.hosts;
+    let urls = [];
+    hosts.forEach(host =>{ //get Event host list and their logoURLs
+        let url = {
+            name:host.name,
+            logoURL:host.logoURL
+        };
+        urls.push(url);
+    });
+    urls.push({
+        name:'default',
+        logoURL:'https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/kisspng-calendar-date-computer-icons-clip-art-calendar-5abbfbe7cd01e5.3454946815222691598397.png?alt=media&token=1bc76d95-94f4-4a2b-b9fd-1f5b448e4e1d'
+    });
+
+    Event.getAllEvent((err, msg) => { //Get All Events
+        if (err) {
+            console.log(err);
+        } else {
+            res.send({
+                success: true,
+                message: "successfully get events",
+                code: 200,
+                data: {
+                    events: msg, // combine events with url lists
+                    url:urls
+                }
+            });
         }
     })
 });
@@ -855,9 +886,9 @@ router.put('/event', verifyToken,(req,res)=>{
 
 
 
-router.post('/flashWithTime',verifyToken,(req,res)=>{
+router.post('/flashWithTime',verifyToken,(req,res)=>{       //use to receive delay news flash
     let flash = req.body;
-    if (flash.time ===null || flash.time === undefined){
+    if (flash.time ===null || flash.time === undefined){        //if not set time, sent now
         NewsFlash.addFlashNews(flash, function (err, flashAdded) {
             if (err) {
                 console.log(err);
@@ -872,13 +903,14 @@ router.post('/flashWithTime',verifyToken,(req,res)=>{
             }
         })
     } else {
-        sendAfter(flash.time,flash,req,res);
+        sendAfter(flash.time,flash,req,res); // if set time, sent after
+        logger.newsFlashLog(null ,"send after in "+flash.time/1000+' seconds');
     }
 });
 
 
 function sendAfter(time,flashAdded,req,res) {
-    delay(time).then(()=>{
+    delay(time).then(()=>{ //set time delay then push notification
         let address = req.connection.remoteAddress;
         NewsFlash.addFlashNews(flashAdded, function (err, flashAdded) {
             if (err) {
