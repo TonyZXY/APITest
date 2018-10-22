@@ -57,7 +57,7 @@ function verifyToken(req, res, next) {
                     } else {
                         let user = msg.rows[0];
                         if (msg.rows[0] === undefined) {
-                            let address = req.connect.remoteAddress;
+                            let address = req.connection.remoteAddress;
                             logger.databaseError("deviceManage", address, "No user in database");
                             return res.send({
                                 success: false,

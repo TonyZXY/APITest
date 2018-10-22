@@ -623,10 +623,23 @@ module.exports = {
     },
 
 
-    gameUpdateWeekNumber: (number,callback)=>{
-        number = number +1;
+    gameUpdateWeekNumber: (number,callback)=> {
+        number = number + 1;
         let query = 'update config set "value" = $1 where "key" = \'weekNumber\' returning *;';
         let param = [number];
+        return pool.query(query, param, callback);
+    },
+
+
+    gameGetAverageHistory: (user_id,callback)=>{
+        let query = 'select coin_add_name,status, sum(single_price*amount) as total_value, sum(amount) as total_amount from game_transactions where user_id=$1 group by coin_add_name,status;';
+        let param = [user_id];
+        return pool.query(query,param,callback);
+    },
+
+    gameDeleteAlert: (interest,callback)=>{
+        let query = 'Delete from game_alert where alert_id = $1;';
+        let param = [interest.alert_id];
         return pool.query(query,param,callback);
     }
 

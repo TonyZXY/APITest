@@ -577,6 +577,47 @@ router.get('/getCoinData',(req,res)=>{
 });
 
 
+router.post('/getUserAverageHistory',verifyToken,(req,res)=>{
+    let user_id = req.body.user_id;
+    if (user_id === null || user_id === undefined){
+        badRequest(res);
+    } else {
+        db.gameGetAverageHistory(user_id,(err,msg)=>{
+            if (err){
+                databaseError(err,res);
+            } else {
+                res.send({
+                    message: 'successfully get average data',
+                    code: 200,
+                    success: true,
+                    data: msg.rows
+                })
+            }
+        })
+    }
+});
+
+router.post('/deleteAlert',verifyToken,(req,res)=>{
+    let interest = req.body.alert;
+    if (interest === null || interest === undefined){
+        badRequest(res);
+    } else {
+        db.gameDeleteAlert(interest,(err,dbmsg)=>{
+            if (err){
+                databaseError(err,res);
+            } else {
+                res.send({
+                    message: 'Successfully delete interest',
+                    code: 200,
+                    success: true,
+                    data: null
+                })
+            }
+        })
+    }
+});
+
+
 function compareWeek(a,b) {
     if (a.week_rank < b.week_rank)
         return -1;
