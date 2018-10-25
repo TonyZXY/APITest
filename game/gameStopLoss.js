@@ -77,7 +77,7 @@ function porformTransaction(set, coin) {
         date: new Date(),
         note: 'Stop Loss Function Auto Generate: ' + coin.note,
     };
-    db.gameUpdateAccountAmount(set.user_id, coinTo.status, coinTo.amount, coinTo.coinAddName.toLowerCase(), coinTo.singlePrice * coinTo.amount, (err, dbmsg1) => {
+    db.gameUpdateAccountAmount(set.user_id, coinTo.status, coinTo.amount, coinTo.coinAddName.toLowerCase(), Math.round(coinTo.singlePrice * coinTo.amount*100000000)/100000000, (err, dbmsg1) => {
         if (err) {
             if (err.code === '23514') {
                 console.log('no enough fund');
@@ -92,7 +92,7 @@ function porformTransaction(set, coin) {
                 console.log(err);
             }
         } else {
-            coinTo.transaction_fee = coinTo.singlePrice * coinTo.amount * 0.002;
+            coinTo.transaction_fee = Math.round(coinTo.singlePrice * coinTo.amount * 0.002*100000000)/100000000;
             db.gameAddTransactionListAuto(set.user_id, coinTo, (err, dbmsg) => {
                 if (err) {
                     console.log(err);

@@ -184,7 +184,7 @@ router.post('/addTransaction', verifyToken, (req, res) => {
             data: null
         });
     } else {
-        db.gameUpdateAccountAmount(user_id, transaction.status, transaction.amount, transaction.coinAddName, transaction.singlePrice * transaction.amount, (err, dbmsg1) => {
+        db.gameUpdateAccountAmount(user_id, transaction.status, transaction.amount, transaction.coinAddName, Math.round(transaction.singlePrice * transaction.amount*100000000)/100000000, (err, dbmsg1) => {
             if (err) {
                 if (err.code === '23514') {
                     res.send({
@@ -197,7 +197,7 @@ router.post('/addTransaction', verifyToken, (req, res) => {
                     databaseError(err, res);
                 }
             } else {
-                transaction.transaction_fee = transaction.amount * transaction.singlePrice * 0.002;
+                transaction.transaction_fee = Math.round(transaction.amount * transaction.singlePrice * 0.002*100000000)/100000000;
                 db.gameAddTransactionList(user_id, transaction, (err, dbmsg2) => {
                     if (err) {
                         databaseError(err, res);
