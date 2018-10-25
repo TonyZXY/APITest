@@ -8,8 +8,8 @@ const cpmpression = require('compression');
 
 app.use(cors());
 app.use(cpmpression());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json({limit:'50mb',extended: true}));
+app.use(bodyParser.urlencoded({limit:'50mb', extended: true }));
 
 
 const api = require('./routes/api');
@@ -21,7 +21,7 @@ const admin = require('./routes/admin');
 const policy = require('./routes/policy');
 const terms = require('./routes/terms');
 const css = require('./routes/css');
-// const game = require('./game/game');
+const game = require('./game/game');
 
 
 app.use('/api', api);
@@ -33,7 +33,7 @@ app.use('/adminpage', admin);
 app.use('/policy', policy);
 app.use('/terms', terms);
 app.use('/css',css);
-// app.use('/game',game);
+app.use('/game',game);
 
 
 //nothing

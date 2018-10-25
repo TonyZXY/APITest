@@ -34,7 +34,7 @@ function getData() {
                         console.log(err)
                     } else {
                         list.forEach( item =>{
-                            let coin = momsg.find( co => co.coin_name === item.coin_name);
+                            let coin = momsg.find( co => co.coin_name.toLowerCase() === item.coin_name.toLowerCase());
                             compare(item,coin);
                         })
                     }

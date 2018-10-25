@@ -42,7 +42,7 @@ function getData() {
                         if (dbData[0] === null || dbData[0] === undefined) {
                         } else {
                             dbData.forEach(set => {
-                                if (coin.coin_name === set.coin_name) {
+                                if (coin.coin_name.toLowerCase() === set.coin_name.toLowerCase()) {
                                     comparePrice(set, coin, (none, higher, lower) => {
                                         if (none) {
 
@@ -77,7 +77,7 @@ function porformTransaction(set, coin) {
         date: new Date(),
         note: 'Stop Loss Function Auto Generate: ' + coin.note,
     };
-    db.gameUpdateAccountAmount(set.user_id, coinTo.status, coinTo.amount, coinTo.coinAddName, coinTo.singlePrice * coinTo.amount, (err, dbmsg1) => {
+    db.gameUpdateAccountAmount(set.user_id, coinTo.status, coinTo.amount, coinTo.coinAddName.toLowerCase(), coinTo.singlePrice * coinTo.amount, (err, dbmsg1) => {
         if (err) {
             if (err.code === '23514') {
                 console.log('no enough fund');
@@ -92,7 +92,7 @@ function porformTransaction(set, coin) {
                 console.log(err);
             }
         } else {
-            coinTo.transaction_fee = coinTo.singlePrice * coinTo.amount * 0.01;
+            coinTo.transaction_fee = coinTo.singlePrice * coinTo.amount * 0.002;
             db.gameAddTransactionListAuto(set.user_id, coinTo, (err, dbmsg) => {
                 if (err) {
                     console.log(err);
@@ -147,19 +147,19 @@ function pushNotification(user_id,message){
         } else {
             let list = dbmsg.rows;
             list.forEach( e =>{
-                // let apnProvider = new apn.Provider(optionsToFile);
-                // let notification = new apn.Notification();
-                // notification.badge = 0;
-                // notification.title = "Trading Stop Loss Notification";
-                // notification.body = message;
-                // notification.sound = 'default';
-                // notification.topic = "com.blockchainglobal.bglmedia";
-                // apnProvider.send(notification,e.device_token).then( res =>{
-                //     console.log(res);
-                //     res.failed.forEach(f=>{
-                //
-                //     })
-                // })
+                let apnProvider = new apn.Provider(optionsToFile);
+                let notification = new apn.Notification();
+                notification.badge = 0;
+                notification.title = "Trading Stop Loss Notification";
+                notification.body = message;
+                notification.sound = 'default';
+                notification.topic = "com.blockchainglobal.bglmedia";
+                apnProvider.send(notification,e.device_token).then( res =>{
+                    console.log(res);
+                    res.failed.forEach(f=>{
+
+                    })
+                })
             })
         }
     });

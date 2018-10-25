@@ -19,85 +19,93 @@ mongoose.connect(config.database, config.options);
 // });
 
 
-async function start(Number) {
+async function start() {
     CoinData.runOneTime();
     await delay(1000*10);
-    GameCoin.getCoinList((err,monmsg)=>{
-        if (err){
+    db.gameCheckWeekNumber((err,week)=>{
+        if (err) {
             console.log(err);
         } else {
-            let btc = monmsg.find(e=> e.coin_name === 'btc').current_price;
-            let bch = monmsg.find(e=> e.coin_name === 'bch').current_price;
-            let ltc = monmsg.find(e=> e.coin_name === 'ltc').current_price;
-            let ctxc = monmsg.find(e=> e.coin_name === 'ctxc').current_price;
-            let powr = monmsg.find(e=> e.coin_name === 'powr').current_price;
-            let eth = monmsg.find(e=> e.coin_name === 'eth').current_price;
-            let iost = monmsg.find(e=> e.coin_name === 'iost').current_price;
-            let elf = monmsg.find(e=> e.coin_name === 'elf').current_price;
-            let etc = monmsg.find(e=> e.coin_name === 'etc').current_price;
-            let dta = monmsg.find(e=> e.coin_name === 'dta').current_price;
-
-            db.gameGetAllAccount((err,dbmsg)=>{
+            let Number = parseInt(week.rows[0].value);
+            GameCoin.getCoinList((err,monmsg)=>{
                 if (err){
                     console.log(err);
                 } else {
-                    let accounts = dbmsg.rows;
-                    accounts.forEach(account=>{
-                        let weekly_total = account.aud + account.btc*btc + account.eth*eth+account.bch*bch+account.ltc*ltc+ account.ctxc*ctxc+account.powr*powr+ account.iost*iost+account.elf*elf+account.etc*etc+account.dta*dta;
+                    let btc = monmsg.find(e=> e.coin_name.toLowerCase() === 'btc').current_price;
+                    let bch = monmsg.find(e=> e.coin_name.toLowerCase() === 'bch').current_price;
+                    let ltc = monmsg.find(e=> e.coin_name.toLowerCase() === 'ltc').current_price;
+                    let ctxc = monmsg.find(e=> e.coin_name.toLowerCase() === 'ctxc').current_price;
+                    let powr = monmsg.find(e=> e.coin_name.toLowerCase() === 'powr').current_price;
+                    let eth = monmsg.find(e=> e.coin_name.toLowerCase() === 'eth').current_price;
+                    let iost = monmsg.find(e=> e.coin_name.toLowerCase() === 'iost').current_price;
+                    let elf = monmsg.find(e=> e.coin_name.toLowerCase() === 'elf').current_price;
+                    let etc = monmsg.find(e=> e.coin_name.toLowerCase() === 'etc').current_price;
+                    let dta = monmsg.find(e=> e.coin_name.toLowerCase() === 'dta').current_price;
 
-                        let lastWeek = account.last_week;
-                        if (account.last_week === null) {
-                            lastWeek = 10000;
-                        }
-                        let this_week = weekly_total/lastWeek*100;
-                        let data = {
-                            user_id: account.user_id,
-                            last_week: lastWeek,
-                            this_week: this_week,
-                            total:weekly_total,
-                            reset:account.reset,
-                        };
-                        // console.log(data);
-                        if(account.reset === true){
-                            db.gameUpdateWeeklyAmount(account.user_id,data,(err,dbmsg4)=>{
-                                if (err){
-                                    console.log(err);
-                                } else {
-                                    // console.log(dbmsg4.rows);
-                                    // console.log(account.user_id + ' will be reset');
-                                    db.gameResetAccountAmount(account.user_id,(err,dbmsg2)=>{
-                                        if (err){
-                                            console.log(err);
-                                        } else {
-                                            // console.log(dbmsg2.rows);
-                                        }
-                                    })
-                                }
-                            })
-                        }else {
-                            db.gameUpdateWeeklyAmount(account.user_id,data,(err,dbmsg7)=>{
-                                if (err){
-                                    console.log(err);
-                                } else {
-                                    // console.log(dbmsg7);
-                                }
-                            })
-                        }
-                    });
-                    delay(10*1000);
-
-                    db.gameGetAllAccount((err,dbmsg5)=>{
+                    db.gameGetAllAccount((err,dbmsg)=>{
                         if (err){
                             console.log(err);
                         } else {
-                            let list = dbmsg5.rows;
-                            generateRank(list,Number);
+                            let accounts = dbmsg.rows;
+                            accounts.forEach(account=>{
+                                let weekly_total = account.aud + account.btc*btc + account.eth*eth+account.bch*bch+account.ltc*ltc+ account.ctxc*ctxc+account.powr*powr+ account.iost*iost+account.elf*elf+account.etc*etc+account.dta*dta;
+
+                                let lastWeek = account.last_week;
+                                if (account.last_week === null) {
+                                    lastWeek = 10000;
+                                }
+                                let this_week = (weekly_total/lastWeek - 1)*100;
+                                let data = {
+                                    user_id: account.user_id,
+                                    last_week: lastWeek,
+                                    this_week: this_week,
+                                    total:weekly_total,
+                                    reset:account.reset,
+                                };
+                                // console.log(data);
+                                if(account.reset === true){
+                                    db.gameUpdateWeeklyAmount(account.user_id,data,(err,dbmsg4)=>{
+                                        if (err){
+                                            console.log(err);
+                                        } else {
+                                            // console.log(dbmsg4.rows);
+                                            // console.log(account.user_id + ' will be reset');
+                                            db.gameResetAccountAmount(account.user_id,(err,dbmsg2)=>{
+                                                if (err){
+                                                    console.log(err);
+                                                } else {
+                                                    // console.log(dbmsg2.rows);
+                                                }
+                                            })
+                                        }
+                                    })
+                                }else {
+                                    db.gameUpdateWeeklyAmount(account.user_id,data,(err,dbmsg7)=>{
+                                        if (err){
+                                            console.log(err);
+                                        } else {
+                                            // console.log(dbmsg7);
+                                        }
+                                    })
+                                }
+                            });
+                            delay(10*1000);
+
+                            db.gameGetAllAccount((err,dbmsg5)=>{
+                                if (err){
+                                    console.log(err);
+                                } else {
+                                    let list = dbmsg5.rows;
+                                    generateRank(list,Number);
+                                }
+                            })
                         }
                     })
                 }
-            })
+            });
         }
     });
+
 }
 
 
@@ -170,6 +178,6 @@ function compareTotal(a,b) {
 }
 
 
-module.exports.run = (Number)=>{
-    start(Number);
+module.exports.run = ()=>{
+    start();
 };

@@ -197,7 +197,7 @@ router.post('/addTransaction', verifyToken, (req, res) => {
                     databaseError(err, res);
                 }
             } else {
-                transaction.transaction_fee = transaction.amount * transaction.singlePrice * 0.01;
+                transaction.transaction_fee = transaction.amount * transaction.singlePrice * 0.002;
                 db.gameAddTransactionList(user_id, transaction, (err, dbmsg2) => {
                     if (err) {
                         databaseError(err, res);
