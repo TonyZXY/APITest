@@ -184,11 +184,11 @@ router.post('/addTransaction', verifyToken, (req, res) => {
             data: null
         });
     } else {
-        db.gameUpdateAccountAmount(user_id, transaction.status, transaction.amount, transaction.coinAddName, Math.round(transaction.singlePrice * transaction.amount*100000000)/100000000, (err, dbmsg1) => {
+        db.gameUpdateAccountAmount(user_id, transaction.status, Math.round(transaction.amount*100000000)/100000000, transaction.coinAddName, Math.round(transaction.singlePrice * transaction.amount*100000000)/100000000, (err, dbmsg1) => {
             if (err) {
                 if (err.code === '23514') {
                     res.send({
-                        message: 'Amount doesn\'t enough!',
+                        message: 'No Enough Amount',
                         code: 440,
                         success: false,
                         data: null
@@ -386,30 +386,39 @@ router.post('/setStopLoss', verifyToken, (req, res) => {
         if (err) {
             databaseError(err, res);
         } else {
-            db.gameGetSetsWithCoin(user_id, set.coinName, (err, msg2) => {
+            db.gameGetSetsWithCoin(user_id, set.coinName.toLowerCase(), (err, msg2) => {
                 if (err) {
                     databaseError(err, res);
                 } else {
-                    if (msg2.rows.length < msg1.rows[0].sets) {
-                        db.gameAddStopLossSet(user_id, set, (err, msg3) => {
-                            if (err) {
-                                databaseError(err, res);
-                            } else {
-                                res.send({
-                                    message: 'successfully add stop loss pair',
-                                    code: 200,
-                                    success: true,
-                                    data: msg3.rows[0]
-                                })
-                            }
-                        })
-                    } else {
+                    if (msg1.rows[0]===null || msg1.rows[0]===undefined){
                         res.send({
-                            message: 'User cannot set pair due to limitation',
-                            code: 450,
+                            message:'Invalid Input, Check input',
+                            code: 502,
                             success: false,
-                            data: msg2.rows
+                            data: null
                         })
+                    }else {
+                        if (msg2.rows.length < msg1.rows[0].sets) {
+                            db.gameAddStopLossSet(user_id, set, (err, msg3) => {
+                                if (err) {
+                                    databaseError(err, res);
+                                } else {
+                                    res.send({
+                                        message: 'successfully add stop loss pair',
+                                        code: 200,
+                                        success: true,
+                                        data: msg3.rows[0]
+                                    })
+                                }
+                            })
+                        } else {
+                            res.send({
+                                message: 'User cannot set pair due to limitation',
+                                code: 450,
+                                success: false,
+                                data: msg2.rows
+                            })
+                        }
                     }
                 }
             })

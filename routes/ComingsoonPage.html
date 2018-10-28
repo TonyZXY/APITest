@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <title>Trading Game Coming Soon</title>
+    <style type="text/css">
+        body{
+           background: url("https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/background%20pic.jpg?alt=media&token=5e69bdd3-59af-421a-8f89-73d7b4ae4bba") no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;;
+        }
+
+        .countdownContainer{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform : translateX(-50%) translateY(-50%);
+            text-align: center;
+            padding: 10px;
+            box-shadow: 0 0;
+            color: white;
+        }
+        .info {
+            font-size : 60px;
+            font-family: "Andale Mono";
+        }
+        .timeColumn{
+            padding-left: 8px;
+            padding-right: 8px;
+            border: 1px solid #ffffff;
+        }
+
+        .timeInfoColumn{
+            font-size: large;
+            font-family: AppleGothic;
+        }
+        .question{
+            font-size: 18px;
+            font-family: Arial;
+            font-weight: 800;
+            font-style: italic;
+        }
+        .answer{
+            font-size: 14px;
+            font-family: Arial;
+        }
+    </style>
+</head>
+<body>
+<div class="countdownContainer">
+    <img src="https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/logo-filled.png?alt=media&token=768c371d-4c91-43d7-9929-b4baa4afe431"
+         style="width: 150px; height: 150px; border-radius: 25% ; border: 1px solid #ffffff"/>
+    <p class = "text-center" style="font-family: Silom; font-size: 30px">The Open Test Will Start Soon In</p>
+    <table style="padding-top: 30px" align="center">
+        <tr class = "info">
+            <td class="timeColumn" id = "days"></td>
+            <td style="width: 10px;"> </td>
+            <td class="timeColumn" id = "hours"></td>
+            <td style="width: 10px;"> </td>
+            <td class="timeColumn" id = "minutes"></td>
+            <td style="width: 10px;"> </td>
+            <td class="timeColumn" id="seconds"></td>
+        </tr>
+        <tr style="width: 15px;">
+        </tr>
+        <tr>
+            <td class = "timeInfoColumn">Days</td>
+            <td></td>
+            <td class = "timeInfoColumn">Hours</td>
+            <td></td>
+            <td class = "timeInfoColumn">Minutes</td>
+            <td></td>
+            <td class = "timeInfoColumn">Seconds</td>
+        </tr>
+
+    </table>
+    <div style="padding-top: 15px">
+       <a href="https://www.facebook.com/TheCryptoGeek/" target="_blank">
+           <i class="fa fa-facebook-square" style="font-size:48px;color:white;padding-right: 15px"></i>
+       </a>
+        <a href="https://www.linkedin.com/company/cryptogeek-app/?originalSubdomain=au" target="_blank">
+            <i class="fa fa-linkedin-square" style="font-size:48px;color:white"></i>
+        </a>
+        <a href="https://twitter.com/CryptogeekApp" target="_blank">
+            <i class="fa fa-twitter-square" style="font-size:48px;color:white;padding-left: 15px"></i>
+        </a>
+    </div>
+    <button
+            type="button"
+            class="btn"
+            data-toggle="modal"
+            data-target="#exampleModalLong"
+            style="border: 2px white solid;
+                   background-color:inherit;
+                   border-radius: 10px;
+                   margin-top: 15px;
+                   padding:8px;
+                   font-size: 20px;
+                   color:white;
+                    font-family: Silom" >More Questions</button>
+</div>
+
+
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width: auto">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel" style="text-align: center">Q  &  A</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h3></h3>
+                <table>
+                    <tr class="question">
+                        <td>&middot; Is there a cost to enter?</td>
+                    </tr>
+                    <tr class="answer">
+                        <td style="padding-left: 10px">
+                            No, free to join the CryptoGeek Cryptocurrency Trading Competition Beta Test. There are only two steps you need to do:
+                        </td>
+                    </tr>
+                    <tr class="answer">
+                        <td style="padding-left: 10px">
+                                1. Download the cryptogeek app (Appstore for IOS, webpage for Android)
+                        </td>
+                    </tr>
+                    <tr class="answer">
+                        <td style="padding-left: 10px">
+                                2. Wait for confirmation and welcoming email
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <hr />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="question">
+                            &middot; How much virtual fund will I be given to start with?
+                        </td>
+                    </tr>
+                    <tr class="answer">
+                        <td style="padding-left: 10px">
+                                100k virtual AU dollars will be saved in your CryptoGeek app account after finishing registration.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <hr />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="question">
+                            &middot; How are the winners to be chosen?
+                        </td>
+                    </tr>
+                    <tr class="answer">
+                        <td style="padding-left: 10px">
+                                Ranking Result is calculated as, Realized Profit at the End of Competition / Total Value of (AUD + Coin) at the End of Competition.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <hr />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="question">
+                            &middot; How is the competition scheduled?
+                        </td>
+                    </tr>
+                    <tr class="answer">
+                        <td style="padding-left: 10px">
+                            It will start on 19 Nov 0:00:00 (Monday) and ends on 30 Nov 23:59:59 (Friday). Winners would be announced on 3rd of Dec via email and social media
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+    function countdown(){
+        let now = new Date();
+        let eventDate = new Date(2018,10,19);
+        let currentTime = now.getTime();
+        let eventTime = eventDate.getTime();
+
+        let gapTime = eventTime - currentTime;
+
+        let second = Math.floor(gapTime / 1000);
+        let minute = Math.floor(second / 60);
+        let hour = Math.floor(minute/60);
+        let day = Math.floor(hour / 24);
+
+        hour %= 24;
+        minute %= 60;
+        second %= 60;
+
+        hour = (hour < 10) ? "0" + hour : hour;
+        minute = (minute < 10) ? "0" + minute : minute;
+        second = (second < 10) ? "0" + second : second;
+
+        document.getElementById("days").textContent = day;
+        document.getElementById("days").innerText = day;
+
+        document.getElementById("hours").textContent = hour;
+        document.getElementById("minutes").textContent = minute;
+        document.getElementById("seconds").textContent = second;
+
+        setTimeout(countdown, 1000);
+    }
+    countdown();
+
+
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</body>
+</html>

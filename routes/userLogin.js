@@ -185,7 +185,9 @@ router.post('/login', (req, res) => {
                                 success: true,
                                 message: 'Login Success',
                                 code: 200,
-                                token: tokenToSend
+                                token: tokenToSend,
+                                user_nickname: user.nick_name,
+                                user_id:user._id
                             });
                             logger.userRegistrationLoginLog(address, "Login Successfully in: " + userName);
                         }

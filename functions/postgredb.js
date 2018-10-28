@@ -419,7 +419,7 @@ module.exports = {
             ' trading_pair_name, single_price, amount, date, note, auto,transaction_fee) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)' +
             ' returning *;';
         let param = [userID, coinList.status, coinList.coinName, coinList.coinAddName.toLowerCase(), coinList.exchangeName,
-            coinList.tradingPairName, coinList.singlePrice, coinList.amount, coinList.date, coinList.note, false, coinList.transaction_fee];
+            coinList.tradingPairName, Math.round(coinList.singlePrice*100000000)/100000000, Math.round(coinList.amount*100000000)/100000000, coinList.date, coinList.note, false, coinList.transaction_fee];
         return pool.query(query, param, callback);
     },
 
@@ -428,7 +428,7 @@ module.exports = {
             ' trading_pair_name, single_price, amount, date, note, auto, transaction_fee) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)' +
             ' returning *;';
         let param = [userID, coin.status, coin.coinName, coin.coinAddName.toLowerCase(), coin.exchangeName,
-            coin.tradingPairName, coin.singlePrice, coin.amount, coin.date, coin.note, true, coin.transaction_fee];
+            coin.tradingPairName, Math.round(coin.singlePrice*100000000)/100000000, Math.round(coin.amount*100000000)/100000000, coin.date, coin.note, true, coin.transaction_fee];
         return pool.query(query,param,callback);
     },
 
@@ -443,9 +443,9 @@ module.exports = {
         let query = '';
         if (status === "sell"){
             // add transaction fee
-            query = 'update game_account set (aud,'+coinName+') = (aud+'+Math.round(audAmount *0.998*100000000)/100000000+','+coinName+'-'+coinAmount+') where user_id='+userID+' returning *;';
+            query = 'update game_account set (aud,'+coinName+') = (aud+'+Math.round(audAmount *0.998*100000000)/100000000+','+coinName+'-'+Math.round(coinAmount*100000000)/100000000+') where user_id='+userID+' returning *;';
         } else {
-            query = 'update game_account set (aud,'+coinName+') = (aud-'+audAmount +','+coinName+'+'+Math.round(coinAmount * 0.998*100000000)/100000000+') where user_id='+userID+' returning *;';
+            query = 'update game_account set (aud,'+coinName+') = (aud-'+Math.round(audAmount*100000000)/100000000 +','+coinName+'+'+Math.round(coinAmount * 0.998*100000000)/100000000+') where user_id='+userID+' returning *;';
         }
         return pool.query(query,[],callback);
     },

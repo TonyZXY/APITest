@@ -61,11 +61,10 @@ module.exports = {
             if (err){
                 console.log(err);
             } else {
-                weekNumber = parseInt(dbmsg.rows[0].value);
+                weekNumber = parseInt(dbmsg.rows[0].value) - 1;
                 Ranking.find({
                     week_number: weekNumber
                 },callback);
-                console.log(weekNumber);
             }
         });
     },
