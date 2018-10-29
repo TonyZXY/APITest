@@ -24,7 +24,6 @@ function getData() {
         if (err){
             console.log(err);
         } else {
-            console.log(dbmsg.rows);
             if (dbmsg.rows[0]===null || dbmsg.rows[0]===undefined){
                 console.log("No data in database");
             } else {

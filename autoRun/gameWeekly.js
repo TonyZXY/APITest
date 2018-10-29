@@ -9,7 +9,7 @@ let weekNumber = 1;
 
 
 function run() {
-    corn.schedule('59 23 * * 0/2',()=>{
+    corn.schedule('59 23 * * 0',()=>{
         db.gameCheckWeekNumber((err,msg)=>{
             if (err){
                 console.log(err);
