@@ -19,9 +19,9 @@ const optionsToFile = {
 
 
 function comparePrice(set, coin, callback) {
-    if (set.price_greater <= coin.current_price) {
+    if (parseFloat(set.price_greater) <= coin.current_price) {
         return callback(null, {action: 'higher'}, null);
-    } else if (set.price_lower >= coin.current_price) {
+    } else if (parseFloat(set.price_lower) >= coin.current_price) {
         return callback(null, null, {action: 'lower'});
     } else {
         return callback({action: 'no'}, null, null);
@@ -77,7 +77,9 @@ function porformTransaction(set, coin) {
         date: new Date(),
         note: 'Stop Loss Function Auto Generate: ' + coin.note,
     };
-    db.gameUpdateAccountAmount(set.user_id, coinTo.status, coinTo.amount, coinTo.coinAddName.toLowerCase(), Math.round(coinTo.singlePrice * coinTo.amount*100000000)/100000000, (err, dbmsg1) => {
+    db.gameUpdateAccountAmount(set.user_id, coinTo.status, Math.round(parseFloat(coinTo.amount)*100000000)/100000000,
+        coinTo.coinAddName.toLowerCase(), Math.round(coinTo.singlePrice * parseFloat(coinTo.amount)*100000000)/100000000,
+        (err, dbmsg1) => {
         if (err) {
             if (err.code === '23514') {
                 console.log('no enough fund');
@@ -92,7 +94,7 @@ function porformTransaction(set, coin) {
                 console.log(err);
             }
         } else {
-            coinTo.transaction_fee = Math.round(coinTo.singlePrice * coinTo.amount * 0.002*100000000)/100000000;
+            coinTo.transaction_fee = Math.round(coinTo.singlePrice * parseFloat(coinTo.amount) * 0.002*100000000)/100000000;
             db.gameAddTransactionListAuto(set.user_id, coinTo, (err, dbmsg) => {
                 if (err) {
                     console.log(err);

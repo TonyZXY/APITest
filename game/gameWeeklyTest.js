@@ -20,8 +20,8 @@ mongoose.connect(config.database, config.options);
 
 
 async function start() {
-    CoinData.runOneTime();
-    await delay(1000*10);
+    // CoinData.runOneTime();
+    // await delay(1000*10);
     db.gameCheckWeekNumber((err,week)=>{
         if (err) {
             console.log(err);
@@ -48,13 +48,16 @@ async function start() {
                         } else {
                             let accounts = dbmsg.rows;
                             accounts.forEach(account=>{
-                                let weekly_total = account.aud + account.btc*btc + account.eth*eth+account.bch*bch+account.ltc*ltc+ account.ctxc*ctxc+account.powr*powr+ account.iost*iost+account.elf*elf+account.etc*etc+account.dta*dta;
+                                let weekly_total = parseFloat(account.aud) + parseFloat(account.btc)*btc +
+                                    parseFloat(account.eth)*eth + parseFloat(account.bch)*bch + parseFloat(account.ltc)*ltc+
+                                    parseFloat(account.ctxc)*ctxc + parseFloat(account.powr)*powr + parseFloat(account.iost)*iost+
+                                    parseFloat(account.elf)*elf + parseFloat(account.etc)*etc + parseFloat(account.dta)*dta;
 
-                                let lastWeek = account.last_week;
+                                let lastWeek = parseFloat(account.last_week);
                                 if (account.last_week === null) {
                                     lastWeek = 10000;
                                 }
-                                let this_week = (weekly_total/lastWeek - 1)*100;
+                                let this_week = (weekly_total/lastWeek)*100;
                                 let data = {
                                     user_id: account.user_id,
                                     last_week: lastWeek,
@@ -170,9 +173,9 @@ function compareWeek(a,b) {
 }
 
 function compareTotal(a,b) {
-    if (a.total > b.total)
+    if (parseFloat(a.total) > parseFloat(b.total))
         return -1;
-    if (a.total < b.total)
+    if (parseFloat(a.total) < parseFloat(b.total))
         return 1;
     return 0;
 }

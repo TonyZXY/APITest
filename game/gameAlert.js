@@ -45,7 +45,7 @@ function getData() {
 }
 
 function compare(interest, coin) {
-    if(interest.isgreater === 1 && coin.current_price > interest.price){
+    if(interest.isgreater === 1 && coin.current_price > parseFloat(interest.price)){
         let message = 'Now, '+interest.coin_name+' is worth '+coin.current_price+', higher than your expectation of '+interest.price;
         sendAlert(interest.device_token,message);
         interest.status = false;
@@ -55,7 +55,7 @@ function compare(interest, coin) {
             } else {
             }
         })
-    }else if (interest.isgreater === 2 && coin.current_price < interest.price){
+    }else if (interest.isgreater === 2 && coin.current_price < parseFloat(interest.price)){
         let message = 'Now, '+interest.coin_name+' is worth '+coin.current_price+', lower than your expectation of '+interest.price;
         sendAlert(interest.device_token,message);
         interest.status = false;
@@ -65,7 +65,7 @@ function compare(interest, coin) {
             } else {
             }
         })
-    }else if (interest.isgreater === 3 && coin.current_price >= interest.price ){
+    }else if (interest.isgreater === 3 && coin.current_price >= parseFloat(interest.price)){
         let message = 'Now, '+interest.coin_name+' is worth '+coin.current_price+', higher than or equal your expectation of '+interest.price;
         sendAlert(interest.device_token,message);
         interest.status = false;
@@ -75,7 +75,7 @@ function compare(interest, coin) {
             } else {
             }
         })
-    } else if (interest.isgreater === 4 && coin.current_price <=interest.price){
+    } else if (interest.isgreater === 4 && coin.current_price <= parseFloat(interest.price)){
         let message = 'Now, '+interest.coin_name+' is worth '+coin.current_price+', lower than or equal your expectation of '+interest.price;
         sendAlert(interest.device_token,message);
         interest.status = false;

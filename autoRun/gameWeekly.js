@@ -21,7 +21,7 @@ function run() {
                         console.log(err);
                     } else {
                         weekNumber = parseInt(dbmsg.rows[0].value);
-                        console.log(weekNumber);
+                        // console.log(weekNumber);
                     }
                 });
             }
