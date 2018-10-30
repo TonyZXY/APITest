@@ -461,39 +461,48 @@ router.post('/getRanking',verifyToken,(req,res)=>{
                 databaseError(err,res);
             } else {
                 let rankData = msg[0];
-                let ranks = rankData.data;
-                let weeklyRank;
-                if(ranks.length>=10){
-                    weeklyRank = ranks.sort(compareWeek).slice(0,10);
+                if (rankData.data === null || rankData.data === undefined){
+                    res.send({
+                        message: 'no ranking data',
+                        success: false,
+                        code: 404,
+                        data: null
+                    })
                 } else {
-                    weeklyRank = ranks.sort(compareWeek).slice(0,ranks.length);
-                }
-                let totalRank;
-                if(ranks.length >= 10){
-                    totalRank = ranks.sort(compareTotal).slice(0,10);
-                } else {
-                    totalRank = ranks.sort(compareTotal).slice(0,ranks.length);
-                }
-                let userRank = ranks.find(e=>
-                    e.user_id === user_id.toString()
-                );
-                if (userRank === undefined){
-                    userRank = null
-                }
-                res.send({
-                    message: 'successfully get ranking data',
-                    code: 200,
-                    success: true,
-                    data:{
-                        title:rankData.title,
-                        rank_time:rankData.time,
-                        rank_time_string:rankData.time_string,
-                        week_number:rankData.week_number,
-                        weekly_rank: weeklyRank,
-                        total_rank: totalRank,
-                        user_rank:userRank
+                    let ranks = rankData.data;
+                    let weeklyRank;
+                    if(ranks.length>=10){
+                        weeklyRank = ranks.sort(compareWeek).slice(0,10);
+                    } else {
+                        weeklyRank = ranks.sort(compareWeek).slice(0,ranks.length);
                     }
-                })
+                    let totalRank;
+                    if(ranks.length >= 10){
+                        totalRank = ranks.sort(compareTotal).slice(0,10);
+                    } else {
+                        totalRank = ranks.sort(compareTotal).slice(0,ranks.length);
+                    }
+                    let userRank = ranks.find(e=>
+                        e.user_id === user_id.toString()
+                    );
+                    if (userRank === undefined){
+                        userRank = null
+                    }
+                    res.send({
+                        message: 'successfully get ranking data',
+                        code: 200,
+                        success: true,
+                        data:{
+                            title:rankData.title,
+                            rank_time:rankData.time,
+                            rank_time_string:rankData.time_string,
+                            week_number:rankData.week_number,
+                            weekly_rank: weeklyRank,
+                            total_rank: totalRank,
+                            user_rank:userRank
+                        }
+                    })
+                }
             }
         })
     }
