@@ -441,7 +441,7 @@ module.exports = {
 
     gameUpdateAccountAmount:(userID,status,coinAmount,coinName,audAmount,callback)=>{
         let query = '';
-        if (status === "sell"){
+        if (status.toLowerCase() === "sell"){
             // add transaction fee
             query = 'update game_account set (aud,'+coinName+') = (aud+'+Math.round(audAmount *0.998*100000000)/100000000+','+coinName.toLowerCase()+'-'+Math.round(coinAmount*100000000)/100000000+') where user_id='+userID+' returning *;';
         } else {
