@@ -87,11 +87,9 @@ function porformTransaction(set, coin) {
                     if (err) {
                         console.log(err);
                     } else {
-                        console.log(failmsg);
                     }
                 })
             } else {
-                console.log(err);
             }
         } else {
             coinTo.transaction_fee = Math.round(coinTo.singlePrice * parseFloat(coinTo.amount) * 0.002*100000000)/100000000;
@@ -99,15 +97,12 @@ function porformTransaction(set, coin) {
                 if (err) {
                     console.log(err);
                 } else {
-                    console.log(dbmsg.rows);
-                    console.log("send notification");
                     let message = 'Your Stop Loss Set '+ coinTo.coinName+" is performed due to price reach "+coinTo.singlePrice+" AUD.";
                     pushNotification(set.user_id,message);
                     db.gameCompleteStopLossSet(set.set_id, coinTo.date, (err, dbmsg2) => {
                         if (err) {
                             console.log(err);
                         } else {
-                            console.log(dbmsg2.rows[0]);
                         }
                     })
                 }

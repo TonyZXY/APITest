@@ -447,7 +447,6 @@ module.exports = {
         } else {
             query = 'update game_account set (aud,'+coinName+') = (aud-'+Math.round(audAmount*100000000)/100000000 +','+coinName.toLowerCase()+'+'+Math.round(coinAmount * 0.998*100000000)/100000000+') where user_id='+userID+' returning *;';
         }
-        console.log(query);
         return pool.query(query,[],callback);
     },
 
