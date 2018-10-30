@@ -199,7 +199,7 @@ module.exports = {
 
     getAllIOSDeviceForFlashNotification: (callback) => {
         let param = [];
-        let query = 'SELECT iosdevices.device_token \n' +
+        let query = 'SELECT iosdevices.device_token, users.flash\n' +
             'from (users join iosdevices on users.user_id=iosdevices.device_user_id) \n' +
             'where users.flash = true;';
         return pool.query(query, param, callback);

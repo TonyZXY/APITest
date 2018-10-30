@@ -77,9 +77,11 @@ module.exports.sendFlashNotification = (title,message)=>{
                         } else {
                             let list2 = dbmsg2.rows;
                             list2.forEach( device =>{
-                                db.addIOSDeviceNumber(device.device_token,(err,msg1)=>{
-                                    sendIos(device.device_token,title,message,msg1.rows[0].number)
-                                });
+                                if (device.flash === true){
+                                    db.addIOSDeviceNumber(device.device_token,(err,msg1)=>{
+                                        sendIos(device.device_token,title,message,msg1.rows[0].number)
+                                    });
+                                }
                                 list1 = list1.filter( e =>
                                     e.device_token !== device.device_token
                                 );
