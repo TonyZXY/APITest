@@ -117,12 +117,10 @@ function getNews(content) {
 
         httpUrl += '&from=' + content.from.toISOString();
     }
-    console.log('Get Data From URL: ' + httpUrl);
     logger.APIUpdateLog("NewsFromNewsAPI", httpUrl, "Get Data From URL: " + httpUrl);
     https.get(httpUrl, (res) => {
         let data = '';
         res.on('error', (err) => {
-            console.log("error in receiving data: " + err);
             logger.APIConnectionError('NewsFromNewsAPI', httpUrl, err);
             delay(2000);
             getLoop();
@@ -132,11 +130,9 @@ function getNews(content) {
         });
         res.on('end', function () {
             let dataJSON = JSON.parse(data);
-            console.log('Total find results: ' + dataJSON.totalResults);
             logger.APIUpdateLog("NewsFromNewsAPI", httpUrl, "Total find results: " + dataJSON.totalResults);
             if (dataJSON.totalResults !== 0) {
                 let articles = dataJSON.articles;
-                console.log('Numbers of Data Got: ' + articles.length);
                 articles.forEach(function (element) {
                     let news = new News;
                     news.title = element.title;
@@ -187,7 +183,7 @@ function getNews(content) {
                 content.from = date;
             }
         });
-    })
+    });
     logger.APIUpdateLog("NewsFromNewsAPI", httpUrl, "News API Updated")
 }
 

@@ -16,7 +16,6 @@ module.exports.getPriceFromAPI = function (coinFrom, coinTo, market, callback) {
                 return callback(err);
             } else {
                 if (coin === null || coin === undefined) {
-                    console.log("Coin not found: " + coinFrom);
                     db.setCoinAvailable(coinFrom, false, (err, msg) => {
                         if (err) {
                             return callback(err)
@@ -28,7 +27,6 @@ module.exports.getPriceFromAPI = function (coinFrom, coinTo, market, callback) {
                 } else {
                     let data = coin.quotes;
                     if (data === null || data === undefined) {
-                        console.log("Coin not found: " + coinFrom);
                         db.setCoinAvailable(coinFrom, false, (err, msg) => {
                             if (err) {
                                 return callback(err)
@@ -64,9 +62,7 @@ module.exports.getPriceFromAPI = function (coinFrom, coinTo, market, callback) {
                 logger.APIConnectionError('coinAlgorithm','HuobiAUAPI', error);
                 return callback(error);
             } else {
-                // console.log(body);
                 let ObjectJSON = JSON.parse(body);
-                // console.log(ObjectJSON.tick.data[0].price);
                 return callback(null, ObjectJSON.tick.data[0].price)
             }
         });

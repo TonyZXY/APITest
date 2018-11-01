@@ -202,15 +202,22 @@ router.post('/addTransaction', verifyToken, (req, res) => {
                     if (err) {
                         databaseError(err, res);
                     } else {
-                        res.send({
-                            message: 'Successfully add new transaction',
-                            code: 200,
-                            success: true,
-                            data: {
-                                transaction: dbmsg2.rows[0],
-                                account: dbmsg1.rows[0]
+                        db.gameCancelStopLoss(user_id,transaction.coinAddName.toLowerCase(),(err,dbmsg3)=>{
+                            if (err) {
+                                databaseError(err,res);
+                            } else {
+                                res.send({
+                                    message: 'Successfully add new transaction',
+                                    code: 200,
+                                    success: true,
+                                    data: {
+                                        transaction: dbmsg2.rows[0],
+                                        account: dbmsg1.rows[0],
+                                        sets: dbmsg3.rows
+                                    }
+                                })
                             }
-                        })
+                        });
                     }
                 })
             }

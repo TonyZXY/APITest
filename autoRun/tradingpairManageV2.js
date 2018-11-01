@@ -14,7 +14,6 @@ setInterval(function () {
 
         } else {
             if (list.rows[0] === null || typeof list.rows[0] === undefined) {
-                console.log("No data in database");
                 logger.databaseError("TradingpairManage", "db", "No data in database");
             }
             else {
@@ -42,7 +41,6 @@ setInterval(function () {
                 });
             }
         }
-        console.log("Compared once");
         logger.databaseUpdateLog("TradingpairManage", "server", "Trading pair in database has been compared once.")
     })
 }, the_internal);

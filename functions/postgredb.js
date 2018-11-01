@@ -280,7 +280,6 @@ module.exports = {
         });
         query += str.substring(0, str.length - 1);
         query += ' returning * ;';
-        // console.log(query);
         return pool.query(query, [], callback);
     },
 
@@ -363,7 +362,6 @@ module.exports = {
         let query = 'insert into ios_newsflash (device_token) values ($1) returning *;';
         let param = [device];
 
-        console.log(query);
         return pool.query(query,param,callback);
     },
 
@@ -640,6 +638,12 @@ module.exports = {
     gameDeleteAlert: (interest,callback)=>{
         let query = 'Delete from game_alert where alert_id = $1;';
         let param = [interest.alert_id];
+        return pool.query(query,param,callback);
+    },
+
+    gameCancelStopLoss: (user_id,coinName,callback) =>{
+        let query = 'UPDATE game_stop_loss_sets set (actived,code)=(false,500) where user_id=$1 and coin_name=$2 and actived=true returning *;';
+        let param = [user_id,coinName.toLowerCase()];
         return pool.query(query,param,callback);
     }
 

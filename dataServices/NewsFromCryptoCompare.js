@@ -45,7 +45,6 @@ function getNews() {
                 }
                 news.languageTag = 'EN';
                 news.localeTag = "";
-                // console.log(news);
                 News.findNews(news.url, (err, newsFromDB) => {
                     if (err) {
                         console.log(err);
