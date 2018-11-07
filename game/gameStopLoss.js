@@ -78,7 +78,7 @@ function porformTransaction(set, coin) {
         note: 'Stop Loss Function Auto Generate: ' + coin.note,
     };
     db.gameUpdateAccountAmount(set.user_id, coinTo.status, Math.round(parseFloat(coinTo.amount)*100000000)/100000000,
-        coinTo.coinAddName.toLowerCase(), Math.round(coinTo.singlePrice * parseFloat(coinTo.amount)*100000000)/100000000,
+        coinTo.coinAddName.toLowerCase(), Math.round(coinTo.singlePrice * parseFloat(coinTo.amount) * 100000000)/100000000,
         (err, dbmsg1) => {
         if (err) {
             if (err.code === '23514') {
@@ -92,7 +92,7 @@ function porformTransaction(set, coin) {
             } else {
             }
         } else {
-            coinTo.transaction_fee = Math.round(coinTo.singlePrice * parseFloat(coinTo.amount) * 0.002*100000000)/100000000;
+            coinTo.transaction_fee = Math.round(coinTo.singlePrice * parseFloat(coinTo.amount) * 0.002 * 100000000)/100000000;
             db.gameAddTransactionListAuto(set.user_id, coinTo, (err, dbmsg) => {
                 if (err) {
                     console.log(err);

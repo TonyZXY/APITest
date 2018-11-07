@@ -441,9 +441,9 @@ module.exports = {
         let query = '';
         if (status.toLowerCase() === "sell"){
             // add transaction fee
-            query = 'update game_account set (aud,'+coinName+') = (aud+'+Math.round(audAmount *0.998*100000000)/100000000+','+coinName.toLowerCase()+'-'+Math.round(coinAmount*100000000)/100000000+') where user_id='+userID+' returning *;';
+            query = 'update game_account set (aud,'+coinName+') = (aud+'+Math.round(audAmount * 0.998 * 100000000)/100000000 +','+coinName.toLowerCase()+'-'+Math.round(coinAmount*100000000)/100000000+') where user_id='+userID+' returning *;';
         } else {
-            query = 'update game_account set (aud,'+coinName+') = (aud-'+Math.round(audAmount*100000000)/100000000 +','+coinName.toLowerCase()+'+'+Math.round(coinAmount * 0.998*100000000)/100000000+') where user_id='+userID+' returning *;';
+            query = 'update game_account set (aud,'+coinName+') = (aud-'+Math.round(audAmount / 0.998 * 100000000)/100000000 +','+coinName.toLowerCase()+'+'+Math.round(coinAmount*100000000)/100000000+') where user_id='+userID+' returning *;';
         }
         return pool.query(query,[],callback);
     },

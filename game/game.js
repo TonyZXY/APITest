@@ -197,7 +197,11 @@ router.post('/addTransaction', verifyToken, (req, res) => {
                     databaseError(err, res);
                 }
             } else {
-                transaction.transaction_fee = Math.round(transaction.amount * transaction.singlePrice * 0.002*100000000)/100000000;
+                if (transaction.status.toLowerCase() === "sell"){
+                    transaction.transaction_fee = Math.round(transaction.amount * transaction.singlePrice * 0.002 * 100000000)/100000000;
+                } else {
+                    transaction.transaction_fee = Math.round(transaction.amount * transaction.singlePrice * 0.002/0.998 * 100000000)/100000000;
+                }
                 db.gameAddTransactionList(user_id, transaction, (err, dbmsg2) => {
                     if (err) {
                         databaseError(err, res);
