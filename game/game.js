@@ -5,8 +5,9 @@ const db = require('../functions/postgredb');
 const logger = require('../functions/logger');
 const mongoose = require('mongoose');
 const Notification = require('../functions/notification');
-const Ranking = require('./Ranking');
 const GameCoin = require('./GameCoin');
+const TotalRanking = require('../module/TotalRanking');
+const CompRanking = require('../module/CompetitionRanking');
 
 
 const config = require('../config');
@@ -464,56 +465,64 @@ router.post('/editStopLoss', verifyToken, (req, res) => {
 
 router.post('/getRanking',verifyToken,(req,res)=>{
     let user_id = req.body.user_id;
-    if (user_id === null || user_id === undefined){
+    if(user_id === null  || user_id === undefined){
         badRequest(res);
     } else {
-        Ranking.getRanking((err,msg)=>{
-            if (err) {
+        TotalRanking.getRanking((err,msg1)=>{
+            if (err){
                 databaseError(err,res);
             } else {
-                let rankData = msg[0];
-                if (rankData.data === null || rankData.data === undefined){
-                    res.send({
-                        message: 'no ranking data',
-                        success: false,
-                        code: 404,
-                        data: null
-                    })
-                } else {
-                    let ranks = rankData.data;
-                    let weeklyRank;
-                    if(ranks.length>=10){
-                        weeklyRank = ranks.sort(compareWeek).slice(0,10);
+                let totalData = msg1[0];
+                CompRanking.getRanking((err,msg2)=>{
+                    if (err){
+                        databaseError(err,res);
                     } else {
-                        weeklyRank = ranks.sort(compareWeek).slice(0,ranks.length);
-                    }
-                    let totalRank;
-                    if(ranks.length >= 10){
-                        totalRank = ranks.sort(compareTotal).slice(0,10);
-                    } else {
-                        totalRank = ranks.sort(compareTotal).slice(0,ranks.length);
-                    }
-                    let userRank = ranks.find(e=>
-                        e.user_id === user_id.toString()
-                    );
-                    if (userRank === undefined){
-                        userRank = null
-                    }
-                    res.send({
-                        message: 'successfully get ranking data',
-                        code: 200,
-                        success: true,
-                        data:{
-                            title:rankData.title,
-                            rank_time:rankData.time,
-                            rank_time_string:rankData.time_string,
-                            week_number:rankData.week_number,
-                            weekly_rank: weeklyRank,
-                            total_rank: totalRank,
-                            user_rank:userRank
+                        let compData = msg2[0];
+                        let totalRank = {};
+                        let compRank = {};
+                        let total = null;
+                        let comp = null;
+                        if (totalData !== null && totalData !== undefined){
+                            totalRank.title = totalData.title;
+                            totalRank.time = totalData.time;
+                            totalRank.date_number = totalData.date_number;
+                            totalRank.time_string = totalData.time_string;
+                            if (totalData.data.length >=10){
+                                totalRank.data = totalData.data.slice(0,10);
+                            } else {
+                                totalRank.data = totalData.data.slice(0,totalData.data.length);
+                            }
+                            total = totalData.data.find(e => e.user_id.toString() === user_id.toString());
+                        } else {
+                            totalRank =null;
                         }
-                    })
-                }
+                        if (compData !== null && compData !== undefined){
+                            compRank.title = compData.title;
+                            compRank.time = compData.time;
+                            compRank.date_number = compData.date_number;
+                            compRank.time_string = compData.time_string;
+                            if (compData.data.length >= 10) {
+                                compRank.data = compData.data.slice(0,10);
+                            }else {
+                                compRank.data = compData.data.slice(0,length);
+                            }
+                            comp = compData.data.find(e => e.user_id.toString() === user_id.toString());
+                        } else {
+                            compRank = null;
+                        }
+                        res.send({
+                            success: true,
+                            message:"successfully get ranking data",
+                            code: 200,
+                            data:{
+                                totalRank: totalRank,
+                                competitionRank: compRank,
+                                total: total,
+                                competition: comp,
+                            }
+                        })
+                    }
+                });
             }
         })
     }

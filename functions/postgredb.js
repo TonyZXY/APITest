@@ -594,6 +594,24 @@ module.exports = {
         return pool.query(query,param,callback);
     },
 
+    gameStartCompetition: (user_id,this_week,last_week,callback)=> {
+    let query = 'update game_account set (last_week, this_week) = ($2,$3) where user_id = $1 returning *;';
+    let param = [user_id,last_week,this_week];
+    return pool.query(query,param,callback);
+},
+
+    gameDailyUpdateTotal: (user_id,weekly_total,callback)=> {
+    let query = 'update game_account set total = $2 where user_id = $1 returning *;';
+    let param = [user_id,weekly_total];
+    return pool.query(query,param,callback);
+},
+
+    gameDailyUpdateCompetition: (user_id, this_week, callback)=>{
+    let query = 'update game_account set this_week = $2 where user_id = $1 returning *;';
+    let param = [user_id,this_week];
+    return pool.query(query,param,callback);
+},
+
     getDeviceTokenByID:(user_id,callback)=>{
         let query = 'select device_token from iosdevices where device_user_id = $1;';
         let param = [user_id];
