@@ -119,7 +119,7 @@ async function startcall() {
                     if (err) {
                         console.log(err);
                     } else {
-                        loginConsole("Add to database");
+                        // loginConsole("Add to database");
                     }
                 });
             });

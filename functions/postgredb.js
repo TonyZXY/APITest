@@ -19,7 +19,7 @@ module.exports = {
 
     getUser: (email, callback) => {
         let param = [email];
-        let text = 'select user_id as _id,password,salt,email,nick_name from users where email=$1';
+        let text = 'select user_id as _id,password,salt,email,nick_name, verify from users where email=$1';
         return pool.query(text, param, callback)
     },
 
@@ -412,19 +412,19 @@ module.exports = {
 
     gameAddTransactionList: (userID, coinList, callback) => {
         let query = 'insert into game_transactions (user_id, status, coin_name, coin_add_name, exchange_name, ' +
-            ' trading_pair_name, single_price, amount, date, note, auto) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)' +
+            ' trading_pair_name, single_price, amount, date, note, auto,transaction_fee) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)' +
             ' returning *;';
         let param = [userID, coinList.status, coinList.coinName, coinList.coinAddName, coinList.exchangeName,
-            coinList.tradingPairName, coinList.singlePrice, coinList.amount, coinList.date, coinList.note, false];
+            coinList.tradingPairName, coinList.singlePrice, Math.round(coinList.amount*100000000)/100000000, coinList.date, coinList.note, false, coinList.transaction_fee];
         return pool.query(query, param, callback);
     },
 
     gameAddTransactionListAuto: (userID, coin, callback) => {
         let query = 'insert into game_transactions (user_id, status, coin_name, coin_add_name, exchange_name, ' +
-            ' trading_pair_name, single_price, amount, date, note, auto) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)' +
+            ' trading_pair_name, single_price, amount, date, note, auto, transaction_fee) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)' +
             ' returning *;';
         let param = [userID, coin.status, coin.coinName, coin.coinAddName, coin.exchangeName,
-            coin.tradingPairName, coin.singlePrice, coin.amount, coin.date, coin.note, true];
+            coin.tradingPairName, coin.singlePrice, Math.round(coin.amount*100000000)/100000000, coin.date, coin.note, true, coin.transaction_fee];
         return pool.query(query,param,callback);
     },
 
@@ -437,10 +437,12 @@ module.exports = {
 
     gameUpdateAccountAmount:(userID,status,coinAmount,coinName,audAmount,callback)=>{
         let query = '';
-        if (status === "sell"){
-            query = 'update game_account set (aud,'+coinName+') = (aud+'+audAmount+','+coinName+'-'+coinAmount+') where user_id='+userID+' returning *;';
+        console.log(status);
+        if (status.toLowerCase() === "sell"){
+            // add transaction fee
+            query = 'update game_account set (aud,'+coinName+') = (aud+'+Math.round((audAmount *0.998)*100000000)/100000000+','+coinName+'-'+Math.round(coinAmount*100000000)/100000000+') where user_id='+userID+' returning *;';
         } else {
-            query = 'update game_account set (aud,'+coinName+') = (aud-'+audAmount+','+coinName+'+'+coinAmount+') where user_id='+userID+' returning *;';
+            query = 'update game_account set (aud,'+coinName+') = (aud-'+Math.round(audAmount*100000000)/100000000 +','+coinName+'+'+Math.round(coinAmount * 0.998*100000000)/100000000+') where user_id='+userID+' returning *;';
         }
         return pool.query(query,[],callback);
     },
@@ -463,7 +465,7 @@ module.exports = {
 
     gameAddStopLossSet:(userID,set,callback)=>{
         let query = 'insert into game_stop_loss_sets (user_id, coin_name, price_greater, price_lower, amount) values ($1,$2,$3,$4,$5) returning *;';
-        let param = [userID,set.coinName,set.priceGreater,set.priceLower,set.amount];
+        let param = [userID,set.coinName.toLowerCase(),set.priceGreater,set.priceLower,set.amount];
         return pool.query(query,param,callback);
     },
 
@@ -505,7 +507,7 @@ module.exports = {
 
     gameSetAlert:(user_id,alert,callback)=>{
         let query = 'insert into game_alert (user_id, coin_name, price, isgreater) values ($1,$2,$3,$4) returning *;';
-        let param = [user_id,alert.coinName,alert.price,alert.isGreater];
+        let param = [user_id,alert.coinName.toLowerCase(),alert.price,alert.isGreater];
         return pool.query(query,param,callback);
     },
 
@@ -537,7 +539,7 @@ module.exports = {
 
     gameUpdateAlert: (alert,callback)=>{
         let query = 'update game_alert set (coin_name,price,isgreater,status) = ($1,$2,$3,$4) where alert_id = $5 returning *;';
-        let param = [alert.coinName,alert.price,alert.isGreater,alert.status,alert.alert_id];
+        let param = [alert.coinName.toLowerCase(),alert.price,alert.isGreater,alert.status,alert.alert_id];
         return pool.query(query,param,callback);
     },
 
@@ -591,6 +593,24 @@ module.exports = {
         return pool.query(query,param,callback);
     },
 
+    gameStartCompetition: (user_id,this_week,last_week,callback)=> {
+        let query = 'update game_account set (last_week, this_week) = ($2,$3) where user_id = $1 returning *;';
+        let param = [user_id,last_week,this_week];
+        return pool.query(query,param,callback);
+    },
+
+    gameDailyUpdateTotal: (user_id,weekly_total,callback)=> {
+        let query = 'update game_account set total = $2 where user_id = $1 returning *;';
+        let param = [user_id,weekly_total];
+        return pool.query(query,param,callback);
+    },
+
+    gameDailyUpdateCompetition: (user_id, this_week, callback)=>{
+        let query = 'update game_account set this_week = $2 where user_id = $1 returning *;';
+        let param = [user_id,this_week];
+        return pool.query(query,param,callback);
+    },
+
     getDeviceTokenByID:(user_id,callback)=>{
         let query = 'select device_token from iosdevices where device_user_id = $1;';
         let param = [user_id];
@@ -622,6 +642,27 @@ module.exports = {
         number = number +1;
         let query = 'update config set "value" = $1 where "key" = \'weekNumber\' returning *;';
         let param = [number];
+        return pool.query(query,param,callback);
+    },
+
+
+    gameGetAverageHistory: (user_id,callback)=>{
+        let query = 'select coin_add_name,status, sum(single_price*amount) as total_value, sum(amount) as total_amount from game_transactions where user_id=$1 group by coin_add_name,status;';
+        let param = [user_id];
+        return pool.query(query,param,callback);
+    },
+
+
+    gameDeleteAlert: (interest,callback)=>{
+        let query = 'Delete from game_alert where alert_id = $1;';
+        let param = [interest.alert_id];
+        return pool.query(query,param,callback);
+    },
+
+
+    gameCancelStopLoss: (user_id,coinName,callback) =>{
+        let query = 'UPDATE game_stop_loss_sets set (actived,code)=(false,500) where user_id=$1 and coin_name=$2 and actived=true returning *;';
+        let param = [user_id,coinName.toLowerCase()];
         return pool.query(query,param,callback);
     }
 

@@ -10,6 +10,7 @@ const event = require('../dataServices/EventData');
 
 function run() {
     NewsAPI.run();
+    CryptoCoinNews.run();
     RSSFeed.run();
     alg.run();
     avg.run();

@@ -8,6 +8,8 @@ const Notification = require('../functions/notification');
 const Ranking = require('../module/Ranking');
 const GameCoin = require('../module/GameCoin');
 const gameWeek = require('../autoRun/gameWeekly');
+const TotalRanking = require('../module/TotalRanking');
+const CompRanking = require('../module/CompetitionRanking');
 
 
 const config = require('../config');
@@ -185,11 +187,11 @@ router.post('/addTransaction', verifyToken, (req, res) => {
             data: null
         });
     } else {
-        db.gameUpdateAccountAmount(user_id, transaction.status, transaction.amount, transaction.coinAddName, transaction.singlePrice * transaction.amount, (err, dbmsg1) => {
+        db.gameUpdateAccountAmount(user_id, transaction.status, Math.round(transaction.amount*100000000)/100000000, transaction.coinAddName, Math.round(transaction.singlePrice * transaction.amount* 100000000)/100000000, (err, dbmsg1) => {
             if (err) {
                 if (err.code === '23514') {
                     res.send({
-                        message: 'Amount doesn\'t enough!',
+                        message: 'Amount not enough!',
                         code: 440,
                         success: false,
                         data: null
@@ -198,19 +200,28 @@ router.post('/addTransaction', verifyToken, (req, res) => {
                     databaseError(err, res);
                 }
             } else {
+                // This is transaction fee generated
+                transaction.transaction_fee = Math.round(transaction.amount * transaction.singlePrice * 0.002*100000000)/100000000;
                 db.gameAddTransactionList(user_id, transaction, (err, dbmsg2) => {
                     if (err) {
                         databaseError(err, res);
                     } else {
-                        res.send({
-                            message: 'Successfully add new transaction',
-                            code: 200,
-                            success: true,
-                            data: {
-                                transaction: dbmsg2.rows[0],
-                                account: dbmsg1.rows[0]
+                        db.gameCancelStopLoss(user_id,transaction.coinAddName.toLowerCase(),(err,dbmsg3)=>{
+                            if (err) {
+                                databaseError(err,res);
+                            } else {
+                                res.send({
+                                    message: 'Successfully add new transaction',
+                                    code: 200,
+                                    success: true,
+                                    data: {
+                                        transaction: dbmsg2.rows[0],
+                                        account: dbmsg1.rows[0],
+                                        sets: dbmsg3.rows
+                                    }
+                                })
                             }
-                        })
+                        });
                     }
                 })
             }
@@ -386,30 +397,39 @@ router.post('/setStopLoss', verifyToken, (req, res) => {
         if (err) {
             databaseError(err, res);
         } else {
-            db.gameGetSetsWithCoin(user_id, set.coinName, (err, msg2) => {
+            db.gameGetSetsWithCoin(user_id, set.coinName.toLowerCase(), (err, msg2) => {
                 if (err) {
                     databaseError(err, res);
                 } else {
-                    if (msg2.rows.length < msg1.rows[0].sets) {
-                        db.gameAddStopLossSet(user_id, set, (err, msg3) => {
-                            if (err) {
-                                databaseError(err, res);
-                            } else {
-                                res.send({
-                                    message: 'successfully add stop loss pair',
-                                    code: 200,
-                                    success: true,
-                                    data: msg3.rows[0]
-                                })
-                            }
-                        })
-                    } else {
+                    if (msg1.rows[0]===null || msg1.rows[0]===undefined){
                         res.send({
-                            message: 'User cannot set pair due to limitation',
-                            code: 450,
+                            message:'Invalid Input, Check input',
+                            code: 502,
                             success: false,
-                            data: msg2.rows
+                            data: null
                         })
+                    }else {
+                        if (msg2.rows.length < msg1.rows[0].sets) {
+                            db.gameAddStopLossSet(user_id, set, (err, msg3) => {
+                                if (err) {
+                                    databaseError(err, res);
+                                } else {
+                                    res.send({
+                                        message: 'successfully add stop loss pair',
+                                        code: 200,
+                                        success: true,
+                                        data: msg3.rows[0]
+                                    })
+                                }
+                            })
+                        } else {
+                            res.send({
+                                message: 'User cannot set pair due to limitation',
+                                code: 450,
+                                success: false,
+                                data: msg2.rows
+                            })
+                        }
                     }
                 }
             })
@@ -442,49 +462,115 @@ router.post('/editStopLoss', verifyToken, (req, res) => {
 });
 
 
+// router.post('/getRanking',verifyToken,(req,res)=>{
+//     let user_id = req.body.user_id;
+//     if (user_id === null || user_id === undefined){
+//         badRequest(res);
+//     } else {
+//         Ranking.getRanking((err,msg)=>{
+//             if (err) {
+//                 databaseError(err,res);
+//             } else {
+//                 let rankData = msg[0];
+//                 let ranks = rankData.data;
+//                 let weeklyRank;
+//                 if(ranks.length>=10){
+//                     weeklyRank = ranks.sort(compareWeek).slice(0,10);
+//                 } else {
+//                     weeklyRank = ranks.sort(compareWeek).slice(0,ranks.length);
+//                 }
+//                 let totalRank;
+//                 if(ranks.length >= 10){
+//                     totalRank = ranks.sort(compareTotal).slice(0,10);
+//                 } else {
+//                     totalRank = ranks.sort(compareTotal).slice(0,ranks.length);
+//                 }
+//                 let userRank = ranks.find(e=>
+//                     e.user_id === user_id.toString()
+//                 );
+//                 if (userRank === undefined){
+//                     userRank = null
+//                 }
+//                 res.send({
+//                     message: 'successfully get ranking data',
+//                     code: 200,
+//                     success: true,
+//                     data:{
+//                         title:rankData.title,
+//                         rank_time:rankData.time,
+//                         rank_time_string:rankData.time_string,
+//                         week_number:rankData.week_number,
+//                         weekly_rank: weeklyRank,
+//                         total_rank: totalRank,
+//                         user_rank:userRank
+//                     }
+//                 })
+//             }
+//         })
+//     }
+// });
+
+
 router.post('/getRanking',verifyToken,(req,res)=>{
     let user_id = req.body.user_id;
-    if (user_id === null || user_id === undefined){
+    if(user_id === null  || user_id === undefined){
         badRequest(res);
     } else {
-        Ranking.getRanking((err,msg)=>{
-            if (err) {
+        TotalRanking.getRanking((err,msg1)=>{
+            if (err){
                 databaseError(err,res);
             } else {
-                let rankData = msg[0];
-                let ranks = rankData.data;
-                let weeklyRank;
-                if(ranks.length>=10){
-                    weeklyRank = ranks.sort(compareWeek).slice(0,10);
-                } else {
-                    weeklyRank = ranks.sort(compareWeek).slice(0,ranks.length);
-                }
-                let totalRank;
-                if(ranks.length >= 10){
-                    totalRank = ranks.sort(compareTotal).slice(0,10);
-                } else {
-                    totalRank = ranks.sort(compareTotal).slice(0,ranks.length);
-                }
-                let userRank = ranks.find(e=>
-                    e.user_id === user_id.toString()
-                );
-                if (userRank === undefined){
-                    userRank = null
-                }
-                res.send({
-                    message: 'successfully get ranking data',
-                    code: 200,
-                    success: true,
-                    data:{
-                        title:rankData.title,
-                        rank_time:rankData.time,
-                        rank_time_string:rankData.time_string,
-                        week_number:rankData.week_number,
-                        weekly_rank: weeklyRank,
-                        total_rank: totalRank,
-                        user_rank:userRank
+                let totalData = msg1[0];
+                CompRanking.getRanking((err,msg2)=>{
+                    if (err){
+                        databaseError(err,res);
+                    } else {
+                        let compData = msg2[0];
+                        let totalRank = {};
+                        let compRank = {};
+                        let total = null;
+                        let comp = null;
+                        if (totalData !== null && totalData !== undefined){
+                            totalRank.title = totalData.title;
+                            totalRank.time = totalData.time;
+                            totalRank.date_number = totalData.date_number;
+                            totalRank.time_string = totalData.time_string;
+                            if (totalData.data.length >=10){
+                                totalRank.data = totalData.data.slice(0,10);
+                            } else {
+                                totalRank.data = totalData.data.slice(0,totalData.data.length);
+                            }
+                            total = totalData.data.find(e => e.user_id.toString() === user_id.toString());
+                        } else {
+                            totalRank =null;
+                        }
+                        if (compData !== null && compData !== undefined){
+                            compRank.title = compData.title;
+                            compRank.time = compData.time;
+                            compRank.date_number = compData.date_number;
+                            compRank.time_string = compData.time_string;
+                            if (compData.data.length >= 10) {
+                                compRank.data = compData.data.slice(0,10);
+                            }else {
+                                compRank.data = compData.data.slice(0,length);
+                            }
+                            comp = compData.data.find(e => e.user_id.toString() === user_id.toString());
+                        } else {
+                            compRank = null;
+                        }
+                        res.send({
+                            success: true,
+                            message:"successfully get ranking data",
+                            code: 200,
+                            data:{
+                                totalRank: totalRank,
+                                competitionRank: compRank,
+                                total: total,
+                                competition: comp,
+                            }
+                        })
                     }
-                })
+                });
             }
         })
     }
@@ -575,6 +661,51 @@ router.get('/getCoinData',(req,res)=>{
         }
     })
 });
+
+
+
+router.post('/getUserAverageHistory',verifyToken,(req,res)=>{
+    let user_id = req.body.user_id;
+    if (user_id === null || user_id === undefined){
+        badRequest(res);
+    } else {
+        db.gameGetAverageHistory(user_id,(err,msg)=>{
+            if (err){
+                databaseError(err,res);
+            } else {
+                res.send({
+                    message: 'successfully get average data',
+                    code: 200,
+                    success: true,
+                    data: msg.rows
+                })
+            }
+        })
+    }
+});
+
+
+router.post('/deleteAlert',verifyToken,(req,res)=>{
+    let interest = req.body.alert;
+    if (interest === null || interest === undefined){
+        badRequest(res);
+    } else {
+        db.gameDeleteAlert(interest,(err,dbmsg)=>{
+            if (err){
+                databaseError(err,res);
+            } else {
+                res.send({
+                    message: 'Successfully delete interest',
+                    code: 200,
+                    success: true,
+                    data: null
+                })
+            }
+        })
+    }
+});
+
+
 
 
 function compareWeek(a,b) {

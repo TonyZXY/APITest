@@ -86,7 +86,7 @@ router.post('/register', (req, res) => {
                 db.addIntoVerifyTable(msg.rows[0].user_id, generate, (err, msg) => {
                     let url = "http://localhost:3020/userLogin/verify/" + verifyToken + '/' + key;
                     let mailOptions = {
-                        from: 'do-not-replay@cryptogeekapp.com',
+                        from: 'tony.zheng@cryptogeekapp.com',
                         to: email,
                         subject: '[CryptoGeek] Please Verify Your Email',
                         html: "<body>\n" +
@@ -219,7 +219,8 @@ router.post('/login', (req, res) => {
                                 message: 'Login Success',
                                 code: 200,
                                 token: tokenToSend,
-                                user_nickname: user.nick_name
+                                user_nickname: user.nick_name,
+                                user_id:user._id
                             });
                             logger.userRegistrationLoginLog(address, "Login Successfully in: " + userName);
                         }
@@ -655,7 +656,7 @@ router.get('/resetPassword/:email', (req, res) => {
 
                                         let url = "http://localhost:3020/userLogin/reset/" + verifyToken + '/' + key;
                                         let mailOptions = {
-                                            from: 'do-not-replay@cryptogeekapp.com',
+                                            from: 'tony.zheng@cryptogeekapp.com',
                                             to: email,
                                             subject: '[CryptoGeek] Reset Password',
                                             html: "<body>\n" +
@@ -706,7 +707,7 @@ router.get('/resetPassword/:email', (req, res) => {
                     } else {
                         let url = "http://localhost:3020/userLogin/reset/" + verifyToken + '/' + key;
                         let mailOptions = {
-                            from: 'do-not-replay@cryptogeekapp.com',
+                            from: 'tony.zheng@cryptogeekapp.com',
                             to: email,
                             subject: '[CryptoGeek] Reset Password',
                             html: "<body>\n" +
@@ -879,7 +880,7 @@ router.get('/resendVerifyLink/:email', (req, res) => {
                 let verifyToken = jwt.sign(payload, key);
                 let url = "http://localhost:3020/userLogin/verify/" + verifyToken + '/' + key;
                 let mailOptions = {
-                    from: 'do-not-replay@cryptogeekapp.com',
+                    from: 'tony.zheng@cryptogeekapp.com',
                     to: email,
                     subject: '[CryptoGeek] Please Verify Your Email',
                     html: "<body>\n" +

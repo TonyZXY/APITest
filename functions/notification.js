@@ -14,7 +14,7 @@ const optionsToFile = {
         keyId: "PFYGPR25U8",
         teamId: "4SMWL7L89M"
     },
-    production: true
+    production: false
 };
 
 function sendIos(deviceId, title, message, badgeNumber) {
@@ -25,6 +25,7 @@ function sendIos(deviceId, title, message, badgeNumber) {
     notification.title = title;
     notification.body = message;
     notification.topic = "com.blockchainglobal.bglmedia";
+    notification.aps.category = "APP_GAME_STOPLOSS";
     notification.sound = 'default';
     apnprovider.send(notification, deviceToken).then(result => {
             console.log(result);

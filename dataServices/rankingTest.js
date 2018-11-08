@@ -7,21 +7,9 @@ const GameCoin = require('../module/GameCoin');
 
 mongoose.connect(config.database, config.options);
 
-
-
-// CoinData.runOneTime();
-// GameCoin.getCoinList((err,monmsg)=>{
-//     if (err){
-//         console.log(err);
-//     } else {
-//         console.log(monmsg);
-//     }
-// });
-
-
 async function start(Number) {
-    // CoinData.runOneTime();
-    // await delay(1000*10);
+    CoinData.runOneTime();
+    await delay(1000*10);
     GameCoin.getCoinList((err,monmsg)=>{
         if (err){
             console.log(err);
@@ -52,7 +40,11 @@ async function start(Number) {
                         if (account.last_week === null) {
                             lastWeek = 10000;
                         }
-                        let this_week = (weekly_total/lastWeek)*100;
+                        console.log('lastweek: '+ lastWeek);
+                        console.log('this week: '+ weekly_total);
+
+                        let this_week = ((weekly_total/lastWeek)-1)*100;
+                        console.log('weekly persentage: '+ this_week);
                         let data = {
                             user_id: account.user_id,
                             last_week: lastWeek,
@@ -104,6 +96,7 @@ async function start(Number) {
 }
 
 
+
 function generateRank(list,number) {
     let date = new Date();
     let rank = {
@@ -126,6 +119,7 @@ function generateRank(list,number) {
     });
     list.sort(compareTotal);
     let totalrank = 1;
+    console.log(list);
     list.forEach( total=>{
         let index = data.findIndex(e=> e.user_id === total.user_id);
         data[index].total_rank = totalrank;
@@ -133,28 +127,14 @@ function generateRank(list,number) {
         data[index].total = total.total;
     });
     rank.data = data;
-    Ranking.addRanking(rank,(err,monmsg)=>{
-        if (err){
-            console.log(err);
-        } else {
-        }
-    })
+    console.log(rank);
+    // Ranking.addRanking(rank,(err,monmsg)=>{
+    //     if (err){
+    //         console.log(err);
+    //     } else {
+    //     }
+    // })
 }
-
-
-const delay = amount => {
-    return new Promise(resolve => {
-        setTimeout(resolve, amount);
-    });
-};
-
-
-function loginConsole(msg) {
-    console.log(
-        new Date(Date.now()).toLocaleString() + " " + msg
-    );
-}
-
 
 function compareWeek(a,b) {
     if (a.this_week > b.this_week)
@@ -172,7 +152,10 @@ function compareTotal(a,b) {
     return 0;
 }
 
-
-module.exports.run = (Number)=>{
-    start(Number);
+const delay = amount => {
+    return new Promise(resolve => {
+        setTimeout(resolve, amount);
+    });
 };
+
+start(2);

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const week = require('../autoRun/gameWeekly');
+const db = require('../functions/postgredb');
+
 
 const rankingSchema = mongoose.Schema({
     title: {
@@ -52,13 +53,23 @@ const Ranking = module.exports = mongoose.model('Ranking', rankingSchema);
 
 module.exports = {
     addRanking: (ranking, callback) => {
+        console.log("add ranking");
         Ranking.create(ranking, callback);
     },
 
     getRanking: (callback) => {
-        Ranking.find({
-            week_number: week.weekNumber
-        },callback)
+        let weekNumber;
+        db.gameCheckWeekNumber((err,dbmsg)=>{
+            if (err){
+                console.log(err);
+            } else {
+                weekNumber = parseInt(dbmsg.rows[0].value) - 1;
+                console.log(weekNumber);
+                Ranking.find({
+                    week_number: weekNumber
+                },callback);
+            }
+        });
     },
 
     deleteByID: (id, callback) => {

@@ -18,7 +18,7 @@ const eventSchema = mongoose.Schema({
     eventLati:Number,
     eventLong:Number,
     custom:Boolean,
-    logalURL:String
+    logoURL:String
 });
 
 const Event = module.exports = mongoose.model('Event',eventSchema);

@@ -135,7 +135,7 @@ async function runScript() {
         coinDataStart();
         loginConsole("Update Gaming Coin API from Huobi AU for " + time + " times");
         time++;
-        await delay(1000 * 60);
+        await delay(1000 * 10);
     } while (true)
 }
 

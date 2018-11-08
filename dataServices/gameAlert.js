@@ -24,7 +24,6 @@ function getData() {
         if (err){
             console.log(err);
         } else {
-            console.log(dbmsg.rows);
             if (dbmsg.rows[0]===null || dbmsg.rows[0]===undefined){
                 console.log("No data in database");
             } else {
@@ -34,7 +33,7 @@ function getData() {
                         console.log(err)
                     } else {
                         list.forEach( item =>{
-                            let coin = momsg.find( co => co.coin_name === item.coin_name);
+                            let coin = momsg.find( co => co.coin_name.toLowerCase() === item.coin_name.toLowerCase());
                             compare(item,coin);
                         })
                     }
@@ -45,7 +44,7 @@ function getData() {
 }
 
 function compare(interest, coin) {
-    if(interest.isgreater === 1 && coin.current_price > interest.price){
+    if(interest.isgreater === 1 && coin.current_price > parseFloat(interest.price)){
         let message = 'Now, '+interest.coin_name+' is worth '+coin.current_price+', higher than your expectation of '+interest.price;
         sendAlert(interest.device_token,message);
         interest.status = false;
@@ -55,7 +54,7 @@ function compare(interest, coin) {
             } else {
             }
         })
-    }else if (interest.isgreater === 2 && coin.current_price < interest.price){
+    }else if (interest.isgreater === 2 && coin.current_price < parseFloat(interest.price)){
         let message = 'Now, '+interest.coin_name+' is worth '+coin.current_price+', lower than your expectation of '+interest.price;
         sendAlert(interest.device_token,message);
         interest.status = false;
@@ -65,7 +64,7 @@ function compare(interest, coin) {
             } else {
             }
         })
-    }else if (interest.isgreater === 3 && coin.current_price >= interest.price ){
+    }else if (interest.isgreater === 3 && coin.current_price >= parseFloat(interest.price) ){
         let message = 'Now, '+interest.coin_name+' is worth '+coin.current_price+', higher than or equal your expectation of '+interest.price;
         sendAlert(interest.device_token,message);
         interest.status = false;
@@ -75,7 +74,7 @@ function compare(interest, coin) {
             } else {
             }
         })
-    } else if (interest.isgreater === 4 && coin.current_price <=interest.price){
+    } else if (interest.isgreater === 4 && coin.current_price <= parseFloat(interest.price)){
         let message = 'Now, '+interest.coin_name+' is worth '+coin.current_price+', lower than or equal your expectation of '+interest.price;
         sendAlert(interest.device_token,message);
         interest.status = false;

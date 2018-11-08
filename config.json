@@ -1,11 +1,11 @@
 {
-  "database": "mongodb://10.10.6.44:27017/APITest",
+  "database": "mongodb://192.168.9.92:27017/APITest",
 
 
 
   "postgre": {
     "user": "tonyzheng",
-    "host": "10.10.6.44",
+    "host": "192.168.9.92",
     "database": "postgres",
     "password": "bgltest",
     "port": 5432
@@ -14,10 +14,12 @@
 
 
   "mail":{
-    "service": "gmail",
+    "host": "smtp.exmail.qq.com",
+    "secureConnection": true,
+    "port": 465,
     "auth":{
-      "user": "cryptogeekapp@gmail.com",
-      "pass": "Bgltest12345"
+      "user": "tony.zheng@cryptogeekapp.com",
+      "pass": "Zxy~19910313"
     }
   },
 

@@ -19,9 +19,9 @@ const optionsToFile = {
 
 
 function comparePrice(set, coin, callback) {
-    if (set.price_greater <= coin.current_price) {
+    if (parseFloat(set.price_greater) <= coin.current_price) {
         return callback(null, {action: 'higher'}, null);
-    } else if (set.price_lower >= coin.current_price) {
+    } else if (parseFloat(set.price_lower) >= coin.current_price) {
         return callback(null, null, {action: 'lower'});
     } else {
         return callback({action: 'no'}, null, null);
@@ -42,7 +42,7 @@ function getData() {
                         if (dbData[0] === null || dbData[0] === undefined) {
                         } else {
                             dbData.forEach(set => {
-                                if (coin.coin_name === set.coin_name) {
+                                if (coin.coin_name.toLowerCase() === set.coin_name.toLowerCase()) {
                                     comparePrice(set, coin, (none, higher, lower) => {
                                         if (none) {
 
@@ -77,7 +77,9 @@ function porformTransaction(set, coin) {
         date: new Date(),
         note: 'Stop Loss Function Auto Generate: ' + coin.note,
     };
-    db.gameUpdateAccountAmount(set.user_id, coinTo.status, coinTo.amount, coinTo.coinAddName, coinTo.singlePrice * coinTo.amount, (err, dbmsg1) => {
+    db.gameUpdateAccountAmount(set.user_id, coinTo.status, Math.round(parseFloat(coinTo.amount)*100000000)/100000000,
+        coinTo.coinAddName, Math.round(coinTo.singlePrice * parseFloat(coinTo.amount)*100000000)/100000000,
+        (err, dbmsg1) => {
         if (err) {
             if (err.code === '23514') {
                 console.log('no enough fund');
@@ -93,6 +95,8 @@ function porformTransaction(set, coin) {
             }
         } else {
             console.log(dbmsg1.rows);
+            // add transaction fee here
+            coinTo.transaction_fee = Math.round(coinTo.singlePrice * parseFloat(coinTo.amount) * 0.002 *100000000)/100000000;
             db.gameAddTransactionListAuto(set.user_id, coinTo, (err, dbmsg) => {
                 if (err) {
                     console.log(err);

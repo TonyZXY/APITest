@@ -21,6 +21,8 @@ const Genuine = require('../module/Genuine.js');
 const UpdateInfo = require('../module/UpdateInfo');
 const Event = require('../module/Event');
 // address = req.connection.remoteAddress
+const EventData = require('../dataServices/EventData');
+
 
 function verifyToken(req, res, next) {
     let address = req.connection.remoteAddress;
@@ -752,13 +754,45 @@ router.get('/update',(req,res)=>{
 
 
 router.get('/eventAll',(req,res)=>{
-    let address = req.connection.remoteAddress;
-
+    let address = req.connection.address;
     Event.getAllEvent((err,msg)=>{
         if (err){
             console.log(err);
         } else {
             res.json(msg);
+        }
+    })
+});
+
+router.get('/eventAllV2', (req, res) => {
+    let address = req.connection.remoteAddress;
+    let hosts = EventData.hosts;
+    let urls = [];
+    hosts.forEach(host =>{
+        let url = {
+            name:host.name,
+            logoURL:host.logoURL
+        };
+        urls.push(url);
+    });
+    urls.push({
+        name:'default',
+        logoURL:'https://firebasestorage.googleapis.com/v0/b/email-app-6e8c9.appspot.com/o/Calendar_Green.png?alt=media&token=3e0ca806-8e18-42ca-a13b-53209e784727'
+    });
+
+    Event.getAllEvent((err, msg) => {
+        if (err) {
+            console.log(err);
+        } else {
+            res.send({
+                success: true,
+                message: "successfully get events",
+                code: 200,
+                data: {
+                    events: msg,
+                    url:urls
+                }
+            });
         }
     })
 });
@@ -832,27 +866,43 @@ router.put('/event', verifyToken,(req,res)=>{
 router.post('/flashWithTime',verifyToken,(req,res)=>{
     let flash = req.body;
     if (flash.time ===null || flash.time === undefined){
-        NewsFlash.addFlashNews(flash,(err,msg1)=>{
-            if (err){
+        console.log("flash add without time");
+        NewsFlash.addFlashNews(flash, function (err, flashAdded) {
+            if (err) {
                 console.log(err);
-            } else {
-                res.send(msg1);
+                let address = req.connection.remoteAddress;
+                logger.databaseError('apifile',address, err);
+            }
+            res.json(flashAdded);
+            let address2 = req.connection.remoteAddress;
+            logger.newsFlashLog("NewsFlashApi",address2,"A News Flash added ("+flashAdded._id+")");
+            if(flashAdded.toSent){
+                Notification.sendFlashNotification(flashAdded.title,flashAdded.shortMassage);
             }
         })
     } else {
-        sendAfter(flash.time,flash,res);
+        sendAfter(flash.time,flash,req,res);
     }
 });
 
 
-function sendAfter(time,newsFlash,res) {
+
+
+
+function sendAfter(time,flashAdded,req,res) {
     delay(time).then(()=>{
-        NewsFlash.addFlashNews(newsFlash,(err,msg2)=>{
-            if (err){
+        let address = req.connection.remoteAddress;
+        NewsFlash.addFlashNews(flashAdded, function (err, flashAdded) {
+            if (err) {
                 console.log(err);
-            } else {
-                res.send(msg2)
+                logger.databaseError('apifile',address, err);
             }
+            res.json(flashAdded);
+            logger.newsFlashLog("NewsFlashApi",address,"A News Flash added ("+flashAdded._id+")");
+            if(flashAdded.toSent){
+                Notification.sendFlashNotification(flashAdded.title,flashAdded.shortMassage);
+            }
+
         })
     })
 }
