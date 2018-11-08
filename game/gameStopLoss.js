@@ -150,6 +150,7 @@ function pushNotification(user_id,message){
                 notification.title = "Trading Stop Loss Notification";
                 notification.body = message;
                 notification.sound = 'default';
+                notification.aps.category = "APP_GAME_STOPLOSS";
                 notification.topic = "com.blockchainglobal.bglmedia";
                 apnProvider.send(notification,e.device_token).then( res =>{
                     console.log(res);
