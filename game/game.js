@@ -504,7 +504,7 @@ router.post('/getRanking',verifyToken,(req,res)=>{
                             if (compData.data.length >= 10) {
                                 compRank.data = compData.data.slice(0,10);
                             }else {
-                                compRank.data = compData.data.slice(0,compRank.data.length);
+                                compRank.data = compData.data.slice(0,compDank.data.length);
                             }
                             comp = compData.data.find(e => e.user_id.toString() === user_id.toString());
                         } else {
