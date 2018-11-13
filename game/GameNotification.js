@@ -30,8 +30,14 @@ module.exports = {
     addNewNotification: (notification,callback)=>{
         GameNotification.create(notification,callback);
     },
-    editNotification: (notificationToEdit,callback)=>{
-        GameNotification.findOneAndUpdate({_id:notificationToEdit._id},notificationToEdit,{upsert:true,returnNewDocument:true},callback);
+    editNotification: (id,notificationToEdit,callback)=>{
+        let edit = {
+            shortMassage: notificationToEdit.shortMassage,
+            title: notificationToEdit.title,
+            timeFrom: notificationToEdit.timeFrom,
+            timeTo: notificationToEdit.timeTo
+        };
+        GameNotification.findOneAndUpdate({_id:id},edit,{upsert:true,new:true},callback);
     },
     getNotifications: (callback)=>{
         let dateNow = new Date();

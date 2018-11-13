@@ -953,7 +953,7 @@ router.put('/gameNoti/:_id', verifyToken, (req, res) => {
         })
     } else {
         let toEdit = req.body;
-        GameNotification.editNotification(toEdit, (err, monmsg) => {
+        GameNotification.editNotification(id,toEdit, (err, monmsg) => {
             if (err) {
                 res.send({
                     message: "database error",
