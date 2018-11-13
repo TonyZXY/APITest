@@ -4,6 +4,10 @@ const Flash = require('../module/NewsFlash');
 const mongoose = require('mongoose');
 const config = require('../config');
 const corn = require('node-cron');
+const logger = require('../functions/logger');
+const Notification = require('../functions/notification');  //require to send notification
+
+
 
 
 
@@ -13,7 +17,7 @@ mongoose.connect(config.database, config.options);
 corn.schedule('* * * * *',()=>{
     FlashLater.getFlashList((err,dbmsg1)=>{
         if (err) {
-            console.log(err);
+            logger.databaseError("NewsFlash send Later","null","failed with getting flash list");
         } else {
             if (dbmsg1.length>0){
                 dbmsg1.forEach( element => {
@@ -27,14 +31,16 @@ corn.schedule('* * * * *',()=>{
                     };
                     Flash.addFlashNews(flash,(err,dbmsg2)=>{
                         if (err){
-                            console.log(err);
+                            logger.databaseError("NewsFlash send Later","null","failed in add news flash");
                         } else {
-                            console.log(dbmsg2);
                             FlashLater.deleteFlash(element,(err,dbmsg3)=>{
                                 if (err) {
-                                    console.log(err);
+                                    logger.databaseError("NewsFlash send Later","null","failed in delete flash from list");
                                 } else {
-                                    console.log(dbmsg3);
+                                    if(dbmsg2.toSent){
+                                        Notification.sendFlashNotification(dbmsg2.title,dbmsg2.shortMassage);
+                                        logger.newsFlashLog(null,'flash sent from send later');
+                                    }
                                 }
                             })
                         }

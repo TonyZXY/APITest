@@ -8,6 +8,8 @@ const Notification = require('../functions/notification');
 const GameCoin = require('./GameCoin');
 const TotalRanking = require('../module/TotalRanking');
 const CompRanking = require('../module/CompetitionRanking');
+const GameNotification = require('./GameNotification');
+
 
 
 const config = require('../config');
@@ -653,6 +655,29 @@ router.post('/deleteAlert',verifyToken,(req,res)=>{
             }
         })
     }
+});
+
+
+
+router.get('/notification',(req,res)=>{
+    GameNotification.getNotifications((err,mommsg)=>{
+        if (err) {
+            databaseError(err,res);
+        } else {
+            res.send(mommsg);
+        }
+    })
+});
+
+
+router.get('/allNoti',(req,res)=>{
+    GameNotification.getAllNotification((err,monmsg)=>{
+        if (err){
+            databaseError(err,res);
+        } else {
+            res.send(monmsg);
+        }
+    })
 });
 
 

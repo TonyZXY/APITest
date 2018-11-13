@@ -22,6 +22,9 @@ const FlashLike = require('../module/FlashLike');   //FlashNews Like and dislike
 const UpdateInfo = require('../module/UpdateInfo'); //Update info for force update app (not used)
 const Event = require('../module/Event');           //Event Schema and mongodb functions
 const EventData = require('../dataServices/EventData'); //Use to get Event host name list and logo url
+const FlashLater = require('../module/NewsFlashLater');
+const GameNotification = require('../game/GameNotification');
+
 
 // address = req.connection.remoteAddress
 
@@ -886,6 +889,124 @@ router.put('/event', verifyToken,(req,res)=>{
 
 
 
+router.post('/gameNoti', verifyToken, (req, res) => {
+    let noti = req.body;
+    GameNotification.addNewNotification(noti, (err, monmsg) => {
+        if (err) {
+            res.send({
+                message: "database error",
+                code: 500,
+                success: false,
+                data: null
+            })
+        } else {
+            res.send({
+                message: 'Successfully get available Notification',
+                code: 200,
+                success: true,
+                data: monmsg
+            });
+        }
+    })
+});
+
+
+router.get('/gameNoti/:_id', (req, res) => {
+    let id = req.params._id;
+    if (id === null || id === undefined) {
+        res.send({
+            message: "bad request",
+            code: 500,
+            success: false,
+            data: null
+        })
+    } else {
+        GameNotification.getOneNotification(id, (err, monmsg) => {
+            if (err) {
+                res.send({
+                    message: "database error",
+                    code: 500,
+                    success: false,
+                    data: null
+                })
+            } else {
+                res.send({
+                    message: 'Successfully get One Notification',
+                    code: 200,
+                    success: true,
+                    data: monmsg
+                });
+            }
+        })
+    }
+});
+
+
+router.put('/gameNoti/:_id', verifyToken, (req, res) => {
+    let id = req.params._id;
+    if (id === null || id === undefined) {
+        res.send({
+            message: "bad request",
+            code: 500,
+            success: false,
+            data: null
+        })
+    } else {
+        let toEdit = req.body;
+        GameNotification.editNotification(toEdit, (err, monmsg) => {
+            if (err) {
+                res.send({
+                    message: "database error",
+                    code: 500,
+                    success: false,
+                    data: null
+                })
+            } else {
+                res.send({
+                    message: 'successfully edit notification',
+                    code: 200,
+                    success: false,
+                    data: monmsg
+                })
+            }
+        })
+    }
+});
+
+
+router.delete('/gameNoti/:_id', verifyToken, (req, res) => {
+    let id = req.params._id;
+    if (id === null || id === undefined) {
+        res.send({
+            message: "bad request",
+            code: 500,
+            success: false,
+            data: null
+        })
+    } else {
+        GameNotification.deleteNotification(id,(err,monmsg)=>{
+            if (err){
+                res.send({
+                    message: "database error",
+                    code: 500,
+                    success: false,
+                    data: null
+                })
+            } else {
+                res.send({
+                    message: 'successfully delete notification',
+                    code: 200,
+                    success: false,
+                    data: monmsg
+                })
+            }
+        })
+    }
+});
+
+
+
+
 router.post('/flashWithTime',verifyToken,(req,res)=>{       //use to receive delay news flash
     let flash = req.body;
     if (flash.time ===null || flash.time === undefined){        //if not set time, sent now
@@ -903,28 +1024,43 @@ router.post('/flashWithTime',verifyToken,(req,res)=>{       //use to receive del
             }
         })
     } else {
-        sendAfter(flash.time,flash,req,res); // if set time, sent after
-        logger.newsFlashLog(null ,"send after in "+flash.time/1000+' seconds');
+        sendAfter(flash,req,res); // if set time, sent after
+        logger.newsFlashLog(null ,"message will be send after: "+flash.title);
     }
 });
 
 
-function sendAfter(time,flashAdded,req,res) {
-    delay(time).then(()=>{ //set time delay then push notification
-        let address = req.connection.remoteAddress;
-        NewsFlash.addFlashNews(flashAdded, function (err, flashAdded) {
-            if (err) {
-                console.log(err);
-                logger.databaseError('apifile',address, err);
-            }
-            res.json(flashAdded);
-            logger.newsFlashLog("NewsFlashApi",address,"A News Flash added ("+flashAdded._id+")");
-            if(flashAdded.toSent){
-                Notification.sendFlashNotification(flashAdded.title,flashAdded.shortMassage);
-            }
-
-        })
-    })
+function sendAfter(flashAdded,req,res) {
+    // delay(time).then(()=>{ //set time delay then push notification
+    //     let address = req.connection.remoteAddress;
+    //     NewsFlash.addFlashNews(flashAdded, function (err, flashAdded) {
+    //         if (err) {
+    //             console.log(err);
+    //             logger.databaseError('apifile',address, err);
+    //         }
+    //         res.json(flashAdded);
+    //         logger.newsFlashLog("NewsFlashApi",address,"A News Flash added ("+flashAdded._id+")");
+    //         if(flashAdded.toSent){
+    //             Notification.sendFlashNotification(flashAdded.title,flashAdded.shortMassage);
+    //         }
+    //
+    //     })
+    // })
+    let address = req.connection.remoteAddress;
+    FlashLater.addFlash(flashAdded,(err,monmsg)=>{
+        if (err) {
+            res.send({
+                success: false,
+                message: "database err",
+                code: 500,
+                data: null
+            });
+            logger.databaseError('apifile',address, err);
+        } else {
+            logger.newsFlashLog("NewsFlashApi",address,"A News Flash added ("+monmsg._id+")");
+            res.json(monmsg);
+        }
+    });
 }
 
 const delay = (amount) => {
