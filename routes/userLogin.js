@@ -207,8 +207,6 @@ function verifyToken(req, res, next) {
         if (token === null || token === undefined ||
             email === null || email === undefined) {
             logger.userRegistrationLoginLog(address, "Invalid param number");
-            console.log(req.headers);
-            console.log(req.body);
             return res.send({
                 success: false,
                 message: "Token Error",
