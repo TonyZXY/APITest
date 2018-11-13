@@ -35,7 +35,7 @@ app.use('/adminpage', admin);
 app.use('/policy', policy);
 app.use('/terms', terms);
 app.use('/css',css);
-app.use('/webgame',webGameTest);
+app.use('/webgame',webGame);
 app.use('/game',game);
 app.use('/webgametest',webGameTest);
 
