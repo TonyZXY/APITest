@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const config = require('../config');
 const corn = require('node-cron');
 const logger = require('../functions/logger');
-const Notification = require('../functions/notification');  //require to send notification
+const Notification = require('./notification');  //require to send notification
 
 
 
