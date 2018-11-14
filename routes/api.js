@@ -1047,6 +1047,7 @@ function sendAfter(flashAdded,req,res) {
     //     })
     // })
     let address = req.connection.remoteAddress;
+    flashAdded.publishedTime = flashAdded.time;
     FlashLater.addFlash(flashAdded,(err,monmsg)=>{
         if (err) {
             res.send({

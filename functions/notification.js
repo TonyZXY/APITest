@@ -10,7 +10,7 @@ mongoose.connect(config.database, config.options);
 
 const optionsToFile = {
     token: {
-        key: "cert.p8",
+        key: "../cert.p8",
         keyId: "PFYGPR25U8",
         teamId: "4SMWL7L89M"
     },

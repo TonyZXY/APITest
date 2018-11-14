@@ -12,7 +12,7 @@ const newsFlashLaterSchema = mongoose.Schema({
     },
     publishedTime:{
         type: Date,
-        default: Date.now
+        require: true
     },
     languageTag:{
         type:String,
