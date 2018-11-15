@@ -16,10 +16,12 @@
 
 
   "mail":{
-    "service": "gmail",
+    "host": "smtp.exmail.qq.com",
+    "secureConnection": true,
+    "port": 465,
     "auth":{
-      "user": "cryptogeekapp@gmail.com",
-      "pass": "Bgltest12345"
+      "user": "no-reply@cryptogeekapp.com",
+      "pass": "Cryptogeek123"
     }
   },
 

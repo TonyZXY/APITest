@@ -69,7 +69,7 @@ router.post('/register', (req, res) => {
                 db.addIntoVerifyTable(msg.rows[0].user_id, generate, (err, msg) => {
                     let url = "https://cryptogeekapp.com/userLogin/verify/" + verifyToken + '/' + key;
                     let mailOptions = {
-                        from: 'do-not-replay@cryptogeekapp.com',
+                        from: 'no-reply@cryptogeekapp.com',
                         to: email,
                         subject: '[CryptoGeek] Please Verify Your Email',
                         html: "<body>\n" +
@@ -630,7 +630,7 @@ router.get('/resetPassword/:email', (req, res) => {
 
                                             let url = "https://cryptogeekapp.com/userLogin/reset/" + verifyToken + '/' + key;
                                             let mailOptions = {
-                                                from: 'do-not-replay@cryptogeekapp.com',
+                                                from: 'no-reply@cryptogeekapp.com',
                                                 to: email,
                                                 subject: '[CryptoGeek] Reset Password',
                                                 html: "<body>\n" +
@@ -686,7 +686,7 @@ router.get('/resetPassword/:email', (req, res) => {
                         } else {
                             let url = "https://cryptogeekapp.com/userLogin/reset/" + verifyToken + '/' + key;
                             let mailOptions = {
-                                from: 'do-not-replay@cryptogeekapp.com',
+                                from: 'no-reply@cryptogeekapp.com',
                                 to: email,
                                 subject: '[CryptoGeek] Reset Password',
                                 html: "<body>\n" +
@@ -868,7 +868,7 @@ router.get('/resendVerifyLink/:email', (req, res) => {
                 let verifyToken = jwt.sign(payload, key);
                 let url = "https://cryptogeekapp.com/userLogin/verify/" + verifyToken + '/' + key;
                 let mailOptions = {
-                    from: 'do-not-replay@cryptogeekapp.com',
+                    from: 'no-reply@cryptogeekapp.com',
                     to: email,
                     subject: '[CryptoGeek] Please Verify Your Email',
                     html: "<body>\n" +

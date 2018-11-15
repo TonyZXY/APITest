@@ -23,13 +23,13 @@ let task = corn.schedule('20 59 23 * * *', () => {
 });
 
 
-corn.schedule('14 59 23 9 11 *',()=>{
+corn.schedule('14 59 23 16 11 *',()=>{
     data.startCompetition();
     task.start();
 });
 
 
-corn.schedule('59 59 23 11 11 *',()=>{
+corn.schedule('59 59 23 17 11 *',()=>{
     task.stop();
 });
 
