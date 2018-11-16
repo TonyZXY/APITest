@@ -202,7 +202,25 @@ module.exports = {
                 })
             }
         })
+    },
+
+    competitionRankingClean: (number)=>{
+        let date = new Date();
+        let rank = {
+            title: 'No data available',
+            time: date,
+            time_string: date.toISOString(),
+            date_number: number,
+            data: [],
+        };
+        CompetitionRanking.addRanking(rank,(err,monmsg)=>{
+            if (err){
+                console.log(err);
+            } else {
+            }
+        })
     }
+
 };
 
 

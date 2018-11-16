@@ -505,8 +505,10 @@ router.post('/getRanking',verifyToken,(req,res)=>{
                             compRank.time_string = compData.time_string;
                             if (compData.data.length >= 10) {
                                 compRank.data = compData.data.slice(0,10);
-                            }else {
-                                compRank.data = compData.data.slice(0,compData.data.length);
+                            }else if (compData.data.length >0) {
+                                compRank.data = compData.data.slice(0,length);
+                            } else {
+                                compRank.data = null;
                             }
                             comp = compData.data.find(e => e.user_id.toString() === user_id.toString());
                         } else {

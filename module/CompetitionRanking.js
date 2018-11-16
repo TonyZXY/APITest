@@ -48,6 +48,6 @@ module.exports = {
     },
 
     getRanking: (callback) => {
-        CompetitionRanking.find(callback).limit(1).sort({date_number:-1});
+        CompetitionRanking.find(callback).limit(1).sort({_id:-1});
     }
 };

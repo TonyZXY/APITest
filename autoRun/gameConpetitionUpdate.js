@@ -23,13 +23,20 @@ let task = corn.schedule('20 59 23 * * *', () => {
 });
 
 
-corn.schedule('14 59 11 16 11 *',()=>{
+corn.schedule('14 59 16 16 11 *',()=>{
     data.startCompetition();
+    data.checkWeekNumber((err,number)=>{
+        if (err){
+            console.log(err);
+        } else {
+            data.competitionRankingClean(number)
+        }
+    });
     task.start();
 });
 
 
-corn.schedule('59 59 23 17 11 *',()=>{
+corn.schedule('59 59 23 18 11 *',()=>{
     task.stop();
 });
 
