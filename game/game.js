@@ -498,14 +498,14 @@ router.post('/getRanking',verifyToken,(req,res)=>{
                         } else {
                             totalRank =null;
                         }
-                        if (compData !== null && compData !== undefined){
+                        if (compData.data !== null && compData.data !== undefined){
                             compRank.title = compData.title;
                             compRank.time = compData.time;
                             compRank.date_number = compData.date_number;
                             compRank.time_string = compData.time_string;
                             if (compData.data.length >= 10) {
                                 compRank.data = compData.data.slice(0,10);
-                            }else if (compData.data.length >0) {
+                            }else if (compData.data.length > 0) {
                                 compRank.data = compData.data.slice(0,length);
                             } else {
                                 compRank.data = null;
