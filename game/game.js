@@ -498,7 +498,7 @@ router.post('/getRanking',verifyToken,(req,res)=>{
                         } else {
                             totalRank =null;
                         }
-                        if (compData.data !== null && compData.data !== undefined){
+                        if (compData !== null && compData !== undefined){
                             compRank.title = compData.title;
                             compRank.time = compData.time;
                             compRank.date_number = compData.date_number;
