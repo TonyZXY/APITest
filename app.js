@@ -6,9 +6,9 @@ const path = require('path');
 const cpmpression = require('compression');
 
 
-app.use(cors());
-app.use(cpmpression());
-app.use(bodyParser.json({limit:'50mb',extended: true}));
+app.use(cors()); //use cors to solve cross domain issue
+app.use(cpmpression()); //use compression to enable gzip compression
+app.use(bodyParser.json({limit:'50mb',extended: true})); //increase body size
 app.use(bodyParser.urlencoded({limit:'50mb', extended: true }));
 
 
@@ -26,7 +26,7 @@ const webGame = require('./routes/game');
 const webGameTest = require('./game/tradingGame');
 
 
-app.use('/api', api);
+app.use('/api', api); // path /api/** use this file
 app.use('/userLogin', userLogin);
 app.use('/login', login);
 app.use('/deviceManage', deviceManage);
@@ -40,12 +40,12 @@ app.use('/game',game);
 app.use('/webgametest',webGameTest);
 
 
-//nothing
+// send home page when PATH /
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname + '/routes/homepage.html'));
 });
 
 //start application
-let port = 3020;
+let port = 3020; // listened port
 app.listen(port);
 console.log(`Running on port ${port}`);
