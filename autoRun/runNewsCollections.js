@@ -5,7 +5,7 @@ const alg = require('../dataServices/coinAlgorithm');
 const avg = require('../dataServices/CoinGlobalAvg');
 const event = require('../dataServices/EventData');
 
-
+// call this method to run data collections
 function run() {
     NewsAPI.run();
     CryptoCoinNews.run();

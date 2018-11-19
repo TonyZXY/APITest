@@ -5,6 +5,7 @@ const postgre = config.postgre;
 const pool = new Pool(postgre);
 
 module.exports = {
+    // get add user info with their trading pair from db
     getIOSDevicesForCompare: (callback) => {
         let params = [];
         let text = 'select distinct users.user_id,coins."from",coins."to",interests.price as inPrice,coins.price as coPrice,\n' +
@@ -17,6 +18,7 @@ module.exports = {
     },
 
 
+    // get user info
     getUser: (email, callback) => {
         let param = [email];
         let text = 'select user_id as _id,password,salt,email,nick_name,verify from users where email=$1';
@@ -24,6 +26,7 @@ module.exports = {
     },
 
 
+    // register user
     registerUser: (firstName, lastName, email, password, title, language, salt, callback) => {
         let param = [firstName, lastName, email, password, title, language, salt];
         let text = 'INSERT INTO "public"."users" ("first_name", "last_name", "email", "password", "title", "language", "salt")\n' +
@@ -32,6 +35,7 @@ module.exports = {
     },
 
 
+    // get list of alert setting for one user
     getInterests: (email, callback) => {
         let param = [email];
         let query = 'select coins."from",coins."to",coins.available,interests.price,interests.interest_id as _id,interests.isGreater,interests.status,coins.market\n' +
@@ -42,6 +46,7 @@ module.exports = {
     },
 
 
+    // get notification status for user
     getInterestStatus: (email, callback) => {
         let param = [email];
         let query = 'select interest, flash from users where email=$1;';
@@ -49,6 +54,7 @@ module.exports = {
     },
 
 
+    // get trading pair data for adding or not adding new trading pair
     getTradingPair: (from, to, market, callback) => {
         let param = [from, to, market];
         let query = 'select "from","to",market,coin_id as _id from coins where "from"=$1 and "to"=$2 and market=$3;';
@@ -56,6 +62,7 @@ module.exports = {
     },
 
 
+    // add trading pair data for store into db and perpare to compare
     addTradingPair: (from, to, market, callback) => {
         let param = [from, to, market];
         let query = 'insert into coins ("from", "to", market) values ($1,$2,$3) returning coin_id as _id;';
@@ -63,6 +70,7 @@ module.exports = {
     },
 
 
+    // add new interest with out adding new trading pair
     addInterestWithOutTradingPair: (email, coinID, price, isGreater, callback) => {
         let param = [email, coinID, price, isGreater];
         let query = 'insert into interests (interest_user_id, interest_coin_id, price, isGreater) values ((SELECT user_id from users where email=$1),$2,$3,$4) returning *;';
@@ -70,6 +78,7 @@ module.exports = {
     },
 
 
+    // add new interest with adding new trading pair
     addInterestWithTradingPair: (email, coinID, price, isGreater, callback) => {
         let param = [email, coinID, price, isGreater];
         let query = 'insert into interests (interest_user_id, interest_coin_id, price, isGreater) values ((SELECT user_id from users where email=$1),$2,$3,$4) returning *;';
@@ -77,6 +86,7 @@ module.exports = {
     },
 
 
+    // change list of interest notification status
     changeInterestStatus: (interests, callback) => {
         let query = 'update interests set\n' +
             '  status = c.status\n' +
@@ -93,6 +103,7 @@ module.exports = {
     },
 
 
+    // update users notification status
     updateNotificationStatus: (email, flash, interest, callback) => {
         let param = [flash, interest, email];
         let query = 'update users set flash=$1,interest=$2 where email=$3 returning interest,flash;';
@@ -100,6 +111,7 @@ module.exports = {
     },
 
 
+    // delete list of interest
     deleteInterest: (interests, callback) => {
         let query = 'delete from interests\n' +
             'where interest_id in (';
@@ -113,6 +125,7 @@ module.exports = {
     },
 
 
+    // get list of interest for one user
     getInterest: (id, callback) => {
         let param = [id];
         let query = 'select coins."from",coins."to",coins.market,interests.interest_id,interests.price,interests.isgreater,interests.frequence\n' +
@@ -122,6 +135,7 @@ module.exports = {
     },
 
 
+    // update the price of interest that user want to set
     updateInterestPrice: (id, price, isGreater, callback) => {
         let param = [price, isGreater, id];
         let query = 'Update interests set (price,isgreater) = ($1,$2) where interest_id=$3 returning *;';
@@ -129,6 +143,7 @@ module.exports = {
     },
 
 
+    // update users selected interest to database
     updateInterestCoin: (id, coinID, price, isGreater, callback) => {
         let param = [price, isGreater, coinID, id];
         let query = 'Update interests set (price,isgreater,interest_coin_id) = ($1,$2,$3) where interest_id=$4 returning *;';
@@ -136,6 +151,7 @@ module.exports = {
     },
 
 
+    // add ios device into db with user id
     addIOSDevice: (email, token, callback) => {
         let param = [email, token];
         let query = 'insert into iosdevices (device_user_id, device_token) VALUES ((SELECT user_id from users where email=$1),$2) returning *;';
@@ -143,6 +159,7 @@ module.exports = {
     },
 
 
+    // delete device token
     deleteIOSDevice: (token, callback) => {
         let param = [token];
         let query = 'DELETE FROM iosdevices where device_token=$1;';
@@ -150,6 +167,7 @@ module.exports = {
     },
 
 
+    // add number that display when push notification
     addIOSDeviceNumber: (token, callback) => {
         let param = [token];
         let query = 'update iosdevices set number = number+1 where device_token=$1 returning device_token,number;';
@@ -157,6 +175,7 @@ module.exports = {
     },
 
 
+    // clear number display when push notification
     setIOSDeviceNumberToZero: (token, callback) => {
         let param = [token];
         let query = 'update iosdevices set number = 0 where device_token=$1 returning device_token,number;';
@@ -165,6 +184,7 @@ module.exports = {
 
 
 
+    // get the number that need to display
     getIOSDeviceNumber:(token,callback)=>{
         let query = 'select number from iosdevices where device_token = $1;';
         let param = [token];
@@ -173,6 +193,7 @@ module.exports = {
 
 
 
+    // get number of news flash
     getIOSNewsNumber:(token,callback)=>{
         let query = 'select number from ios_newsflash where device_token = $1;';
         let param = [token];
@@ -185,18 +206,22 @@ module.exports = {
     //     let query = 'update users set flash=$2 where email=$1 returning user_id,flash;';
     //     return pool.query(query,param,callback);
     // },
+
+    // update trading pair list
     updateTradingPair: (id, price, callback) => {
         let param = [price, id];
         let query = 'update coins set price=$1 where coin_id=$2 returning *;';
         return pool.query(query, param, callback);
     },
 
+    // get all list of trading pair
     getAllTradingPair: (callback) => {
         let param = [];
         let query = 'Select * from coins;';
         return pool.query(query, param, callback);
     },
 
+    // get all ios devices token with user data
     getAllIOSDeviceForFlashNotification: (callback) => {
         let param = [];
         let query = 'SELECT iosdevices.device_token, users.flash\n' +
@@ -205,6 +230,7 @@ module.exports = {
         return pool.query(query, param, callback);
     },
 
+    // add value into verify user
     addIntoVerifyTable: (user_id, verifyToken, callback) => {
         let param = [verifyToken, user_id];
         let query = 'insert into verify_user (token, verify_user_id) VALUES ($1, $2) returning *;';
@@ -212,6 +238,7 @@ module.exports = {
     },
 
 
+    // remove value from verify user table
     removeFromVerifyTable: (token, callback) => {
         let param = [token];
         let query = 'delete from verify_user where token=$1 returning verify_user_id as user;';
@@ -219,6 +246,7 @@ module.exports = {
     },
 
 
+    // select values from verify table
     selectFromVerifyTable: (token, callback) => {
         let param = [token];
         let query = 'select * from verify_user where token=$1;';
@@ -226,6 +254,7 @@ module.exports = {
     },
 
 
+    // verify user status
     verifyUser: (userID, callback) => {
         let param = [userID];
         let query = 'update users set verify=true where user_id=$1 returning *';
@@ -233,6 +262,7 @@ module.exports = {
     },
 
 
+    // after reset password, delete verify from verify table
     removeVerifyByReset: (id, callback) => {
         let param = [id];
         let query = 'DELETE FROM verify_user WHERE verify_user_id=$1 returning *;';
@@ -240,6 +270,7 @@ module.exports = {
     },
 
 
+    // reset password
     updatePassword: (id, password, salt, callback) => {
         let param = [id, password, salt];
         let query = 'UPDATE users set password=$2,salt=$3 where user_id=$1 returning *;';
@@ -247,6 +278,7 @@ module.exports = {
     },
 
 
+    // resend password for users
     resendVerifyEmail: (email, callback) => {
         let param = [email];
         let query = 'Select * from verify_user where verify_user_id=(select user_id from users where email=$1);';

@@ -8,6 +8,9 @@ const config = require('../config');
 mongoose.connect(config.database, config.options);
 
 
+// this file is to get data from coin market cap
+// the global average data
+
 // const url = 'https://api.coinmarketcap.com/v2/ticker/?convert=AUD&start=1&limit=100&sort=rank&structure=array';
 const urlHead = 'https://api.coinmarketcap.com/v2/ticker/?structure=array&sort=rank&limit=100';
 const AUD = 'AUD';
@@ -30,6 +33,8 @@ const delay = amount => {
 };
 const second = 3;
 
+
+// get data from coin market cap
 async function forLoop(array, currency) {
     for (let i = 0; i < length; i++) {
         let start = i * 100 + 1;
@@ -91,6 +96,8 @@ async function forLoop(array, currency) {
     }
 }
 
+
+// this method is make sure every currency price is generated
 async function forCurrency(array) {
     for (let i = 0; i < currencys.length; i++) {
         await forLoop(array, currencys[i]);
@@ -99,6 +106,8 @@ async function forCurrency(array) {
 
 let time = 1;
 
+
+// start the api call
 function startcall() {
     let array = [];
     loginConsole(" start Loop for " + time);

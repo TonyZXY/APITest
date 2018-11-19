@@ -9,7 +9,7 @@ const config = require('../config');
 
 mongoose.connect(config.database, config.options);
 
-
+// get news from cryptocompare news api
 function getNews() {
     https.get('https://min-api.cryptocompare.com/data/v2/news/?lang=EN', (res) => {
         let data = '';
@@ -75,6 +75,7 @@ const delay = (amount) => {
     });
 };
 
+// get data every 5 mins
 async function getLoop() {
     let time = 1;
     do {

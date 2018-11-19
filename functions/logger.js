@@ -6,6 +6,8 @@ const myFormat = printf(info => {
     return `${info.timestamp} [${info.label}]<${info.address}> ${info.level}: ${info.message}`;
 });
 
+
+// this file use to generate formatted logger api to use
 const fs = require('fs');
 const path = require('path');
 const logDir = '/home/bglnewsdev00/NewsAPI/log';

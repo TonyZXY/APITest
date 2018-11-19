@@ -8,6 +8,9 @@ const config = require('../config');
 mongoose.connect(config.database, config.options);
 
 
+
+// This file is to help news flash send later to push notification
+
 const optionsToFile = {
     token: {
         key: "cert.p8",
@@ -17,6 +20,9 @@ const optionsToFile = {
     production: true
 };
 
+
+
+// use this method to send message
 function sendIos(deviceId, title, message, badgeNumber) {
     let apnprovider = new apn.Provider(optionsToFile);
     let deviceToken = deviceId;
@@ -49,16 +55,22 @@ function sendIos(deviceId, title, message, badgeNumber) {
 }
 
 
+
+
+// call this method to send notification
 module.exports.sendFlashNotification = (title,message)=>{
+    // get list of devices token
     db.getIOSNewsFlash((err,dbmsg1)=>{
         if (err){
             console.log(err);
             logger.databaseError("notification","server",err);
         } else {
             if(dbmsg1.rows[0] === null || dbmsg1.rows[0]===undefined){
+                // get all devices token list which are registered
                 db.getAllIOSDeviceForFlashNotification((err,dbmsg3)=>{
                     let list = dbmsg3.rows;
                     list.forEach( element =>{
+                        // for each devices token, send message
                         db.addIOSDeviceNumber(element.device_token,(err,msg3)=>{
                             sendIos(element.device_token,title,message,msg3.rows[0].number)
                         })

@@ -10,6 +10,8 @@ const delay = amount => {
     });
 };
 
+
+// update total every day at 23:59:00
 function run() {
     corn.schedule('0 59 23 * * *', ()=>{
         data.checkWeekNumber((err,number)=>{

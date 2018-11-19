@@ -7,6 +7,9 @@ const config = require('../config');
 mongoose.connect(config.database, config.options);
 
 
+
+// this file is to use to get event data from eventbrite and meetup
+
 let meetUpUrl = 'https://api.meetup.com/2/events?key=4e46424491c5b3830231b2ce4ec6c&group_urlname=';
 
 let BCC = {
@@ -232,6 +235,8 @@ const delay = amount => {
     });
 };
 
+
+// get data every hour
 async function runScript() {
     do {
         runGetEvent();

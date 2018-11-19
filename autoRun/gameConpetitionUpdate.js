@@ -60,11 +60,13 @@ corn.schedule('14 59 16 16 11 *',()=>{
             data.competitionRankingClean(number)
         }
     });
+    // start competition update ranking tasks.
     task.start();
     task2.start();
 });
 
 
+// set this schedule to stop trading competition
 corn.schedule('59 59 23 18 11 *',()=>{
     task.stop();
     task2.stop();

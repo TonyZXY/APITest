@@ -7,8 +7,10 @@ const db = require('../functions/postgredb');
 
 mongoose.connect(config.database, config.options);
 
+// call this method to get data form api
 module.exports.getPriceFromAPI = function (coinFrom, coinTo, market, callback) {
     if (market === 'GLOBAL') {
+        // get data from global average
         Coin.getOneCoin(coinFrom, (err, coin) => {
             if (err) {
                 console.log(err);
@@ -51,6 +53,7 @@ module.exports.getPriceFromAPI = function (coinFrom, coinTo, market, callback) {
                 }
             }
         })
+        // get data from huobi australia
     }else if(market === 'Huobi Australia') {
         request({
             method: 'GET',
@@ -67,6 +70,7 @@ module.exports.getPriceFromAPI = function (coinFrom, coinTo, market, callback) {
             }
         });
     } else {
+        // get data from cryptocompare
         request({
             method: 'GET',
             uri: 'https://min-api.cryptocompare.com/data/generateAvg?fsym=' + coinFrom + '&tsym=' + coinTo + '&e=' + market,
@@ -89,6 +93,8 @@ const CoinFilter = require('../module/Coinfilter');
 const coinfliter = require('../module/coinFliterNew');
 
 
+
+// this function is to generate a list of coin which two apis in common
 async function compareTwoAPI() {
     let array = [];
     request({
@@ -155,6 +161,10 @@ const delay = (amount) => {
     });
 };
 
+
+// call this method to start this file
+// this function start every day
+// this function is start to compare two apis
 function start() {
     let time = 1;
     loginConsole(time);

@@ -6,18 +6,29 @@ const logger = require('../functions/logger');
 
 let minute = 5;
 let the_internal = minute * 60 * 1000;
+
+
+// this file is to compare trading pair and send notification
+// for alert function on the app
+
+
+
 setInterval(function () {
+    // get list of data need to compare from postgresql db
     db.getIOSDevicesForCompare((err, list) => {
         if (err) {
             console.log(err);
             logger.databaseError("TradingpairManage", "server", err);
 
         } else {
+            // if list is not available
             if (list.rows[0] === null || typeof list.rows[0] === undefined) {
                 logger.databaseError("TradingpairManage", "db", "No data in database");
             }
             else {
+                // for each list item
                 list.rows.forEach(row => {
+                    // if trading pair not found, get data from api and store into db, then compare price
                     if (row.coprice === null || typeof row.coprice === undefined) {
                         coinAlgorithm.getPriceFromAPI(row.from, row.to, row.market, (err, response) => {
                             if (err) {
@@ -36,6 +47,7 @@ setInterval(function () {
                             }
                         })
                     } else {
+                        // else, compare price
                         comparePrice(row.from, row.to, row.market, row.inprice, row.coprice, row.isgreater, row.device_token, row.number, row.interest_id)
                     }
                 });
@@ -45,6 +57,9 @@ setInterval(function () {
     })
 }, the_internal);
 
+
+
+// call this method to compare trading pair and send notification
 function comparePrice(from, to, market, inPrice, coPrice, operator, deviceId, badgeNumber, interestID) {
 
     // TODO: Update frequncy of interest
