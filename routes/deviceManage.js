@@ -8,6 +8,8 @@ module.exports = router;
 
 const db = require('../functions/postgredb');
 
+
+// same verify token method
 function verifyToken(req, res, next) {
     let token = req.body.token;
     let email = req.body.email;
@@ -96,6 +98,8 @@ function databaseError(err, res) {
     })
 }
 
+
+//add device token into database with email address
 router.post('/addIOSDevice', verifyToken, (req, res) => {
     let userEmail = req.body.email;
     let deviceToken = req.body.deviceToken;
@@ -138,6 +142,8 @@ router.post('/addIOSDevice', verifyToken, (req, res) => {
 });
 
 
+
+// when receive notification, call this method to reset number
 router.post('/receivedNotification', verifyToken, (req, res) => {
     let token = req.body.deviceToken;
     let email = req.body.email;
@@ -159,6 +165,8 @@ router.post('/receivedNotification', verifyToken, (req, res) => {
 });
 
 
+
+// change user status with user email
 router.post('/changeNotification', verifyToken, (req, res) => {
     let userEmail = req.body.email;
     let flash = req.body.flash;
@@ -180,6 +188,8 @@ router.post('/changeNotification', verifyToken, (req, res) => {
     })
 });
 
+
+// delete ios device from db
 router.post('/logoutIOSDevice', verifyToken, (req, res) => {
     let deviceToken = req.body.deviceToken;
     let address = req.connection.remoteAddress;
@@ -203,6 +213,7 @@ router.post('/logoutIOSDevice', verifyToken, (req, res) => {
 
 
 
+//add ios device token with out login
 router.post('/IOSNewsFlash',(req,res)=>{
     let deveiceToken = req.body.deviceToken;
     let address = req.connection.remoteAddress;
@@ -234,6 +245,8 @@ router.post('/IOSNewsFlash',(req,res)=>{
     }
 });
 
+
+// set number to zero with out login
 router.post('/receivedIOSNotification',(req,res)=>{
     let token = req.body.deviceToken;
     let address = req.connection.remoteAddress;
@@ -264,6 +277,7 @@ router.post('/receivedIOSNotification',(req,res)=>{
 
 
 
+// get number for specific device token
 router.post('/getNumber',(req,res)=>{
     let token = req.body.deviceToken;
     let address = req.connection.remoteAddress;
@@ -293,6 +307,7 @@ router.post('/getNumber',(req,res)=>{
 
 
 
+// get number for login user
 router.post('/getIOSNewsNumber',verifyToken,(req,res)=>{
     let token = req.body.deviceToken;
     let address = req.connection.remoteAddress;

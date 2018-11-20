@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
 
+// schema that use to store admin user
+
 const userSchrma = mongoose.Schema(
     {
         username: {

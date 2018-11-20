@@ -19,8 +19,11 @@ mongoose.connect(config.database,config.options);
 const path = require('path');
 
 
+
+// this function use to be a verify middle ware for post Method
 function verifyToken(req, res, next) {
     try {
+        // get and check body element and check it is appear or not
         let token = req.body.token;
         let email = req.body.email;
         let address = req.connection.remoteAddress;
@@ -35,6 +38,7 @@ function verifyToken(req, res, next) {
             })
 
         } else {
+            // verify token with email (as key)
             let payload = jwt.verify(token.toString(), email.toString());
             if (!payload) {
                 logger.userRegistrationLoginLog(address, "No payload");
@@ -45,6 +49,7 @@ function verifyToken(req, res, next) {
                     token: null
                 })
             } else {
+                // get info from payload
                 let userID = payload.userID;
                 let password = payload.password;
                 if (userID === null || password === null ||
@@ -57,6 +62,7 @@ function verifyToken(req, res, next) {
                         token: null
                     })
                 } else {
+                    // check payload information from database with giving userID
                     db.getUser(email, (err, msg) => {
                         if (err) {
                             console.log(err);
@@ -79,6 +85,7 @@ function verifyToken(req, res, next) {
                                     token: null
                                 })
                             } else {
+                                // check hashed password is curret or not
                                 if (user.password.toString() !== password.toString() ||
                                     (user._id).toString() !== userID.toString()) {
                                     logger.userRegistrationLoginLog(address, "Compare password or userid failed in Email: " + email);
@@ -126,14 +133,17 @@ function badRequest(res) {
 }
 
 
+// register user into trading game
 router.post('/register', verifyToken, (req, res) => {
     let email = req.body.email;
     let nickname = req.body.nickname;
     if (nickname === null || nickname=== undefined){
         badRequest(res);
     } else {
+        // set user nick name
         db.gameSetNickName(email, nickname, (err, dbmsg) => {
             if (err) {
+                // it is means the nick name already token by others
                 if (err.code === '23505') {
                     res.send({
                         success: false,
@@ -145,9 +155,12 @@ router.post('/register', verifyToken, (req, res) => {
                     databaseError(err, res);
                 }
             } else {
+                // success set up nick name
                 let user_id = dbmsg.rows[0].user_id;
+                // set up accounts
                 db.gameSetUpAccount(user_id, (err2, dbmsg2) => {
                     if (err2) {
+                        // means the user already register, login instade
                         if (err2.code === '23505') {
                             res.send({
                                 success: false,
@@ -159,6 +172,7 @@ router.post('/register', verifyToken, (req, res) => {
                             databaseError(err2, res);
                         }
                     } else {
+                        // successfully register
                         let data = dbmsg2.rows[0];
                         data.nick_name = nickname;
                         res.send({
@@ -176,9 +190,11 @@ router.post('/register', verifyToken, (req, res) => {
 
 
 
+// add transaction in game
 router.post('/addTransaction', verifyToken, (req, res) => {
     let user_id = req.body.user_id;
     let transaction = req.body.transaction;
+    // check input element
     if (user_id === null || user_id === undefined || transaction === null || transaction === undefined) {
         res.send({
             message: 'Bad request',
@@ -187,8 +203,10 @@ router.post('/addTransaction', verifyToken, (req, res) => {
             data: null
         });
     } else {
+        // update account amount with transaction got
         db.gameUpdateAccountAmount(user_id, transaction.status, Math.round(transaction.amount*100000000)/100000000, transaction.coinAddName, Math.round(transaction.singlePrice * transaction.amount*100000000)/100000000, (err, dbmsg1) => {
             if (err) {
+                // means reach nagitagive amount
                 if (err.code === '23514') {
                     res.send({
                         message: 'No Enough Amount',
@@ -200,15 +218,18 @@ router.post('/addTransaction', verifyToken, (req, res) => {
                     databaseError(err, res);
                 }
             } else {
+                // cucalate transaction fee
                 if (transaction.status.toLowerCase() === "sell"){
                     transaction.transaction_fee = Math.round(transaction.amount * transaction.singlePrice * 0.002 * 100000000)/100000000;
                 } else {
                     transaction.transaction_fee = Math.round(transaction.amount * transaction.singlePrice * 0.002/0.998 * 100000000)/100000000;
                 }
+                // add transaction into table
                 db.gameAddTransactionList(user_id, transaction, (err, dbmsg2) => {
                     if (err) {
                         databaseError(err, res);
                     } else {
+                        // when add new transaction, cancel stop loss for this coin
                         db.gameCancelStopLoss(user_id,transaction.coinAddName.toLowerCase(),(err,dbmsg3)=>{
                             if (err) {
                                 databaseError(err,res);
@@ -233,6 +254,7 @@ router.post('/addTransaction', verifyToken, (req, res) => {
 });
 
 
+// add alert for game
 router.post('/addAlert', verifyToken, (req, res) => {
     let user_id = req.body.user_id;
     let alert = req.body.alert;
@@ -240,6 +262,7 @@ router.post('/addAlert', verifyToken, (req, res) => {
         alert === null || alert === undefined){
         badRequest(res);
     } else {
+        // add into database
         db.gameSetAlert(user_id,alert,(err,msg)=>{
             if (err) {
                 databaseError(err,res);
@@ -256,6 +279,7 @@ router.post('/addAlert', verifyToken, (req, res) => {
 });
 
 
+// edit alert
 router.post('/editAlert', verifyToken, (req, res) => {
     let user_id = req.body.user_id;
     let alert = req.body.alert;
@@ -263,6 +287,7 @@ router.post('/editAlert', verifyToken, (req, res) => {
         alert === null || alert === undefined){
         badRequest(res);
     } else {
+        // update into db
         db.gameUpdateAlert(alert,(err,dbmsg)=>{
             if (err){
                 databaseError(err,res);
@@ -279,6 +304,7 @@ router.post('/editAlert', verifyToken, (req, res) => {
 });
 
 
+// get alert list for users
 router.post('/getAlertList',verifyToken,(req,res)=>{
     let user_id = req.body.user_id;
     if (user_id === null || user_id === undefined){
@@ -300,6 +326,7 @@ router.post('/getAlertList',verifyToken,(req,res)=>{
 });
 
 
+// change game alert notification status
 router.post('/changeAlertNotifications', verifyToken, (req, res) => {
     let user_id = req.body.user_id;
     let alerts = req.body.alerts;
@@ -308,6 +335,7 @@ router.post('/changeAlertNotifications', verifyToken, (req, res) => {
         alerts[0] === null || alerts[0] === undefined){
         badRequest(res);
     } else {
+        // update list of alert status into db
         db.gameUpdateAlertStatus(alerts,(err,msg)=>{
             if (err){
                 databaseError(err,res);
@@ -324,6 +352,7 @@ router.post('/changeAlertNotifications', verifyToken, (req, res) => {
 });
 
 
+// get game account informations
 router.post('/getAccount', verifyToken, (req, res) => {
     let user_id = req.body.user_id;
     if (user_id === null || user_id === undefined) {
@@ -351,6 +380,7 @@ router.post('/getAccount', verifyToken, (req, res) => {
 
 
 
+// end point for send reset account require to default
 router.post('/resetAccount', verifyToken, (req, res) => {
     let user_id = req.body.user_id;
     if (user_id === null || user_id === undefined) {
@@ -372,6 +402,7 @@ router.post('/resetAccount', verifyToken, (req, res) => {
 });
 
 
+// cancel the request above
 router.post('/withdrawResetAccount', verifyToken, (req, res) => {
     let user_id = req.body.user_id;
     if (user_id === null || user_id === undefined) {
@@ -393,17 +424,21 @@ router.post('/withdrawResetAccount', verifyToken, (req, res) => {
 });
 
 
+// end point for set stop loss of coin
 router.post('/setStopLoss', verifyToken, (req, res) => {
     let user_id = req.body.user_id;
     let set = req.body.set;
+    // select stop loss set limit number
     db.gameSelectSetLimitNumber(user_id, (err, msg1) => {
         if (err) {
             databaseError(err, res);
         } else {
+            // get user current stop loss set (activated)
             db.gameGetSetsWithCoin(user_id, set.coinName.toLowerCase(), (err, msg2) => {
                 if (err) {
                     databaseError(err, res);
                 } else {
+                    // if not found number, means no user found
                     if (msg1.rows[0]===null || msg1.rows[0]===undefined){
                         res.send({
                             message:'Invalid Input, Check input',
@@ -412,7 +447,8 @@ router.post('/setStopLoss', verifyToken, (req, res) => {
                             data: null
                         })
                     }else {
-                        if (msg2.rows.length < msg1.rows[0].sets) {
+                        // compare limit number with current number
+                        if (msg2.rows.length < msg1.rows[0].sets) { // can add new sets
                             db.gameAddStopLossSet(user_id, set, (err, msg3) => {
                                 if (err) {
                                     databaseError(err, res);
@@ -425,7 +461,7 @@ router.post('/setStopLoss', verifyToken, (req, res) => {
                                     })
                                 }
                             })
-                        } else {
+                        } else { // can not add new
                             res.send({
                                 message: 'User cannot set pair due to limitation',
                                 code: 450,
@@ -441,6 +477,7 @@ router.post('/setStopLoss', verifyToken, (req, res) => {
 });
 
 
+// edit current stop loss set
 router.post('/editStopLoss', verifyToken, (req, res) => {
     let user_id = req.body.user_id;
     let set = req.body.set;
@@ -449,6 +486,7 @@ router.post('/editStopLoss', verifyToken, (req, res) => {
         set.set_id === null || set.set_id === undefined){
         badRequest(res);
     } else {
+        // edit set
         db.gameEditStopLossSet(user_id,set,(err,msg)=>{
             if (err){
                 databaseError(err,res);
@@ -465,20 +503,24 @@ router.post('/editStopLoss', verifyToken, (req, res) => {
 });
 
 
+// get ranking data
 router.post('/getRanking',verifyToken,(req,res)=>{
     let user_id = req.body.user_id;
     if(user_id === null  || user_id === undefined){
         badRequest(res);
     } else {
+        // get total ranking data from mongodb
         TotalRanking.getRanking((err,msg1)=>{
             if (err){
                 databaseError(err,res);
             } else {
                 let totalData = msg1[0];
+                // get competition rank from mongodb
                 CompRanking.getRanking((err,msg2)=>{
                     if (err){
                         databaseError(err,res);
                     } else {
+                        // generate formatted ranking data
                         let compData = msg2[0];
                         let totalRank = {};
                         let compRank = {};
@@ -494,6 +536,7 @@ router.post('/getRanking',verifyToken,(req,res)=>{
                             } else {
                                 totalRank.data = totalData.data.slice(0,totalData.data.length);
                             }
+                            // search user ranking from here
                             total = totalData.data.find(e => e.user_id.toString() === user_id.toString());
                         } else {
                             totalRank =null;
@@ -510,6 +553,7 @@ router.post('/getRanking',verifyToken,(req,res)=>{
                             } else {
                                 compRank.data = null;
                             }
+                            // search user competition here
                             comp = compData.data.find(e => e.user_id.toString() === user_id.toString());
                         } else {
                             compRank = null;
@@ -533,6 +577,7 @@ router.post('/getRanking',verifyToken,(req,res)=>{
 });
 
 
+// get users stop loss set list
 router.post('/getStopLossList', verifyToken, (req, res) => {
     let user_id = req.body.user_id;
     if(user_id === null || user_id === undefined){
@@ -554,6 +599,7 @@ router.post('/getStopLossList', verifyToken, (req, res) => {
 });
 
 
+// get user transactions list
 router.post('/getAllTransactions', verifyToken, (req, res) => {
     let user_id = req.body.user_id;
     if (user_id === null || user_id === undefined){
@@ -577,6 +623,7 @@ router.post('/getAllTransactions', verifyToken, (req, res) => {
 
 
 
+// get user nick name
 router.post('/getNickName',verifyToken,(req,res)=>{
     let email = req.body.email;
     db.gameGetNickName(email,(err,msg)=>{
@@ -603,7 +650,9 @@ router.post('/getNickName',verifyToken,(req,res)=>{
 });
 
 
+// get coin data of huobi australia
 router.get('/getCoinData',(req,res)=>{
+    // get data from mongodb
     GameCoin.getCoinList((err,msg)=>{
         if (err){
             databaseError(err,msg);
@@ -619,6 +668,8 @@ router.get('/getCoinData',(req,res)=>{
 });
 
 
+
+// end point get user game average data
 router.post('/getUserAverageHistory',verifyToken,(req,res)=>{
     let user_id = req.body.user_id;
     if (user_id === null || user_id === undefined){
@@ -639,6 +690,8 @@ router.post('/getUserAverageHistory',verifyToken,(req,res)=>{
     }
 });
 
+
+// end point for delete alert for trading game
 router.post('/deleteAlert',verifyToken,(req,res)=>{
     let interest = req.body.alert;
     if (interest === null || interest === undefined){

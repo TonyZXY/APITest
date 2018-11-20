@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const db = require('../functions/postgredb');
 
+// store ranking schema and functions for editing
+// not use
+
 const rankingSchema = mongoose.Schema({
     title: {
         type: String,

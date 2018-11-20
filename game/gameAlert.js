@@ -7,6 +7,10 @@ const GameCoin = require('./GameCoin');
 
 const config = require('../config');
 
+// this file is use to compare game alert and push notification,
+// functions are similier with notification
+
+
 mongoose.connect(config.database,config.options);
 
 const optionsToFile = {

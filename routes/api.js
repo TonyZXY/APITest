@@ -834,6 +834,8 @@ router.get('/eventAllV2', (req, res) => { //get all event from mongodb (V2) with
     })
 });
 
+
+// get specific host's event
 router.get('/event/:host', (req, res) => {
     let host = req.params.host;
     let hostToServer = '';
@@ -888,7 +890,7 @@ router.put('/event', verifyToken,(req,res)=>{
 });
 
 
-
+// add game notification from admin
 router.post('/gameNoti', verifyToken, (req, res) => {
     let noti = req.body;
     GameNotification.addNewNotification(noti, (err, monmsg) => {
@@ -942,6 +944,7 @@ router.get('/gameNoti/:_id', (req, res) => {
 });
 
 
+// update game notification
 router.put('/gameNoti/:_id', verifyToken, (req, res) => {
     let id = req.params._id;
     if (id === null || id === undefined) {
@@ -974,6 +977,8 @@ router.put('/gameNoti/:_id', verifyToken, (req, res) => {
 });
 
 
+
+//delete game notification
 router.delete('/gameNoti/:_id', verifyToken, (req, res) => {
     let id = req.params._id;
     if (id === null || id === undefined) {
@@ -1006,7 +1011,7 @@ router.delete('/gameNoti/:_id', verifyToken, (req, res) => {
 
 
 
-
+// add news flash with delay
 router.post('/flashWithTime',verifyToken,(req,res)=>{       //use to receive delay news flash
     let flash = req.body;
     if (flash.time ===null || flash.time === undefined){        //if not set time, sent now

@@ -5,6 +5,9 @@ const logger = require('../functions/logger');
 
 const config = require('../config');
 
+
+// file that use to push notification
+
 mongoose.connect(config.database, config.options);
 
 

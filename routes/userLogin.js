@@ -14,6 +14,7 @@ const mongoose = require('mongoose');
 
 mongoose.connect(config.database);
 
+// handle user login
 
 mail.setApiKey(config.mailAPIKey);
 
@@ -22,6 +23,8 @@ const mailAccount = config.mail;
 let mailSent = nodeMail.createTransport(mailAccount);
 
 
+
+// register user
 router.post('/register', (req, res) => {
     let email = req.body.email;
     let firstName = req.body.firstName;
@@ -29,6 +32,7 @@ router.post('/register', (req, res) => {
     let title = req.body.title;
     let password = req.body.password;
     let address = req.connection.remoteAddress;
+    // check param valid
     if (firstName === null || firstName === undefined ||
         lastName === null || lastName === undefined ||
         email === null || email === undefined ||
@@ -42,12 +46,15 @@ router.post('/register', (req, res) => {
         });
         logger.userRegistrationLoginLog(address, "Invalid params");
     } else {
+        // set up password hashed
         let passwordHash = hashPassword.generate(password, config.passwordOpt);
         let st = passwordHash.split('$');
         let passwordToDB = st[3];
         let salt = st[1];
+        // add user detail into database
         db.registerUser(firstName, lastName, email, passwordToDB, title, 'EN', salt, (err, msg) => {
             if (err) {
+                // if already register
                 res.send({
                     success: false,
                     message: 'Register fail',
@@ -60,13 +67,19 @@ router.post('/register', (req, res) => {
                     logger.userRegistrationLoginLog(address, "May be already registed in: " + email);
                 }
             } else {
+                // success, prepare verify email for user verify
+                // generate random string as verify
                 let generate = rs.generate(90);
                 let key = rs.generate(40);
                 let payload = {
                     token: generate
                 };
+
+                // generate verify token send to user
                 let verifyToken = jwt.sign(payload, key);
+                // add these token into db
                 db.addIntoVerifyTable(msg.rows[0].user_id, generate, (err, msg) => {
+                    // send email to user
                     let url = "https://cryptogeekapp.com/userLogin/verify/" + verifyToken + '/' + key;
                     let mailOptions = {
                         from: 'no-reply@cryptogeekapp.com',
@@ -122,10 +135,14 @@ router.post('/register', (req, res) => {
     }
 });
 
+
+
+// user login
 router.post('/login', (req, res) => {
     let userName = req.body.email;
     let password = req.body.password;
     let address = req.connection.remoteAddress;
+    // check param is vaild
     if (userName === null || userName === undefined ||
         password === null || password === undefined) {
         res.send({
@@ -136,6 +153,7 @@ router.post('/login', (req, res) => {
         });
         logger.userRegistrationLoginLog(address, "Invalid params");
     } else {
+        // get user data from db
         db.getUser(userName, (err, msg) => {
             if (err) {
                 console.log(err);
@@ -147,6 +165,7 @@ router.post('/login', (req, res) => {
                     token: null,
                 })
             } else {
+                // check if user is exist
                 if (msg.rows[0] === undefined) {
                     logger.userRegistrationLoginLog('userLogin', address, 'No user is found: ' + userName);
                     res.send({
@@ -156,6 +175,7 @@ router.post('/login', (req, res) => {
                         token: null
                     })
                 } else {
+                    // check user is verified or not
                     let user = msg.rows[0];
                     if (user.verify === false) {
                         res.send({
@@ -166,6 +186,7 @@ router.post('/login', (req, res) => {
                         });
                         logger.userRegistrationLoginLog(address, 'not verify in user: ' + userName)
                     } else {
+                        // verify password is curriet or not
                         let passwordToVerify = config.passwordOpt.algorithm + '$' + user.salt + '$' + config.passwordOpt.iterations + '$' + user.password;
                         if (!hashPassword.verify(password, passwordToVerify)) {
                             res.send({
@@ -176,6 +197,7 @@ router.post('/login', (req, res) => {
                             });
                             logger.userRegistrationLoginLog('userLogin', address, 'Password Error in: ' + userName);
                         } else {
+                            // generate token
                             let payload = {
                                 userID: user._id,
                                 password: user.password
@@ -199,6 +221,8 @@ router.post('/login', (req, res) => {
 });
 
 
+
+// verify token
 function verifyToken(req, res, next) {
     try {
         let token = req.body.token;
@@ -283,10 +307,13 @@ function verifyToken(req, res, next) {
 }
 
 
+
+// add alert( interest) for user
 router.post('/addInterest', verifyToken, (req, res) => {
     let userEmail = req.body.email;
     let interest = req.body.interest;
     let address = req.connection.remoteAddress;
+    // get trading pair, if exist, add interest, if not, add trading pair then add interest
     db.getTradingPair(interest.from, interest.to, interest.market, (err, msg) => {
         if (err) {
             databaseError(err, res);
@@ -339,6 +366,8 @@ router.post('/addInterest', verifyToken, (req, res) => {
 });
 
 
+
+// edit interest status
 router.post('/editInterestStatus', verifyToken, (req, res) => {
     let userEmail = req.body.email;
     let interests = req.body.interest;
@@ -361,10 +390,13 @@ router.post('/editInterestStatus', verifyToken, (req, res) => {
 });
 
 
+
+// edit interest
 router.post('/editInterest', verifyToken, (req, res) => {
     let userEmail = req.body.email;
     let interest = req.body.interest;
     let address = req.connection.remoteAddress;
+    // if trading pair changed, set new pair, if not update others setting
     db.getInterest(interest._id, (err, msg) => {
         if (err) {
             databaseError(err, res);
@@ -466,6 +498,8 @@ function databaseError(err, res) {
 }
 
 
+
+// delete interest
 router.post('/deleteInterest', verifyToken, (req, res) => {
     let interests = req.body.interest;
     let userEmail = req.body.email;
@@ -488,6 +522,8 @@ router.post('/deleteInterest', verifyToken, (req, res) => {
 });
 
 
+
+// get interest list
 router.post('/getInterest', verifyToken, (req, res) => {
     let userEmail = req.body.email;
     let address = req.connection.remoteAddress;
@@ -518,6 +554,7 @@ router.post('/getInterest', verifyToken, (req, res) => {
 });
 
 
+// get notification status for user
 router.post('/getNotificationStatus', verifyToken, (req, res) => {
     let userEmail = req.body.email;
     let address = req.connection.remoteAddress;
@@ -538,31 +575,39 @@ router.post('/getNotificationStatus', verifyToken, (req, res) => {
 });
 
 
+
+// verify user by click email
 router.get('/verify/:msg/:str', (req, res) => {
     try {
         let stringToken = req.params.msg;
         let str = req.params.str;
+        // check params are vaild
         if (stringToken === null || stringToken === undefined ||
             str === null || str === undefined) {
             res.sendFile(path.join(__dirname + '/error.html'));
         } else {
+            // decode token
             let payload = jwt.verify(stringToken, str);
             if (!payload) {
                 res.sendFile(path.join(__dirname + '/error.html'));
             } else {
+                // get payload
                 let token = payload.token;
                 if (token === null || token === undefined) {
                     res.sendFile(path.join(__dirname + '/error.html'));
                 } else {
+                    // verify from db
                     db.removeFromVerifyTable(token, (err, msg) => {
                         if (err) {
                             databaseError(err, res);
                         } else {
+                            // verify from db
                             if (msg.rows[0] === undefined || msg.rows[0] === null) {
                                 res.sendFile(path.join(__dirname + '/notfound.html'));
                             } else {
                                 let userID = msg.rows[0].user;
                                 db.verifyUser(userID, (err, msgs) => {
+                                    // success or not
                                     if (err) {
                                         res.sendFile(path.join(__dirname + '/error.html'));
                                     } else {
@@ -582,14 +627,18 @@ router.get('/verify/:msg/:str', (req, res) => {
 });
 
 
+
+// reset password request
 router.get('/resetPassword/:email', (req, res) => {
     let email = req.params.email;
     let address = req.connection.remoteAddress;
+    // get user detail
     db.getUser(email, (err, msg) => {
         if (err) {
             databaseError(err, res);
             logger.databaseError('userLogin', address, err);
         } else {
+            // check if found
             if (msg.rows[0] === undefined || msg.rows[0] === null) {
                 logger.userRegistrationLoginLog(address, 'user not found in reset: ' + email);
                 res.send({
@@ -599,6 +648,7 @@ router.get('/resetPassword/:email', (req, res) => {
                     token: null
                 })
             } else {
+                // check status
                 let user = msg.rows[0];
                 if (user.verify === false) {
                     logger.userRegistrationLoginLog(address, 'user not verify: ' + email);
@@ -609,25 +659,30 @@ router.get('/resetPassword/:email', (req, res) => {
                         token: null
                     })
                 } else {
+                    // generate string store into db
                     let token = rs.generate(90);
                     let key = rs.generate(40);
                     let payload = {
                         token: token
                     };
+                    // set up token and add expires in 15 mins
                     let verifyToken = jwt.sign(payload, key, {expiresIn: 15 * 60});
+                    // add token to db
                     db.addIntoVerifyTable(user._id, token, (err, msg) => {
                         if (err) {
+                            // if fail, remove perivus token
                             db.removeVerifyByReset(user._id, (err, msg) => {
                                 if (err) {
                                     databaseError(err, res);
                                     logger.databaseError('userLogin', address, err);
                                 } else {
+                                    // add to db
                                     db.addIntoVerifyTable(user._id, token, (err, msg) => {
                                         if (err) {
                                             databaseError(err, res);
                                             logger.databaseError('userLogin', address, err);
                                         } else {
-
+                                            // send email
                                             let url = "https://cryptogeekapp.com/userLogin/reset/" + verifyToken + '/' + key;
                                             let mailOptions = {
                                                 from: 'no-reply@cryptogeekapp.com',
@@ -744,6 +799,8 @@ router.get('/resetPassword/:email', (req, res) => {
 });
 
 
+
+// verify reset request
 router.get('/reset/:verify/:key', (req, res) => {
     let verifyToken = req.params.verify;
     let key = req.params.key;
@@ -785,6 +842,8 @@ router.get('/reset/:verify/:key', (req, res) => {
 });
 
 
+
+// do reset password func
 router.post('/reset/:verify/:key', (req, res) => {
     let address = req.connection.remoteAddress;
     let verify = req.params.verify;
@@ -842,6 +901,8 @@ router.post('/reset/:verify/:key', (req, res) => {
 });
 
 
+
+// resend verify email
 router.get('/resendVerifyLink/:email', (req, res) => {
     let email = req.params.email;
     let address = req.connection.remoteAddress;
@@ -920,6 +981,8 @@ router.get('/resendVerifyLink/:email', (req, res) => {
 });
 
 
+
+// user add transaction into db
 router.post('/addTransaction', verifyToken, (req, res) => {
     let email = req.body.email;
     let transactions = req.body.transactions;
@@ -965,6 +1028,8 @@ router.post('/addTransaction', verifyToken, (req, res) => {
 });
 
 
+
+// delete transaction
 router.post('/deleteTransaction', verifyToken, (req, res) => {
     let transactionID = req.body.transactionID;
     if (transactionID === null || transactionID === undefined) {
@@ -991,6 +1056,8 @@ router.post('/deleteTransaction', verifyToken, (req, res) => {
 });
 
 
+
+// get all transactions
 router.post('/getTransactions', verifyToken, (req, res) => {
     let email = req.body.email;
     if (email === undefined || email === null) {
@@ -1017,6 +1084,8 @@ router.post('/getTransactions', verifyToken, (req, res) => {
 });
 
 
+
+// update transaction
 router.post('/updateTransaction', verifyToken, (req, res) => {
     let coin = req.body.transactions;
     if (coin === null || coin === undefined) {
@@ -1043,19 +1112,23 @@ router.post('/updateTransaction', verifyToken, (req, res) => {
 });
 
 
+// add like news flash
 router.post('/like', verifyToken, (req, res) => {
     let newsID = req.body.newsID;
     let email = req.body.email;
+    // get dislike list
     NewsLike.getDislike(newsID, email, (err, li) => { // check if dislike
         if (err) {
             databaseError(err, res);
         } else {
+            // if disliked remove it and add like
             let disliked = li !== null;
             if (disliked === true) {
                 NewsLike.removeDislike(newsID, email, (err, msg) => { // if true remove dislike
                     if (err) {
                         databaseError(err, res);
                     } else {
+                        // remove dislike num
                         db.removeDislike(newsID, (err, rmdbmsg) => {
                             if (err) {
                                 databaseError(err, res);
@@ -1064,6 +1137,7 @@ router.post('/like', verifyToken, (req, res) => {
                                     if (err) {
                                         databaseError(err, res);
                                     } else {
+                                        // add like num
                                         db.addLike(newsID, (err, dbmsg) => {
                                             if (err) {
                                                 databaseError(err, res);
@@ -1129,6 +1203,8 @@ router.post('/like', verifyToken, (req, res) => {
 });
 
 
+
+// add dislike
 router.post('/dislike', verifyToken, (req, res) => {
     let newsID = req.body.newsID;
     let email = req.body.email;
@@ -1215,6 +1291,8 @@ router.post('/dislike', verifyToken, (req, res) => {
 });
 
 
+
+// unlike news flash
 router.post('/unlike', verifyToken, (req, res) => {
     let newsID = req.body.newsID;
     let email = req.body.email;

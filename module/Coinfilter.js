@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
-const logger = require('../functions/logger')
+const logger = require('../functions/logger');
+
+
+// this file use to store schema and function of the list that two api common coin
 
 const coinFilterSchema = mongoose.Schema({
     coinName: {

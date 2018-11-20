@@ -69,6 +69,8 @@ module.exports.updateFlashNews = function (id, flash, option, callback) {
     NewsFlash.findOneAndUpdate(query, update, option, callback);
 };
 
+
+// search news flash by word
 module.exports.searchFlashNews = (languageTag, patten, callback, skip, limit) => {
     NewsFlash.find({
         $or: [{

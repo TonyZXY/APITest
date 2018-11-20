@@ -8,6 +8,8 @@ const CompetitionRanking = require('../module/CompetitionRanking');
 mongoose.connect(config.database, config.options);
 
 
+// this file is use to connect to db and provide function to generate ranking update
+
 
 function compareTotal(a,b) {
     if (parseFloat(a.total) > parseFloat(b.total))
@@ -30,6 +32,7 @@ function compareWeek(a,b) {
 module.exports = {
 
 
+    // start competition and reset percentage
     startCompetition: ()=>{
         db.gameGetAllAccount((err,dbmsg1)=>{
             if (err) {
@@ -52,6 +55,8 @@ module.exports = {
     },
 
 
+
+    // update daily percentage for competition
     updateCompetition: ()=>{
         db.gameGetAllAccount((err,dbmsg1)=>{
             if (err){
@@ -74,6 +79,8 @@ module.exports = {
 
 
 
+
+    // update total amount for daily update
     updateTotal: () => {
         GameCoin.getCoinList((err, monmsg) => {
             if (err) {
@@ -117,6 +124,8 @@ module.exports = {
 
 
 
+
+    // check config number from db
     checkWeekNumber: (callback)=>{
         db.gameCheckWeekNumber((err, number) => {
             if (err) {
@@ -131,6 +140,7 @@ module.exports = {
 
 
 
+    // generate total ranking and store into mongodb
     updateTotalRanking: (number) => {
         db.gameGetAllAccount((err,dbmsg1)=>{
             if (err) {
@@ -168,6 +178,7 @@ module.exports = {
     },
 
 
+    // generate competition ranking and then store into db
     updateCompetitionRanking: (number)=>{
         db.gameGetAllAccount((err,dbmsg1)=>{
             if (err){
@@ -204,6 +215,7 @@ module.exports = {
         })
     },
 
+    // generage a blank competition ranking for display
     competitionRankingClean: (number)=>{
         let date = new Date();
         let rank = {

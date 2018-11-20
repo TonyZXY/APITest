@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// this file is use to get and add and edit notification in game
 
 const GameNotificationSchema = mongoose.Schema({
     shortMassage: {
@@ -39,6 +40,9 @@ module.exports = {
         };
         GameNotification.findOneAndUpdate({_id:id},edit,{upsert:true,new:true},callback);
     },
+
+
+    // get available notification, now time greater than from and not time lower than to
     getNotifications: (callback)=>{
         let dateNow = new Date();
         GameNotification.find({

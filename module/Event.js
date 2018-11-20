@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+
+// file that store event schema and functions that read and write data into mongodb
+
 const eventSchema = mongoose.Schema({
     eventID:String,
     eventName:String,
@@ -60,6 +63,7 @@ module.exports.addEvent = (event,callback)=>{
 //     Event.create(event,callback);
 // };
 
+// get data from now and 91 days after
 module.exports.getAllEvent = (callback)=>{
     let dateNow = new Date();
     let dateTo = new Date();

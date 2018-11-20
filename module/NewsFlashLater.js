@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
 
+//this file handle store and pop news flash that user want to push later
+
 const newsFlashLaterSchema = mongoose.Schema({
     shortMassage:{
         type:String,
@@ -34,7 +36,7 @@ const newsFlashLaterSchema = mongoose.Schema({
 
 const NewsFlashLater = module.exports = mongoose.model('NewsFlashLater', newsFlashLaterSchema);
 
-
+// get all news that time is early than now
 module.exports.getFlashList = (callback) =>{
     NewsFlashLater.find({
         'time':{

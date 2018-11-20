@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const db = require('../functions/postgredb');
 
 
+// this file use to store competition ranking data and func of getting data from mongodb
+
 const rankingSchema = mongoose.Schema({
     title: {
         type: String,
@@ -47,6 +49,7 @@ module.exports = {
         CompetitionRanking.create(ranking, callback);
     },
 
+    // get latest record
     getRanking: (callback) => {
         CompetitionRanking.find(callback).limit(1).sort({_id:-1});
     }

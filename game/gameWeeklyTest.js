@@ -7,7 +7,7 @@ const GameCoin = require('./GameCoin');
 
 mongoose.connect(config.database, config.options);
 
-
+// this file is not used
 
 // CoinData.runOneTime();
 // GameCoin.getCoinList((err,monmsg)=>{

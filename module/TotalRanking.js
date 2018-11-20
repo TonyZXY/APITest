@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const db = require('../functions/postgredb');
 
 
+//store total rank schema and function that read and write data from mongodb
+
 const rankingSchema = mongoose.Schema({
     title: {
         type: String,
@@ -47,6 +49,7 @@ module.exports = {
         TotalRanking.create(ranking, callback);
     },
 
+    // get the latest record of the total rank
     getRanking: (callback) => {
         TotalRanking.find(callback).limit(1).sort({date_number:-1});
     }

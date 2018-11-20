@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const db = require('../functions/postgredb');
 
 
+//this file handle the like and dislike list of news flash
+// adding user email into list of like or dislike
+
 const likeSchema = mongoose.Schema({
     newsID:{
         type:String,

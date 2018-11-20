@@ -5,6 +5,9 @@ const config = require('../config');
 const apn = require('apn');
 
 
+
+//this file is to store function and auto run stop loss function of game
+
 mongoose.connect(config.database, config.options);
 
 
@@ -28,6 +31,8 @@ function comparePrice(set, coin, callback) {
     }
 }
 
+
+// get all data and compare
 function getData() {
     db.gameGetAllActiveStopLossSet((err, dbmsg) => {
         if (err) {
@@ -65,6 +70,8 @@ function getData() {
 }
 
 
+
+// preform transaction
 function porformTransaction(set, coin) {
     let coinTo = {
         status: 'sell',
@@ -132,11 +139,14 @@ async function runScript() {
         getData();
         loginConsole("Check Stop Loss Loop for " + time + " times.");
         time++;
+
+        // run every one min
         await delay(1000 * 60);
     } while (true)
 }
 
 
+// after preform transaction, send notification
 function pushNotification(user_id,message){
     db.getDeviceTokenByID(user_id,(err,dbmsg)=>{
         if (err){

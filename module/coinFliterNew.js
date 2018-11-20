@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 // const logger = require('../functions/logger');
 
+// new coin filter file
 
 const coinFilterSchema = mongoose.Schema({
     data: [{

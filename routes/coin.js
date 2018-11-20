@@ -13,6 +13,8 @@ mongoose.connect(config.database, config.options);
 module.exports = router;
 
 
+
+//get all coin list
 router.get('/getAll', (req, res) => {
     let address = req.connection.remoteAddress;
     Coin.getCoinList((err, list) => {
@@ -25,6 +27,8 @@ router.get('/getAll', (req, res) => {
     })
 });
 
+
+//get all coin list with specific currency
 router.get('/getAllWithCurrency', (req, res) => {
     let currency = req.query.currency;
     let address = req.connection.remoteAddress;
@@ -39,6 +43,8 @@ router.get('/getAllWithCurrency', (req, res) => {
     })
 });
 
+
+// delete coin by name
 router.delete('/delete', (req, res) => {
     let name = req.query.name;
     let address = req.connection.remoteAddress;
@@ -57,6 +63,8 @@ router.delete('/delete', (req, res) => {
 const coinfilter = require('../module/coinFliterNew');
 
 
+
+//get coin list
 router.get('/getCoinList', (req, res) => {
     let address = req.connection.remoteAddress;
     coinfilter.getCoinList((err, coinList) => {
@@ -87,6 +95,7 @@ router.get('/getCoinList', (req, res) => {
 // });
 
 
+// get specific coin data
 router.get('/getCoin', (req, res) => {
     let symbol = req.query.coin;
     let address = req.connection.remoteAddress;

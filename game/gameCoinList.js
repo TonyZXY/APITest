@@ -7,6 +7,8 @@ const config = require('../config');
 mongoose.connect(config.database, config.options);
 
 
+// this file is use to generate game coin data from huobi australian api
+
 function call(coin) {
     let coinData = {};
     https.get('https://api.huobi.com.au/market/history/kline?period=1day&size=7&symbol=' + coin.coinAddName + 'aud', res => {
@@ -135,6 +137,7 @@ async function runScript() {
         coinDataStart();
         loginConsole("Update Gaming Coin API from Huobi AU for " + time + " times");
         time++;
+        // run this script every 10 second
         await delay(1000 * 10);
     } while (true)
 }

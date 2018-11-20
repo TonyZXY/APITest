@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+
+// store Coin schema and functions for coin data (global average)
+
 const coinSchema = mongoose.Schema({
     id: {
         type: Number,
@@ -44,6 +47,7 @@ module.exports.addCoins = (coins, callback) => {
     });
 };
 
+// get coin list with different currency
 module.exports.getCoinListCurrency = (currency, callback) => {
     Coin.aggregate([{
         $project: {

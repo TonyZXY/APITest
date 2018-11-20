@@ -128,6 +128,7 @@ module.exports.findNewsByContent = function (leTag, callback, skip, limit) {
     }).skip(skip).limit(limit);
 };
 
+// search news by key word and title
 module.exports.searchNews = (languageTag, patten, callback, skip, limit) => {
     News.find({
         $or: [{
