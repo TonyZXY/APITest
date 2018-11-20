@@ -47,9 +47,25 @@ let task2 = corn.schedule('20 59 11 * * *', () => {
 });
 
 
+// update competition ranking every day at 11:59:20
+let task3 = corn.schedule('20 59 17 * * *', () => {
+    data.checkWeekNumber((err, number) => {
+        if (err) {
+            console.log(err);
+        } else {
+            data.updateCompetition();
+            delay(5000);
+            data.updateCompetitionRanking(number);
+        }
+    })
+}, {
+    scheduled: false
+});
+
+
 
 // start competition by modify this schedule
-corn.schedule('14 59 16 16 11 *',()=>{
+corn.schedule('14 59 17 20 11 *',()=>{
     // start competition by setting things to default value
     data.startCompetition();
     data.checkWeekNumber((err,number)=>{
@@ -63,13 +79,15 @@ corn.schedule('14 59 16 16 11 *',()=>{
     // start competition update ranking tasks.
     task.start();
     task2.start();
+    task3.start();
 });
 
 
 // set this schedule to stop trading competition
-corn.schedule('59 59 23 18 11 *',()=>{
+corn.schedule('59 59 17 21 11 *',()=>{
     task.stop();
     task2.stop();
+    task3.stop();
 });
 
 
