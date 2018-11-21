@@ -13,7 +13,7 @@ const delay = amount => {
 
 
 // update competition ranking every day at 23:59:20
-let task = corn.schedule('20 59 23 * * *', () => {
+let task = corn.schedule('20 59 * * * *', () => {
     data.checkWeekNumber((err, number) => {
         if (err) {
             console.log(err);
@@ -78,16 +78,16 @@ corn.schedule('14 59 17 20 11 *',()=>{
     });
     // start competition update ranking tasks.
     task.start();
-    task2.start();
-    task3.start();
+    // task2.start();
+    // task3.start();
 });
 
 
 // set this schedule to stop trading competition
 corn.schedule('59 59 17 21 11 *',()=>{
     task.stop();
-    task2.stop();
-    task3.stop();
+    // task2.stop();
+    // task3.stop();
 });
 
 
