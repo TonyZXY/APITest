@@ -12,7 +12,7 @@ const delay = amount => {
 
 
 
-// update competition ranking every day at 23:59:20
+// update competition ranking every day at every hour 59:20
 let task = corn.schedule('20 59 * * * *', () => {
     data.checkWeekNumber((err, number) => {
         if (err) {
