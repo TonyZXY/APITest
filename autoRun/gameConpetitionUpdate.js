@@ -65,6 +65,7 @@ let task3 = corn.schedule('20 59 17 * * *', () => {
 
 
 // start competition by modify this schedule
+//             ss mm hh dd MM day-of-week
 corn.schedule('14 59 17 20 11 *',()=>{
     // start competition by setting things to default value
     data.startCompetition();
@@ -84,6 +85,7 @@ corn.schedule('14 59 17 20 11 *',()=>{
 
 
 // set this schedule to stop trading competition
+//             ss mm hh dd MM day-of-week
 corn.schedule('59 59 17 21 11 *',()=>{
     task.stop();
     // task2.stop();
