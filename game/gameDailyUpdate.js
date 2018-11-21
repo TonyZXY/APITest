@@ -158,13 +158,21 @@ module.exports = {
                 let dailyRank = 1;
                 list.sort(compareTotal);
                 list.forEach( item => {
-                    let user = {
-                        user_id:item.user_id,
-                        user_nickname:item.nick_name,
-                        total_rank:dailyRank++,
-                        total:item.total
-                    };
-                    data.push(user);
+                    db.gameGetAllTransactionForUser(item.user_id,(err,msg)=>{
+                        if (err){
+                            console.log(err);
+                        } else {
+                            if (msg.rows.length > 0){
+                                let user = {
+                                    user_id:item.user_id,
+                                    user_nickname:item.nick_name,
+                                    total_rank:dailyRank++,
+                                    total:item.total
+                                };
+                                data.push(user);
+                            }
+                        }
+                    });
                 });
                 rank.data = data;
                 TotalRanking.addRanking(rank,(err,monmsg)=>{
@@ -196,13 +204,21 @@ module.exports = {
                 let ranking = 1;
                 list.sort(compareWeek);
                 list.forEach( item => {
-                    let user = {
-                        user_id:item.user_id,
-                        user_nickname: item.nick_name,
-                        daily_rank: ranking++,
-                        this_week: item.this_week,
-                    };
-                    data.push(user);
+                    db.gameGetAllTransactionForUser(item.user_id,(err,msg)=>{
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            if (msg.rows.length > 0){
+                                let user = {
+                                    user_id:item.user_id,
+                                    user_nickname: item.nick_name,
+                                    daily_rank: ranking++,
+                                    this_week: item.this_week,
+                                };
+                                data.push(user);
+                            }
+                        }
+                    })
                 });
                 rank.data = data;
                 CompetitionRanking.addRanking(rank,(err,monmsg)=>{
