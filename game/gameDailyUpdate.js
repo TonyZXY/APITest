@@ -11,7 +11,7 @@ mongoose.connect(config.database, config.options);
 // this file is use to connect to db and provide function to generate ranking update
 
 
-function compareTotal(a,b) {
+function compareTotal(a, b) {
     if (parseFloat(a.total) > parseFloat(b.total))
         return -1;
     if (parseFloat(a.total) < parseFloat(b.total))
@@ -20,7 +20,7 @@ function compareTotal(a,b) {
 }
 
 
-function compareWeek(a,b) {
+function compareWeek(a, b) {
     if (a.this_week > b.this_week)
         return -1;
     if (a.this_week < b.this_week)
@@ -33,16 +33,16 @@ module.exports = {
 
 
     // start competition and reset percentage
-    startCompetition: ()=>{
-        db.gameGetAllAccount((err,dbmsg1)=>{
+    startCompetition: () => {
+        db.gameGetAllAccount((err, dbmsg1) => {
             if (err) {
                 console.log(err);
             } else {
                 let accounts = dbmsg1.rows;
-                accounts.forEach( account =>{
+                accounts.forEach(account => {
                     let this_week = 100;
                     let last_week = account.total;
-                    db.gameStartCompetition(account.user_id,this_week,last_week,(err,dbmsg2)=>{
+                    db.gameStartCompetition(account.user_id, this_week, last_week, (err, dbmsg2) => {
                         if (err) {
                             console.log(err);
                         } else {
@@ -55,18 +55,17 @@ module.exports = {
     },
 
 
-
     // update daily percentage for competition
-    updateCompetition: ()=>{
-        db.gameGetAllAccount((err,dbmsg1)=>{
-            if (err){
+    updateCompetition: () => {
+        db.gameGetAllAccount((err, dbmsg1) => {
+            if (err) {
                 console.log(err);
             } else {
                 let accounts = dbmsg1.rows;
-                accounts.forEach( account => {
-                    let this_week = Math.round((account.total/account.last_week *100)*100)/100;
-                    db.gameDailyUpdateCompetition(account.user_id,this_week,(err,dbmsg2)=>{
-                        if (err){
+                accounts.forEach(account => {
+                    let this_week = Math.round((account.total / account.last_week * 100) * 100) / 100;
+                    db.gameDailyUpdateCompetition(account.user_id, this_week, (err, dbmsg2) => {
+                        if (err) {
                             console.log(err);
                         } else {
                             console.log('Update This Week percentage');
@@ -76,8 +75,6 @@ module.exports = {
             }
         })
     },
-
-
 
 
     // update total amount for daily update
@@ -123,33 +120,30 @@ module.exports = {
     },
 
 
-
-
     // check config number from db
-    checkWeekNumber: (callback)=>{
+    checkWeekNumber: (callback) => {
         db.gameCheckWeekNumber((err, number) => {
             if (err) {
                 console.log(err);
                 return callback(err);
             } else {
                 let dataNumber = parseInt(number.rows[0].value);
-                return callback(null,dataNumber);
+                return callback(null, dataNumber);
             }
         })
     },
 
 
-
     // generate total ranking and store into mongodb
     updateTotalRanking: (number) => {
-        db.gameGetAllAccount((err,dbmsg1)=>{
+        db.gameGetAllAccount((err, dbmsg1) => {
             if (err) {
                 console.log(err);
             } else {
                 let list = dbmsg1.rows;
                 let date = new Date();
                 let rank = {
-                    title: 'Total Rank, Date: '+date.toLocaleString(),
+                    title: 'Total Rank, Date: ' + date.toLocaleString(),
                     time: date,
                     time_string: date.toISOString(),
                     date_number: number,
@@ -157,28 +151,20 @@ module.exports = {
                 let data = [];
                 let dailyRank = 1;
                 list.sort(compareTotal);
-                list.forEach( item => {
-                    db.gameGetAllTransactionForUser(item.user_id,(err,msg)=>{
-                        if (err){
-                            console.log(err);
-                        } else {
-                            if (msg.rows.length > 0){
-                                let user = {
-                                    user_id:item.user_id,
-                                    user_nickname:item.nick_name,
-                                    total_rank:dailyRank++,
-                                    total:item.total
-                                };
-                                data.push(user);
-                            }
-                        }
-                    });
+                list.forEach(item => {
+                    let user = {
+                        user_id: item.user_id,
+                        user_nickname: item.nick_name,
+                        total_rank: dailyRank++,
+                        total: item.total
+                    };
+                    data.push(user);
                 });
                 rank.data = data;
-                TotalRanking.addRanking(rank,(err,monmsg)=>{
-                    if (err){
+                TotalRanking.addRanking(rank, (err, monmsg) => {
+                    if (err) {
                         console.log(err);
-                    }else {
+                    } else {
                     }
                 })
             }
@@ -187,15 +173,15 @@ module.exports = {
 
 
     // generate competition ranking and then store into db
-    updateCompetitionRanking: (number)=>{
-        db.gameGetAllAccount((err,dbmsg1)=>{
-            if (err){
+    updateCompetitionRanking: (number) => {
+        db.gameGetAllAccount((err, dbmsg1) => {
+            if (err) {
                 console.log(err);
-            }else {
+            } else {
                 let list = dbmsg1.rows;
                 let date = new Date();
                 let rank = {
-                    title: 'Trading Competition Rank, Date: '+ date.toLocaleString(),
+                    title: 'Trading Competition Rank, Date: ' + date.toLocaleString(),
                     time: date,
                     time_string: date.toISOString(),
                     date_number: number,
@@ -203,14 +189,14 @@ module.exports = {
                 let data = [];
                 let ranking = 1;
                 list.sort(compareWeek);
-                list.forEach( item => {
-                    db.gameGetAllTransactionForUser(item.user_id,(err,msg)=>{
+                list.forEach(item => {
+                    db.gameGetAllTransactionForUser(item.user_id, (err, msg) => {
                         if (err) {
                             console.log(err);
                         } else {
-                            if (msg.rows.length > 0){
+                            if (msg.rows.length > 0) {
                                 let user = {
-                                    user_id:item.user_id,
+                                    user_id: item.user_id,
                                     user_nickname: item.nick_name,
                                     daily_rank: ranking++,
                                     this_week: item.this_week,
@@ -221,8 +207,8 @@ module.exports = {
                     })
                 });
                 rank.data = data;
-                CompetitionRanking.addRanking(rank,(err,monmsg)=>{
-                    if (err){
+                CompetitionRanking.addRanking(rank, (err, monmsg) => {
+                    if (err) {
                         console.log(err);
                     } else {
                     }
@@ -232,7 +218,7 @@ module.exports = {
     },
 
     // generage a blank competition ranking for display
-    competitionRankingClean: (number)=>{
+    competitionRankingClean: (number) => {
         let date = new Date();
         let rank = {
             title: 'No data available',
@@ -241,8 +227,8 @@ module.exports = {
             date_number: number,
             data: [],
         };
-        CompetitionRanking.addRanking(rank,(err,monmsg)=>{
-            if (err){
+        CompetitionRanking.addRanking(rank, (err, monmsg) => {
+            if (err) {
                 console.log(err);
             } else {
             }
