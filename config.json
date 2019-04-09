@@ -1,29 +1,29 @@
 {
-  "database": "mongodb://192.168.9.92:27017/APITest",
+  "database": "",
 
 
 
   "postgre": {
-    "user": "tonyzheng",
-    "host": "192.168.9.92",
-    "database": "postgres",
-    "password": "bgltest",
+    "user": "",
+    "host": "",
+    "database": "",
+    "password": "",
     "port": 5432
   },
 
 
 
   "mail":{
-    "host": "smtp.exmail.qq.com",
-    "secureConnection": true,
-    "port": 465,
+    "host": "",
+    "secureConnection": ,
+    "port": ,
     "auth":{
-      "user": "tony.zheng@cryptogeekapp.com",
-      "pass": "Zxy~19910313"
+      "user": "",
+      "pass": ""
     }
   },
 
-  "mailAPIKey":"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",
+  "mailAPIKey":"",
 
 
   "passwordOpt":{
