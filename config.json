@@ -1,8 +1,8 @@
 {
-  "database": "mongodb://127.0.0.1:29020/newsappbkendprod01",
+  "database": "",
   "options": {
-    "user": "newsappprod10",
-    "pass": "dmc#news8m9bgl"
+    "user": "",
+    "pass": ""
   },
 
 
@@ -20,12 +20,12 @@
     "secureConnection": true,
     "port": 465,
     "auth":{
-      "user": "no-reply@cryptogeekapp.com",
-      "pass": "Cryptogeek123"
+      "user": "",
+      "pass": ""
     }
   },
 
-  "mailAPIKey":"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",
+  "",
 
 
   "passwordOpt":{
