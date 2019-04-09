@@ -1,7 +1,7 @@
 {
-  "database":"mongodb://10.10.6.111:27017/BGLNewsAppbkend",
+  "database":"",
   "options":{
-    "user": "bglappdev100",
-    "pass": "appdevgkV6="
+    "user": "",
+    "pass": ""
   }
 }
