@@ -1,29 +1,29 @@
 {
-  "database": "mongodb://127.0.0.1:29020/newsappbkendprod01",
+  "database": "",
   "options": {
-    "user": "newsappprod10",
-    "pass": "dmc#news8m9bgl"
+    "user": "",
+    "pass": ""
   },
 
 
   "postgre": {
-    "user": "postgreprod10",
-    "host": "localhost",
-    "database": "newsapiproduction00",
-    "password": "nK2ZmUuTgq",
+    "user": "",
+    "host": "",
+    "database": "",
+    "password": "",
     "port": 5432
   },
 
 
   "mail":{
-    "service": "gmail",
+    "service": "",
     "auth":{
-      "user": "cryptogeekapp@gmail.com",
-      "pass": "Bgltest12345"
+      "user": "",
+      "pass": ""
     }
   },
 
-  "mailAPIKey":"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",
+  "mailAPIKey":"",
 
 
   "passwordOpt":{
